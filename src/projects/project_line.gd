@@ -1,4 +1,5 @@
 extends HBoxContainer
+class_name ProjectLine
 
 @export var is_favourite := false:
 	set(newVal):
@@ -10,7 +11,7 @@ extends HBoxContainer
 	set(newVal):
 		project_icon = newVal
 		if Icon != null:
-			Icon.texture = load(newVal)
+			Icon.texture = _create_external_texture(newVal)
 
 @export var project_name := "Project name":
 	set(newVal):
@@ -32,6 +33,14 @@ extends HBoxContainer
 
 func _ready() -> void:
 	FavouriteButton.button_pressed = is_favourite
-	Icon.texture = load(project_icon)
+	Icon.texture = _create_external_texture(project_icon)
 	NameLabel.text = project_name
 	PathLabel.text = project_path
+
+
+func _create_external_texture(texture_path: String) -> ImageTexture:
+	var image = Image.new()
+	image.load(texture_path)
+#			var texture = ImageTexture.new()
+#			texture.create_from_image(image)
+	return ImageTexture.create_from_image(image)

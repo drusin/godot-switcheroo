@@ -1,0 +1,63 @@
+[gd_scene load_steps=3 format=3 uid="uid://c310xxedp25lj"]
+
+[ext_resource type="Script" path="res://src/main.gd" id="1_8d0wa"]
+[ext_resource type="PackedScene" uid="uid://bym3qys3xdgla" path="res://src/projects/local_projects.tscn" id="2_u1x8w"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_8d0wa")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Top" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 2
+
+[node name="Tabs" type="TabBar" parent="Content/Top"]
+layout_mode = 2
+size_flags_horizontal = 3
+tab_count = 2
+tab_0/title = "Local Projects"
+tab_1/title = "Godot Installations"
+
+[node name="Version" type="Label" parent="Content/Top"]
+layout_mode = 2
+text = "v0.0.1.dev"
+
+[node name="Settings" type="Button" parent="Content/Top"]
+layout_mode = 2
+text = "Settings"
+
+[node name="About" type="Button" parent="Content/Top"]
+layout_mode = 2
+text = "About
+"
+
+[node name="Bottom" type="Control" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+
+[node name="LocalProjects" parent="Content/Bottom" instance=ExtResource("2_u1x8w")]
+layout_mode = 1
+
+[node name="ErrorPopup" type="AcceptDialog" parent="."]
+initial_position = 2
+title = "Error!"
+size = Vector2i(200, 100)
+unresizable = true
+
+[connection signal="tab_changed" from="Content/Top/Tabs" to="." method="_on_tabs_tab_changed"]

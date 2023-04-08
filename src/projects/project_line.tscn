@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://blx8obua7efq7"]
+[gd_scene load_steps=2 format=3 uid="uid://c7ih6hxqdjogf"]
 
-[ext_resource type="Script" path="res://project_line.gd" id="1_xk1wh"]
-[ext_resource type="Texture2D" uid="uid://bi7wndmqnnyhs" path="res://icon.svg" id="2_x83uh"]
+[ext_resource type="Script" path="res://src/projects/project_line.gd" id="1_nwo6l"]
 
 [node name="ProjectLine" type="HBoxContainer"]
 anchors_preset = 10
@@ -9,8 +8,8 @@ anchor_right = 1.0
 offset_bottom = 56.0
 grow_horizontal = 2
 size_flags_horizontal = 3
-script = ExtResource("1_xk1wh")
-project_icon = "C:/dev/godot/godot-switcheroo/icon.svg"
+script = ExtResource("1_nwo6l")
+project_icon = "C:/dev/godot/xplosive-godot/icon.png"
 
 [node name="Favourite" type="CheckButton" parent="."]
 layout_mode = 2
@@ -18,7 +17,6 @@ layout_mode = 2
 [node name="Icon" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-texture = ExtResource("2_x83uh")
 expand_mode = 5
 
 [node name="Content" type="VBoxContainer" parent="."]
