@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://c310xxedp25lj"]
+
+[node name="Main" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Top" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 2
+
+[node name="Tabs" type="TabBar" parent="Top"]
+layout_mode = 2
+size_flags_horizontal = 3
+tab_count = 1
+tab_0/title = "Local Projects"
+
+[node name="Version" type="Label" parent="Top"]
+layout_mode = 2
+text = "v0.0.1.dev"
+
+[node name="Content" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+
+[node name="ProjectPane" type="VBoxContainer" parent="Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="Filtering" type="HBoxContainer" parent="Content/ProjectPane"]
+layout_mode = 2
+
+[node name="Filter" type="LineEdit" parent="Content/ProjectPane/Filtering"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter Projects"
+
+[node name="SortLabel" type="Label" parent="Content/ProjectPane/Filtering"]
+layout_mode = 2
+text = "Sort:"
+
+[node name="ItemList" type="OptionButton" parent="Content/ProjectPane/Filtering"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 3
+selected = 0
+popup/item_0/text = "Last Edited"
+popup/item_0/id = 0
+popup/item_1/text = "Name"
+popup/item_1/id = 1
+popup/item_2/text = "Path"
+popup/item_2/id = 2
+
+[node name="Projects" type="VBoxContainer" parent="Content/ProjectPane"]
+layout_mode = 2
+
+[node name="ButtonPane" type="VBoxContainer" parent="Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Content/ButtonPane"]
+layout_mode = 2
+
+[node name="NewProject" type="Button" parent="Content/ButtonPane/VBoxContainer"]
+layout_mode = 2
+text = "New Project"
+
+[node name="Import" type="Button" parent="Content/ButtonPane/VBoxContainer"]
+layout_mode = 2
+text = "Import"
+
+[node name="Scan" type="Button" parent="Content/ButtonPane/VBoxContainer"]
+layout_mode = 2
+text = "Scan"
+
+[node name="HSeparator" type="HSeparator" parent="Content/ButtonPane/VBoxContainer"]
+layout_mode = 2
+
+[node name="Edit" type="Button" parent="Content/ButtonPane/VBoxContainer"]
+layout_mode = 2
+text = "Edit"
+
+[node name="Run" type="Button" parent="Content/ButtonPane/VBoxContainer"]
+layout_mode = 2
+text = "Run"
+
+[node name="Rename" type="Button" parent="Content/ButtonPane/VBoxContainer"]
+layout_mode = 2
+text = "Rename"
+
+[node name="Remove" type="Button" parent="Content/ButtonPane/VBoxContainer"]
+layout_mode = 2
+text = "Remove"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Content/ButtonPane"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="Settings" type="Button" parent="Content/ButtonPane/VBoxContainer2"]
+layout_mode = 2
+text = "Settings"
+
+[node name="About" type="Button" parent="Content/ButtonPane/VBoxContainer2"]
+layout_mode = 2
+text = "About"

@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://blx8obua7efq7"]
+
+[ext_resource type="Script" path="res://project_line.gd" id="1_xk1wh"]
+[ext_resource type="Texture2D" uid="uid://bi7wndmqnnyhs" path="res://icon.svg" id="2_x83uh"]
+
+[node name="ProjectLine" type="HBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 56.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+script = ExtResource("1_xk1wh")
+project_icon = "C:/dev/godot/godot-switcheroo/icon.svg"
+
+[node name="Favourite" type="CheckButton" parent="."]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("2_x83uh")
+expand_mode = 5
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Project name"
+
+[node name="Path" type="Label" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "project/path"
