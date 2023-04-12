@@ -12,11 +12,13 @@ var scan_dir: String:
 		scan_dir = newVal
 		perform_scan()
 
-var projects: Array[Persistence.ProjectData] = []
+var projects := {}
 
 
 func _ready() -> void:
-	projects = Persistence.load_persisted_projects()
+	var projects_array := Persistence.load_persisted_projects()
+	for project in  projects_array:
+		projects[project.path] = project
 	_refresh_project_list()
 
 
@@ -31,7 +33,9 @@ func perform_scan() -> void:
 		dir.change_dir(scan_dir + "/" + subdir)
 		_scan_single_dir(dir)
 	_refresh_project_list()
-	Persistence.persist_projects(projects)
+	var project_data_array: Array[Persistence.ProjectData] = []
+	project_data_array.append_array(projects.values())
+	Persistence.persist_projects(project_data_array)
 
 
 func _scan_single_dir(dir: DirAccess) -> void:
@@ -53,11 +57,13 @@ func _scan_single_dir(dir: DirAccess) -> void:
 	version.version = "5.0.1"
 	project_data.godot_version = version
 	### end debug
-	projects.append(project_data)
+	projects[project_data.path] = project_data
 
 
 func _refresh_project_list() -> void:
-	for project in projects:
+	for child in Projects.get_children():
+		child.queue_free()
+	for project in projects.values():
 		var line: ProjectLine = ProjectLineScene.instantiate()
 		line.project_name = project.name
 		line.project_path = project.path

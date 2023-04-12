@@ -109,4 +109,5 @@ file_mode = 2
 access = 2
 
 [connection signal="pressed" from="Content/ButtonPane/SetProjectsFolder" to="." method="_on_set_projects_folder_pressed"]
+[connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="perform_scan"]
 [connection signal="dir_selected" from="SetProjectsFolderDialog" to="." method="_on_scan_folder_dialog_dir_selected"]
