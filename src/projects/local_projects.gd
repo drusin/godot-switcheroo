@@ -23,19 +23,29 @@ func _ready() -> void:
 
 
 func perform_scan() -> void:
-	var dir := DirAccess.open(scan_dir)
-	if not dir:
-		push_error("needs to show error popup!")
-		return
-	var dirs_to_check := dir.get_directories()
-	_scan_single_dir(dir)
-	for subdir in dirs_to_check:
-		dir.change_dir(scan_dir + "/" + subdir)
-		_scan_single_dir(dir)
+	var checked_paths := _scan_project_dir()
 	_refresh_project_list()
 	var project_data_array: Array[Persistence.ProjectData] = []
 	project_data_array.append_array(projects.values())
 	Persistence.persist_projects(project_data_array)
+
+
+func _scan_project_dir() -> Array[String]:
+	if scan_dir == null:
+		return []
+	var dir := DirAccess.open(scan_dir)
+	if not dir:
+		push_error("needs to show error popup!")
+		return []
+	var checked_paths: Array[String] = []
+	var dirs_to_check := dir.get_directories()
+	checked_paths.append(dir.get_current_dir())
+	_scan_single_dir(dir)
+	for subdir in dirs_to_check:
+		dir.change_dir(scan_dir + "/" + subdir)
+		checked_paths.append(dir.get_current_dir())
+		_scan_single_dir(dir)
+	return checked_paths
 
 
 func _scan_single_dir(dir: DirAccess) -> void:
