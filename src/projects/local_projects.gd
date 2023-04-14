@@ -9,8 +9,11 @@ extends Control
 
 var scan_dir: String: 
 	set(newVal):
-		scan_dir = newVal
+		PREFERENCES.values.scan_dir = newVal
+		PREFERENCES.persist_prefs()
 		perform_scan()
+	get:
+		return PREFERENCES.values.scan_dir
 
 var projects := {}
 
@@ -24,6 +27,9 @@ func _ready() -> void:
 
 func perform_scan() -> void:
 	var checked_paths := _scan_project_dir()
+	var to_check := projects.keys().filter(func(el): return !checked_paths.has(el))
+	for project_path in to_check:
+		_scan_single_dir(DirAccess.open(project_path.substr(0, project_path.length() - "project.godot".length())))
 	_refresh_project_list()
 	var project_data_array: Array[Persistence.ProjectData] = []
 	project_data_array.append_array(projects.values())
@@ -31,7 +37,7 @@ func perform_scan() -> void:
 
 
 func _scan_project_dir() -> Array[String]:
-	if scan_dir == null:
+	if scan_dir == "":
 		return []
 	var dir := DirAccess.open(scan_dir)
 	if not dir:

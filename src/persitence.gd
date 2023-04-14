@@ -7,7 +7,6 @@ const PROJECTS_FILE := "user://.projects.godot-switcheroo"
 static func persist_projects(projects: Array[ProjectData]) -> void:
 	var dicts: Array[Dictionary] = []
 	for project in projects:
-		print(inst_to_dict(project))
 		dicts.append(project.serialize())
 	
 	var stringified := JSON.stringify(dicts, "    ")
