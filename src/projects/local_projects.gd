@@ -21,19 +21,21 @@ var projects := {}
 func _ready() -> void:
 	var projects_array := Persistence.load_persisted_projects()
 	for project in  projects_array:
-		projects[project.path] = project
+		_scan_single_dir(_project_path_to_dir(project))
 	_refresh_project_list()
+
+
+func _project_path_to_dir(path: String) -> DirAccess:
+	return DirAccess.open(path.substr(0, path.length() - "project.godot".length()))
 
 
 func perform_scan() -> void:
 	var checked_paths := _scan_project_dir()
 	var to_check := projects.keys().filter(func(el): return !checked_paths.has(el))
 	for project_path in to_check:
-		_scan_single_dir(DirAccess.open(project_path.substr(0, project_path.length() - "project.godot".length())))
+		_scan_single_dir(_project_path_to_dir(project_path))
 	_refresh_project_list()
-	var project_data_array: Array[Persistence.ProjectData] = []
-	project_data_array.append_array(projects.values())
-	Persistence.persist_projects(project_data_array)
+	Persistence.persist_projects(projects.keys())
 
 
 func _scan_project_dir() -> Array[String]:

@@ -4,12 +4,8 @@ class_name Persistence extends Object
 const PROJECTS_FILE := "user://.projects.godot-switcheroo"
 
 
-static func persist_projects(projects: Array[ProjectData]) -> void:
-	var dicts: Array[Dictionary] = []
-	for project in projects:
-		dicts.append(project.serialize())
-	
-	var stringified := JSON.stringify(dicts, "    ")
+static func persist_projects(projects: Array) -> void:
+	var stringified := JSON.stringify(projects, "    ")
 	var file := FileAccess.open(PROJECTS_FILE, FileAccess.WRITE)
 	if file == null:
 		push_error("cannot open projects persistence file")
@@ -17,7 +13,7 @@ static func persist_projects(projects: Array[ProjectData]) -> void:
 	file.store_string(stringified)
 
 
-static func load_persisted_projects() -> Array[ProjectData]:
+static func load_persisted_projects() -> Array[String]:
 	if not FileAccess.file_exists(PROJECTS_FILE):
 		return []
 	
@@ -26,10 +22,8 @@ static func load_persisted_projects() -> Array[ProjectData]:
 		push_error("cannot open projects persistence file")
 		return []
 	var stringified := file.get_as_text()
-	var dict_arrays: Array = JSON.parse_string(stringified)
-	var returnVal: Array[ProjectData] = []
-	for dict in dict_arrays:
-		returnVal.append(ProjectData.deserialize(dict))
+	var returnVal: Array[String] = []
+	returnVal.append_array(JSON.parse_string(stringified))
 	return returnVal
 
 
