@@ -96,3 +96,8 @@ func _on_scan_folder_dialog_dir_selected(dir: String) -> void:
 func _on_set_projects_folder_pressed() -> void:
 	SetProjectsFolderDialog.current_dir = scan_dir
 	SetProjectsFolderDialog.popup()
+
+
+func _on_filter_text_changed(new_text: String) -> void:
+	for project in Projects.get_children():
+		project.visible = project.project_name.to_lower().begins_with(new_text.to_lower())
