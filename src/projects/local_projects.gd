@@ -3,7 +3,9 @@ extends Control
 @export var index := 0
 
 @onready var SetProjectsFolderDialog: FileDialog = $SetProjectsFolderDialog
+@onready var ConfirmRemoveDialog: ConfirmationDialog = $RemoveConfirmationDialog
 @onready var Projects: VBoxContainer = $Content/ProjectPane/ScrollContainer/Projects
+@onready var RemoveButton: Button = $Content/ButtonPane/Remove
 
 @onready var ProjectLineScene := preload("res://src/projects/project_line.tscn")
 
@@ -17,8 +19,12 @@ var scan_dir: String:
 
 var projects := {}
 
+var selected_projects: Array[String] = []
+
 
 func _ready() -> void:
+	ConfirmRemoveDialog.get_ok_button().pressed.connect(_on_confirm_remove_pressed)
+	
 	var projects_array := Persistence.load_persisted_projects()
 	for project in  projects_array:
 		_scan_single_dir(_project_path_to_dir(project))
@@ -86,6 +92,8 @@ func _refresh_project_list() -> void:
 		line.project_name = project.name
 		line.project_path = project.path
 		line.project_icon = project.icon_path
+		line.selected_changed.connect(_project_selected_handler(project.path))
+#		line.selected_changed.connect(_project_selected_behaviour(line))
 		Projects.add_child(line)
 
 
@@ -101,3 +109,30 @@ func _on_set_projects_folder_pressed() -> void:
 func _on_filter_text_changed(new_text: String) -> void:
 	for project in Projects.get_children():
 		project.visible = new_text == "" or project.project_name.to_lower().contains(new_text.to_lower())
+
+
+func _on_remove_pressed() -> void:
+	ConfirmRemoveDialog.popup()
+
+
+func _on_confirm_remove_pressed() -> void:
+	for project_path in selected_projects:
+		projects.erase(project_path)
+	_refresh_project_list()
+	Persistence.persist_projects(projects.keys())
+
+
+func _project_selected_behaviour(line: ProjectLine) -> Callable:
+	return func (_selected: bool) -> void:
+		for child in Projects.get_children():
+			if child != line:
+				child.is_selected = false
+
+
+func _project_selected_handler(path: String) -> Callable:
+	return func (selected: bool) -> void:
+		if selected:
+			selected_projects.append(path)
+		else:
+			selected_projects.erase(path)
+		RemoveButton.disabled = selected_projects.size() == 0

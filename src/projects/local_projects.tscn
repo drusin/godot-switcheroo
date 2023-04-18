@@ -60,6 +60,8 @@ size_flags_vertical = 3
 
 [node name="Projects" type="VBoxContainer" parent="Content/ProjectPane/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="ButtonPane" type="VBoxContainer" parent="Content"]
 layout_mode = 2
@@ -86,29 +88,36 @@ layout_mode = 2
 
 [node name="Edit" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
+disabled = true
 text = "Edit"
 
 [node name="Run" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
+disabled = true
 text = "Run"
-
-[node name="Rename" type="Button" parent="Content/ButtonPane"]
-layout_mode = 2
-text = "Rename"
 
 [node name="Remove" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
+disabled = true
 text = "Remove"
 
 [node name="SetProjectsFolderDialog" type="FileDialog" parent="."]
 initial_position = 2
 title = "Open a Directory"
 size = Vector2i(900, 500)
-ok_button_text = "Select Current Folder"
+ok_button_text = "Select This Folder"
 file_mode = 2
 access = 2
+
+[node name="RemoveConfirmationDialog" type="ConfirmationDialog" parent="."]
+initial_position = 2
+size = Vector2i(439, 109)
+ok_button_text = "Yes"
+dialog_text = "Are you sure you want to remove the selcted project(s)
+from the list (no files will be deleted)?"
 
 [connection signal="text_changed" from="Content/ProjectPane/Filtering/Filter" to="." method="_on_filter_text_changed"]
 [connection signal="pressed" from="Content/ButtonPane/SetProjectsFolder" to="." method="_on_set_projects_folder_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="perform_scan"]
+[connection signal="pressed" from="Content/ButtonPane/Remove" to="." method="_on_remove_pressed"]
 [connection signal="dir_selected" from="SetProjectsFolderDialog" to="." method="_on_scan_folder_dialog_dir_selected"]

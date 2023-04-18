@@ -2,32 +2,57 @@
 
 [ext_resource type="Script" path="res://src/projects/project_line.gd" id="1_nwo6l"]
 
-[node name="ProjectLine" type="HBoxContainer"]
+[node name="ProjectLine" type="Control"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 3
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 56.0
+offset_bottom = 64.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 script = ExtResource("1_nwo6l")
 project_icon = "C:/dev/godot/xplosive-godot/icon.png"
 
-[node name="Favourite" type="CheckButton" parent="."]
+[node name="SelectButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+
+[node name="Widgets" type="HBoxContainer" parent="."]
+layout_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Favourite" type="CheckButton" parent="Widgets"]
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="."]
+[node name="Icon" type="TextureRect" parent="Widgets"]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+mouse_filter = 2
 expand_mode = 5
 
-[node name="Content" type="VBoxContainer" parent="."]
+[node name="Content" type="VBoxContainer" parent="Widgets"]
 layout_mode = 2
+mouse_filter = 2
 
-[node name="Name" type="Label" parent="Content"]
+[node name="Name" type="Label" parent="Widgets/Content"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "Project name"
 
-[node name="Path" type="Label" parent="Content"]
+[node name="Path" type="Label" parent="Widgets/Content"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "project/path"
+
+[connection signal="toggled" from="SelectButton" to="." method="_on_select_button_toggled"]

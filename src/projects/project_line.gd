@@ -1,34 +1,44 @@
-extends HBoxContainer
+extends Control
 class_name ProjectLine
+
+signal selected_changed(selected: bool)
+signal favourite_changed(favourite: bool)
 
 @export var is_favourite := false:
 	set(newVal):
 		is_favourite = newVal
-		if FavouriteButton != null:
+		if FavouriteButton:
 			FavouriteButton.button_pressed = newVal
 
 @export_global_file var project_icon: String:
 	set(newVal):
 		project_icon = newVal
-		if Icon != null:
+		if Icon:
 			Icon.texture = _create_external_texture(newVal)
 
 @export var project_name := "Project name":
 	set(newVal):
 		project_name = newVal
-		if NameLabel != null:
+		if NameLabel:
 			NameLabel.text = newVal
 		
 @export var project_path := "project/path":
 	set(newVal):
 		project_path = newVal
-		if PathLabel != null:
+		if PathLabel:
 			PathLabel.text = newVal
 
-@onready var FavouriteButton: CheckButton = $Favourite
-@onready var Icon: TextureRect = $Icon
-@onready var NameLabel: Label = $Content/Name
-@onready var PathLabel: Label = $Content/Path
+@export var is_selected := false:
+	set(newVal):
+		is_selected = newVal
+		if SelectButton:
+			SelectButton.button_pressed = newVal
+
+@onready var SelectButton: Button = $SelectButton
+@onready var FavouriteButton: CheckButton = $Widgets/Favourite
+@onready var Icon: TextureRect = $Widgets/Icon
+@onready var NameLabel: Label = $Widgets/Content/Name
+@onready var PathLabel: Label = $Widgets/Content/Path
 
 
 func _ready() -> void:
@@ -41,6 +51,9 @@ func _ready() -> void:
 func _create_external_texture(texture_path: String) -> ImageTexture:
 	var image = Image.new()
 	image.load(texture_path)
-#			var texture = ImageTexture.new()
-#			texture.create_from_image(image)
 	return ImageTexture.create_from_image(image)
+
+
+func _on_select_button_toggled(button_pressed: bool) -> void:
+	is_selected = button_pressed
+	emit_signal("selected_changed", button_pressed)
