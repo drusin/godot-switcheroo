@@ -53,7 +53,6 @@ size_flags_stretch_ratio = 20.0
 
 [node name="LocalProjects" parent="Content/Bottom" instance=ExtResource("2_u1x8w")]
 layout_mode = 1
-index = 0
 
 [node name="ErrorPopup" type="AcceptDialog" parent="."]
 initial_position = 2

@@ -100,4 +100,4 @@ func _on_set_projects_folder_pressed() -> void:
 
 func _on_filter_text_changed(new_text: String) -> void:
 	for project in Projects.get_children():
-		project.visible = project.project_name.to_lower().begins_with(new_text.to_lower())
+		project.visible = new_text == "" or project.project_name.to_lower().contains(new_text.to_lower())
