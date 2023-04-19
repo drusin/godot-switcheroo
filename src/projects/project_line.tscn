@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c7ih6hxqdjogf"]
+[gd_scene load_steps=3 format=3 uid="uid://c7ih6hxqdjogf"]
 
 [ext_resource type="Script" path="res://src/projects/project_line.gd" id="1_nwo6l"]
+[ext_resource type="Texture2D" uid="uid://bi7wndmqnnyhs" path="res://icon.svg" id="2_gkym2"]
 
 [node name="ProjectLine" type="Control"]
 custom_minimum_size = Vector2(0, 64)
@@ -11,7 +12,7 @@ offset_bottom = 64.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 script = ExtResource("1_nwo6l")
-project_icon = "C:/dev/godot/xplosive-godot/icon.png"
+project_icon = "C:/dev/godot/godot-switcheroo/icon.svg"
 
 [node name="SelectButton" type="Button" parent="."]
 layout_mode = 1
@@ -39,6 +40,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 mouse_filter = 2
+texture = ExtResource("2_gkym2")
 expand_mode = 5
 
 [node name="Content" type="VBoxContainer" parent="Widgets"]

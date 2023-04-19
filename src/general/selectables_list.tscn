@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://ba02cqk3mop6o"]
+
+[ext_resource type="Script" path="res://src/general/selectables_list.gd" id="1_1n76g"]
+
+[node name="SelectablesList" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1n76g")
+_dummy_items_count = 3
+
+[node name="Selectables" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
