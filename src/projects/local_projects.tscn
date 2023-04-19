@@ -73,6 +73,7 @@ text = "Set Projects Folder"
 
 [node name="NewProject" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
+disabled = true
 text = "New Project"
 
 [node name="Import" type="Button" parent="Content/ButtonPane"]
@@ -105,7 +106,7 @@ text = "Remove"
 initial_position = 2
 title = "Open a Directory"
 size = Vector2i(900, 500)
-ok_button_text = "Select Current Folder"
+ok_button_text = "Select This Folder"
 file_mode = 2
 access = 2
 
@@ -116,8 +117,19 @@ ok_button_text = "Yes"
 dialog_text = "Are you sure you want to remove the selcted project(s)
 from the list (no files will be deleted)?"
 
+[node name="ImportDialog" type="FileDialog" parent="."]
+initial_position = 2
+title = "Open a File"
+size = Vector2i(900, 500)
+ok_button_text = "Import"
+file_mode = 0
+access = 2
+filters = PackedStringArray("project.godot")
+
 [connection signal="text_changed" from="Content/ProjectPane/Filtering/Filter" to="." method="_on_filter_text_changed"]
 [connection signal="pressed" from="Content/ButtonPane/SetProjectsFolder" to="." method="_on_set_projects_folder_pressed"]
+[connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="perform_scan"]
 [connection signal="pressed" from="Content/ButtonPane/Remove" to="." method="_on_remove_pressed"]
 [connection signal="dir_selected" from="SetProjectsFolderDialog" to="." method="_on_scan_folder_dialog_dir_selected"]
+[connection signal="file_selected" from="ImportDialog" to="." method="_on_import_dialog_file_selected"]

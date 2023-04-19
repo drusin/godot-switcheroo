@@ -4,6 +4,7 @@ extends Control
 
 @onready var SetProjectsFolderDialog: FileDialog = $SetProjectsFolderDialog
 @onready var ConfirmRemoveDialog: ConfirmationDialog = $RemoveConfirmationDialog
+@onready var ImportDialog: FileDialog = $ImportDialog
 @onready var Projects: VBoxContainer = $Content/ProjectPane/ScrollContainer/Projects
 @onready var RemoveButton: Button = $Content/ButtonPane/Remove
 
@@ -178,3 +179,14 @@ func _set_remove_button_state() -> void:
 
 func _update_last_selected(line: ProjectLine) -> void:
 	last_selected_index = Projects.get_children().find(line)
+
+
+func _on_import_pressed() -> void:
+	ImportDialog.current_dir = scan_dir
+	ImportDialog.popup()
+
+
+func _on_import_dialog_file_selected(path: String) -> void:
+	_scan_single_dir(_project_path_to_dir(path))
+	_refresh_project_list()
+	Persistence.persist_projects(projects.keys())
