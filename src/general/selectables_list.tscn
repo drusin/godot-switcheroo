@@ -10,7 +10,7 @@ offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1n76g")
-_dummy_items_count = 3
+_dummy_items_count = 5
 
 [node name="Selectables" type="VBoxContainer" parent="."]
 layout_mode = 2

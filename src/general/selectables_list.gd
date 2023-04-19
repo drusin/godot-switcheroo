@@ -43,22 +43,13 @@ func _send_selection_signal() -> void:
 func _item_selected_behaviour(item: ListItem) -> Callable:
 	return func (selected: bool) -> void:
 		if Input.is_key_pressed(KEY_CTRL):
-			_send_selection_signal()
 			_update_last_selected(item)
 		elif Input.is_key_pressed(KEY_SHIFT):
 			_select_projects_between(item, selected)
 		else:
 			_select_single_line(item, selected)
 			_update_last_selected(item)
-
-
-func _select_single_line(item: ListItem, selected: bool) -> void:
-	if get_selected_items().size() > 1 and not selected:
-		item.is_selected = true
-	for child in Selectables.get_children():
-		if child != item:
-			child.is_selected = false
-	_send_selection_signal()
+		_send_selection_signal()
 
 
 func _select_projects_between(item: ListItem, selected: bool) -> void:
@@ -82,4 +73,11 @@ func _select_projects_between(item: ListItem, selected: bool) -> void:
 
 	for i in range(0, items.size()):
 		items[i].is_selected = i >= first && i <= last
-	_send_selection_signal()
+
+
+func _select_single_line(item: ListItem, selected: bool) -> void:
+	if get_selected_items().size() > 1 and not selected:
+		item.is_selected = true
+	for child in Selectables.get_children():
+		if child != item:
+			child.is_selected = false
