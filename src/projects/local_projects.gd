@@ -19,8 +19,6 @@ var scan_dir: String:
 
 var projects := {}
 
-var selected_projects: Array[String] = []
-
 
 func _ready() -> void:
 	ConfirmRemoveDialog.get_ok_button().pressed.connect(_on_confirm_remove_pressed)
@@ -85,7 +83,6 @@ func _scan_single_dir(dir: DirAccess) -> void:
 
 
 func _refresh_project_list() -> void:
-	selected_projects.clear()
 	RemoveButton.disabled = true
 	for child in Projects.get_children():
 		child.queue_free()
@@ -94,7 +91,7 @@ func _refresh_project_list() -> void:
 		line.project_name = project.name
 		line.project_path = project.path
 		line.project_icon = project.icon_path
-		line.selected_changed.connect(_project_selected_handler(project.path))
+#		line.selected_changed.connect(_project_selected_handler(project.path))
 		line.selected_changed.connect(_project_selected_behaviour(line))
 		Projects.add_child(line)
 
@@ -118,24 +115,59 @@ func _on_remove_pressed() -> void:
 
 
 func _on_confirm_remove_pressed() -> void:
-	for project_path in selected_projects:
-		projects.erase(project_path)
+	for line in _selected_projects():
+		projects.erase(line.project_path)
 	_refresh_project_list()
 	Persistence.persist_projects(projects.keys())
 
 
+func _selected_projects() -> Array:
+	return Projects.get_children().filter(func (line: ProjectLine): return line.is_selected)
+
+
 func _project_selected_behaviour(line: ProjectLine) -> Callable:
-	return func (_selected: bool) -> void:
-		for child in Projects.get_children():
-			if child != line:
-				child.is_selected = false
-				_project_selected_handler(child.project_path).call(false)
-
-
-func _project_selected_handler(path: String) -> Callable:
 	return func (selected: bool) -> void:
-		if selected:
-			selected_projects.append(path)
+		if Input.is_key_pressed(KEY_CTRL):
+			_set_remove_button_state()
+			return
+		if Input.is_key_pressed(KEY_SHIFT):
+			_select_projects_between(line, selected)
+			return
+		_select_single_project(line)
+
+
+func _select_single_project(line: ProjectLine) -> void:
+	for child in Projects.get_children():
+		if child != line:
+			child.is_selected = false
+	_set_remove_button_state()
+
+
+func _select_projects_between(line: ProjectLine, selected: bool) -> void:
+	if not selected:
+		return
+	var lines := Projects.get_children()
+	var first := lines.find(line)
+	var last := first
+	if _selected_projects().is_empty():
+		first = 0
+		if first == last:
+			return
+	else:
+		var line_index := first
+		var prev_line: ProjectLine = lines.filter(func (curr: ProjectLine):
+				return curr.project_path == _selected_projects().back().project_path) \
+				.front()
+		var prev_line_index := lines.find(prev_line)
+		if line_index < prev_line_index:
+			last = prev_line_index
 		else:
-			selected_projects.erase(path)
-		RemoveButton.disabled = selected_projects.size() == 0
+			first = prev_line_index
+
+	for i in range(0, lines.size() - 1):
+		lines[i].is_selected = i >= first && i <= last
+		_set_remove_button_state()
+
+
+func _set_remove_button_state() -> void:
+	RemoveButton.disabled = _selected_projects().is_empty()
