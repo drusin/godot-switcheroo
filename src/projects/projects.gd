@@ -1,6 +1,6 @@
 extends Node
 
-var scan_dir: String: 
+var scan_dir: String:
 	set(newVal):
 		scan_dir = newVal
 		perform_scan()

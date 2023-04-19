@@ -9,7 +9,7 @@ extends Control
 
 @onready var ProjectLineScene := preload("res://src/projects/project_line.tscn")
 
-var scan_dir: String: 
+var scan_dir: String:
 	set(newVal):
 		PREFERENCES.values.scan_dir = newVal
 		PREFERENCES.persist_prefs()
@@ -24,7 +24,7 @@ var selected_projects: Array[String] = []
 
 func _ready() -> void:
 	ConfirmRemoveDialog.get_ok_button().pressed.connect(_on_confirm_remove_pressed)
-	
+
 	var projects_array := Persistence.load_persisted_projects()
 	for project in  projects_array:
 		_scan_single_dir(_project_path_to_dir(project))
@@ -93,7 +93,7 @@ func _refresh_project_list() -> void:
 		line.project_path = project.path
 		line.project_icon = project.icon_path
 		line.selected_changed.connect(_project_selected_handler(project.path))
-#		line.selected_changed.connect(_project_selected_behaviour(line))
+		line.selected_changed.connect(_project_selected_behaviour(line))
 		Projects.add_child(line)
 
 

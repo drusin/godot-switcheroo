@@ -21,7 +21,7 @@ signal favourite_changed(favourite: bool)
 		project_name = newVal
 		if NameLabel:
 			NameLabel.text = newVal
-		
+
 @export var project_path := "project/path":
 	set(newVal):
 		project_path = newVal
@@ -54,6 +54,6 @@ func _create_external_texture(texture_path: String) -> ImageTexture:
 	return ImageTexture.create_from_image(image)
 
 
-func _on_select_button_toggled(button_pressed: bool) -> void:
-	is_selected = button_pressed
-	emit_signal("selected_changed", button_pressed)
+func _on_select_button_pressed() -> void:
+	is_selected = SelectButton.button_pressed
+	emit_signal("selected_changed", is_selected)

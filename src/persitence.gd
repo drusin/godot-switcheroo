@@ -16,7 +16,7 @@ static func persist_projects(projects: Array) -> void:
 static func load_persisted_projects() -> Array[String]:
 	if not FileAccess.file_exists(PROJECTS_FILE):
 		return []
-	
+
 	var file := FileAccess.open(PROJECTS_FILE, FileAccess.READ)
 	if file == null:
 		push_error("cannot open projects persistence file")
@@ -33,7 +33,7 @@ class ProjectData extends RefCounted:
 	var is_favourite: bool
 	var icon_path: String
 	var godot_version: GodotVersion
-	
+
 	func serialize() -> Dictionary:
 		return {
 			"name": name,
@@ -42,7 +42,7 @@ class ProjectData extends RefCounted:
 			"icon_path": icon_path,
 			"godot_version": inst_to_dict(godot_version),
 		}
-	
+
 	static func deserialize(dict: Dictionary) -> ProjectData:
 		var returnVal := ProjectData.new()
 		returnVal.name = dict.name
