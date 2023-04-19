@@ -18,6 +18,7 @@ var scan_dir: String:
 		return PREFERENCES.values.scan_dir
 
 var projects := {}
+var last_selected: ProjectLine
 
 
 func _ready() -> void:
@@ -115,13 +116,13 @@ func _on_remove_pressed() -> void:
 
 
 func _on_confirm_remove_pressed() -> void:
-	for line in _selected_projects():
+	for line in _get_selected_projects():
 		projects.erase(line.project_path)
 	_refresh_project_list()
 	Persistence.persist_projects(projects.keys())
 
 
-func _selected_projects() -> Array:
+func _get_selected_projects() -> Array:
 	return Projects.get_children().filter(func (line: ProjectLine): return line.is_selected)
 
 
@@ -129,14 +130,17 @@ func _project_selected_behaviour(line: ProjectLine) -> Callable:
 	return func (selected: bool) -> void:
 		if Input.is_key_pressed(KEY_CTRL):
 			_set_remove_button_state()
-			return
-		if Input.is_key_pressed(KEY_SHIFT):
+			last_selected = line
+		elif Input.is_key_pressed(KEY_SHIFT):
 			_select_projects_between(line, selected)
-			return
-		_select_single_project(line)
+		else:
+			_select_single_project(line, selected)
+			last_selected = line
 
 
-func _select_single_project(line: ProjectLine) -> void:
+func _select_single_project(line: ProjectLine, selected: bool) -> void:
+	if _get_selected_projects().size() > 1 and not selected:
+		line.is_selected = true
 	for child in Projects.get_children():
 		if child != line:
 			child.is_selected = false
@@ -145,20 +149,26 @@ func _select_single_project(line: ProjectLine) -> void:
 
 func _select_projects_between(line: ProjectLine, selected: bool) -> void:
 	if not selected:
+		line.is_selected = true
 		return
 	var lines := Projects.get_children()
 	var first := lines.find(line)
 	var last := first
-	if _selected_projects().is_empty():
+	if not last_selected:
 		first = 0
 		if first == last:
 			return
+		for i in range(0, lines.size() - 1):
+			lines[i].is_selected = i >= first && i <= last
+		_set_remove_button_state()
+		last_selected = line
+		return
 	else:
+		for child in lines:
+
+
 		var line_index := first
-		var prev_line: ProjectLine = lines.filter(func (curr: ProjectLine):
-				return curr.project_path == _selected_projects().back().project_path) \
-				.front()
-		var prev_line_index := lines.find(prev_line)
+		var prev_line_index := lines.find(last_selected)
 		if line_index < prev_line_index:
 			last = prev_line_index
 		else:
@@ -168,6 +178,10 @@ func _select_projects_between(line: ProjectLine, selected: bool) -> void:
 		lines[i].is_selected = i >= first && i <= last
 		_set_remove_button_state()
 
+	last_selected = line
+
 
 func _set_remove_button_state() -> void:
-	RemoveButton.disabled = _selected_projects().is_empty()
+	RemoveButton.disabled = _get_selected_projects().is_empty()
+	if (RemoveButton.disabled):
+		last_selected = null
