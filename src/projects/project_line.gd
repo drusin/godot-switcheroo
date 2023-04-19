@@ -1,7 +1,6 @@
-extends Control
+extends ListItem
 class_name ProjectLine
 
-signal selected_changed(selected: bool)
 signal favourite_changed(favourite: bool)
 
 @export var is_favourite := false:
@@ -28,13 +27,6 @@ signal favourite_changed(favourite: bool)
 		if PathLabel:
 			PathLabel.text = newVal
 
-@export var is_selected := false:
-	set(newVal):
-		is_selected = newVal
-		if SelectButton:
-			SelectButton.button_pressed = newVal
-
-@onready var SelectButton: Button = $SelectButton
 @onready var FavouriteButton: CheckButton = $Widgets/Favourite
 @onready var Icon: TextureRect = $Widgets/Icon
 @onready var NameLabel: Label = $Widgets/Content/Name
@@ -42,6 +34,7 @@ signal favourite_changed(favourite: bool)
 
 
 func _ready() -> void:
+	select_button_path = get_node("SelectButton").get_path()
 	FavouriteButton.button_pressed = is_favourite
 	Icon.texture = _create_external_texture(project_icon)
 	NameLabel.text = project_name
@@ -55,5 +48,4 @@ func _create_external_texture(texture_path: String) -> ImageTexture:
 
 
 func _on_select_button_pressed() -> void:
-	is_selected = SelectButton.button_pressed
-	emit_signal("selected_changed", is_selected)
+	super._on_select_button_pressed()

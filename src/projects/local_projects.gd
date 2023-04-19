@@ -5,7 +5,7 @@ extends Control
 @onready var SetProjectsFolderDialog: FileDialog = $SetProjectsFolderDialog
 @onready var ConfirmRemoveDialog: ConfirmationDialog = $RemoveConfirmationDialog
 @onready var ImportDialog: FileDialog = $ImportDialog
-@onready var Projects: VBoxContainer = $Content/ProjectPane/ScrollContainer/Projects
+@onready var Projects: SelectablesList = $Content/ProjectPane/Projects
 @onready var RemoveButton: Button = $Content/ButtonPane/Remove
 
 @onready var ProjectLineScene := preload("res://src/projects/project_line.tscn")
@@ -19,11 +19,11 @@ var scan_dir: String:
 		return PREFERENCES.values.scan_dir
 
 var projects := {}
-var last_selected_index := -1
 
 
 func _ready() -> void:
 	ConfirmRemoveDialog.get_ok_button().pressed.connect(_on_confirm_remove_pressed)
+	Projects.selection_changed.connect(_on_selection_changed)
 
 	var projects_array := Persistence.load_persisted_projects()
 	for project in  projects_array:
@@ -37,8 +37,8 @@ func _project_path_to_dir(path: String) -> DirAccess:
 
 func perform_scan() -> void:
 	var checked_paths := _scan_project_dir()
-	var to_check := projects.keys().filter(func(el): return !checked_paths.has(el))
-	for project_path in to_check:
+	var not_in_project_dir := projects.keys().filter(func(el): return !checked_paths.has(el))
+	for project_path in not_in_project_dir:
 		_scan_single_dir(_project_path_to_dir(project_path))
 	_refresh_project_list()
 	Persistence.persist_projects(projects.keys())
@@ -86,15 +86,14 @@ func _scan_single_dir(dir: DirAccess) -> void:
 
 func _refresh_project_list() -> void:
 	RemoveButton.disabled = true
-	for child in Projects.get_children():
-		child.queue_free()
+	var project_lines := []
 	for project in projects.values():
 		var line: ProjectLine = ProjectLineScene.instantiate()
 		line.project_name = project.name
 		line.project_path = project.path
 		line.project_icon = project.icon_path
-		line.selected_changed.connect(_project_selected_behaviour(line))
-		Projects.add_child(line)
+		project_lines.append(line)
+	Projects.set_content(project_lines)
 
 
 func _on_scan_folder_dialog_dir_selected(dir: String) -> void:
@@ -116,69 +115,14 @@ func _on_remove_pressed() -> void:
 
 
 func _on_confirm_remove_pressed() -> void:
-	for line in _get_selected_projects():
+	for line in Projects.get_selected_items():
 		projects.erase(line.project_path)
 	_refresh_project_list()
 	Persistence.persist_projects(projects.keys())
 
 
-func _get_selected_projects() -> Array:
-	return Projects.get_children().filter(func (line: ProjectLine): return line.is_selected)
-
-
-func _project_selected_behaviour(line: ProjectLine) -> Callable:
-	return func (selected: bool) -> void:
-		if Input.is_key_pressed(KEY_CTRL):
-			_set_remove_button_state()
-			_update_last_selected(line)
-		elif Input.is_key_pressed(KEY_SHIFT):
-			_select_projects_between(line, selected)
-		else:
-			_select_single_project(line, selected)
-			_update_last_selected(line)
-
-
-func _select_single_project(line: ProjectLine, selected: bool) -> void:
-	if _get_selected_projects().size() > 1 and not selected:
-		line.is_selected = true
-	for child in Projects.get_children():
-		if child != line:
-			child.is_selected = false
-	_set_remove_button_state()
-
-
-func _select_projects_between(line: ProjectLine, selected: bool) -> void:
-	if not selected:
-		line.is_selected = true
-		return
-	var lines := Projects.get_children()
-	var line_index := lines.find(line)
-	var first := line_index
-	var last := line_index
-	if last_selected_index < 0:
-		first = 0
-		if first == last:
-			_update_last_selected(line)
-			return
-	else:
-		if line_index < last_selected_index:
-			last = last_selected_index
-		else:
-			first = last_selected_index
-
-	for i in range(0, lines.size() - 1):
-		lines[i].is_selected = i >= first && i <= last
-	_set_remove_button_state()
-
-
-func _set_remove_button_state() -> void:
-	RemoveButton.disabled = _get_selected_projects().is_empty()
-	if (RemoveButton.disabled):
-		last_selected_index = -1
-
-
-func _update_last_selected(line: ProjectLine) -> void:
-	last_selected_index = Projects.get_children().find(line)
+func _on_selection_changed(selection: Array) -> void:
+	RemoveButton.disabled = selection.is_empty()
 
 
 func _on_import_pressed() -> void:

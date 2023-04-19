@@ -9,9 +9,18 @@ signal selected_changed(selected: bool)
 		if SelectButton:
 			SelectButton.button_pressed = newVal
 
-@onready var SelectButton: Button = $SelectButton
+@export_node_path("Button") var select_button_path:
+	set(newVal):
+		select_button_path = newVal
+		SelectButton = get_node_or_null(newVal)
+
+var SelectButton: Button
 
 
-func _on_button_pressed() -> void:
+func _ready() -> void:
+	SelectButton = get_node(select_button_path)
+
+
+func _on_select_button_pressed() -> void:
 	is_selected = SelectButton.button_pressed
 	emit_signal("selected_changed", is_selected)

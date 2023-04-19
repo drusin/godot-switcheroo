@@ -11,6 +11,7 @@ offset_bottom = 64.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 script = ExtResource("1_q0eol")
+select_button_path = NodePath("SelectButton")
 
 [node name="SelectButton" type="Button" parent="."]
 layout_mode = 1
@@ -21,4 +22,4 @@ grow_horizontal = 2
 grow_vertical = 2
 toggle_mode = true
 
-[connection signal="pressed" from="SelectButton" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="SelectButton" to="." method="_on_select_button_pressed"]
