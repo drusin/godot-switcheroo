@@ -85,6 +85,8 @@ func _scan_single_dir(dir: DirAccess) -> void:
 
 
 func _refresh_project_list() -> void:
+	selected_projects.clear()
+	RemoveButton.disabled = true
 	for child in Projects.get_children():
 		child.queue_free()
 	for project in projects.values():
@@ -127,6 +129,7 @@ func _project_selected_behaviour(line: ProjectLine) -> Callable:
 		for child in Projects.get_children():
 			if child != line:
 				child.is_selected = false
+				_project_selected_handler(child.project_path).call(false)
 
 
 func _project_selected_handler(path: String) -> Callable:
