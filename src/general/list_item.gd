@@ -13,6 +13,8 @@ signal selected_changed(selected: bool)
 	set(newVal):
 		select_button_path = newVal
 		SelectButton = get_node_or_null(newVal)
+		if SelectButton:
+			SelectButton.pressed.connect(_on_select_button_pressed)
 
 var SelectButton: Button
 

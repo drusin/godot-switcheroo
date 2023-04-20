@@ -45,7 +45,3 @@ func _create_external_texture(texture_path: String) -> ImageTexture:
 	var image = Image.new()
 	image.load(texture_path)
 	return ImageTexture.create_from_image(image)
-
-
-func _on_select_button_pressed() -> void:
-	super._on_select_button_pressed()

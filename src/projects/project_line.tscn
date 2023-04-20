@@ -57,5 +57,3 @@ text = "Project name"
 layout_mode = 2
 size_flags_vertical = 3
 text = "project/path"
-
-[connection signal="pressed" from="SelectButton" to="." method="_on_select_button_pressed"]
