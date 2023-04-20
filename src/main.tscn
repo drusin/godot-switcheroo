@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c310xxedp25lj"]
+[gd_scene load_steps=4 format=3 uid="uid://c310xxedp25lj"]
 
 [ext_resource type="Script" path="res://src/main.gd" id="1_8d0wa"]
 [ext_resource type="PackedScene" uid="uid://bym3qys3xdgla" path="res://src/projects/local_projects.tscn" id="2_u1x8w"]
+[ext_resource type="PackedScene" uid="uid://6drkvcdycwyq" path="res://src/installations/installations_tab.tscn" id="3_srysk"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -39,10 +40,12 @@ text = "v0.0.1.dev"
 
 [node name="Settings" type="Button" parent="Content/Top"]
 layout_mode = 2
+disabled = true
 text = "Settings"
 
 [node name="About" type="Button" parent="Content/Top"]
 layout_mode = 2
+disabled = true
 text = "About
 "
 
@@ -52,6 +55,10 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 20.0
 
 [node name="LocalProjects" parent="Content/Bottom" instance=ExtResource("2_u1x8w")]
+layout_mode = 1
+
+[node name="InstallationsTab" parent="Content/Bottom" instance=ExtResource("3_srysk")]
+visible = false
 layout_mode = 1
 
 [node name="ErrorPopup" type="AcceptDialog" parent="."]

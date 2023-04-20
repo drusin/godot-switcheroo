@@ -1,0 +1,120 @@
+[gd_scene load_steps=3 format=3 uid="uid://6drkvcdycwyq"]
+
+[ext_resource type="PackedScene" uid="uid://ba02cqk3mop6o" path="res://src/general/selectables_list.tscn" id="1_ild5m"]
+[ext_resource type="Script" path="res://src/installations/installations_tab.gd" id="1_rq8wk"]
+
+[node name="InstallationsTab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rq8wk")
+
+[node name="Content" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="InstallationPane" type="VBoxContainer" parent="Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="Filtering" type="HBoxContainer" parent="Content/InstallationPane"]
+layout_mode = 2
+
+[node name="Filter" type="LineEdit" parent="Content/InstallationPane/Filtering"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter Installations"
+
+[node name="ShowLabel" type="Label" parent="Content/InstallationPane/Filtering"]
+layout_mode = 2
+text = "Show:"
+
+[node name="UsageFilter" type="OptionButton" parent="Content/InstallationPane/Filtering"]
+layout_mode = 2
+item_count = 3
+selected = 0
+popup/item_0/text = "All"
+popup/item_0/id = 0
+popup/item_1/text = "Used"
+popup/item_1/id = 1
+popup/item_2/text = "Unused"
+popup/item_2/id = 2
+
+[node name="ManagedFilter" type="OptionButton" parent="Content/InstallationPane/Filtering"]
+layout_mode = 2
+item_count = 3
+selected = 0
+popup/item_0/text = "All"
+popup/item_0/id = 0
+popup/item_1/text = "Managed"
+popup/item_1/id = 1
+popup/item_2/text = "Custom"
+popup/item_2/id = 2
+
+[node name="SortLabel" type="Label" parent="Content/InstallationPane/Filtering"]
+layout_mode = 2
+text = "Sort:"
+
+[node name="Sorting" type="OptionButton" parent="Content/InstallationPane/Filtering"]
+layout_mode = 2
+item_count = 3
+selected = 0
+popup/item_0/text = "Name"
+popup/item_0/id = 0
+popup/item_1/text = "Version"
+popup/item_1/id = 1
+popup/item_2/text = "Path"
+popup/item_2/id = 2
+
+[node name="Installations" parent="Content/InstallationPane" instance=ExtResource("1_ild5m")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonPane" type="VBoxContainer" parent="Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SetFolder" type="Button" parent="Content/ButtonPane"]
+layout_mode = 2
+disabled = true
+text = "Set Managed Folder"
+
+[node name="NewManaged" type="Button" parent="Content/ButtonPane"]
+layout_mode = 2
+disabled = true
+text = "New Managed Installation"
+
+[node name="Import" type="Button" parent="Content/ButtonPane"]
+layout_mode = 2
+text = "Import Custom Installation"
+
+[node name="Rescan" type="Button" parent="Content/ButtonPane"]
+layout_mode = 2
+disabled = true
+text = "Rescan Managed Folder"
+
+[node name="HSeparator" type="HSeparator" parent="Content/ButtonPane"]
+layout_mode = 2
+
+[node name="StartGodot" type="Button" parent="Content/ButtonPane"]
+layout_mode = 2
+disabled = true
+text = "Start Godot Editor"
+
+[node name="OpenGodotFolder" type="Button" parent="Content/ButtonPane"]
+layout_mode = 2
+disabled = true
+text = "Open Installation Folder"
+
+[node name="Remove" type="Button" parent="Content/ButtonPane"]
+layout_mode = 2
+disabled = true
+text = "Remove"
