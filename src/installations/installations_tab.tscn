@@ -118,3 +118,14 @@ text = "Open Installation Folder"
 layout_mode = 2
 disabled = true
 text = "Remove"
+
+[node name="ImportDialog" type="FileDialog" parent="."]
+initial_position = 2
+title = "Open a File"
+size = Vector2i(900, 600)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("Godot*")
+
+[connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
