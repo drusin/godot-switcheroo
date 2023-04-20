@@ -28,6 +28,10 @@ func set_content(items: Array) -> void:
 		Selectables.add_child(list_item)
 
 
+func get_items() -> Array:
+	return Selectables.get_children()
+
+
 func get_selected_items() -> Array:
 	return Selectables.get_children().filter(func (item: ListItem): return item.is_selected)
 
