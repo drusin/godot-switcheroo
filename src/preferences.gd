@@ -1,8 +1,10 @@
 extends Node
 
 const PREFS_FILE := "user://.prefs.godot-switcheroo"
+const FILE_VERSION := 1
 
 var values := {
+	file_version = FILE_VERSION,
 	scan_dir = "",
 }
 
@@ -25,4 +27,8 @@ func load_prefs() -> void:
 		return
 	var file := FileAccess.open(PREFS_FILE, FileAccess.READ)
 	var stringified := file.get_as_text()
-	values = JSON.parse_string(stringified)
+	var read_values = JSON.parse_string(stringified)
+	if read_values.file_version != FILE_VERSION:
+		push_error("Wrong prefs file version!")
+		return
+	values = read_values

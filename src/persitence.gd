@@ -2,10 +2,15 @@ class_name Persistence extends Object
 
 
 const PROJECTS_FILE := "user://.projects.godot-switcheroo"
+const FILE_VERSION := 1
 
 
 static func persist_projects(projects: Array) -> void:
-	var stringified := JSON.stringify(projects, "    ")
+	var projects_dict := {
+		file_version = FILE_VERSION,
+		projects = projects
+	}
+	var stringified := JSON.stringify(projects_dict, "    ")
 	var file := FileAccess.open(PROJECTS_FILE, FileAccess.WRITE)
 	if file == null:
 		push_error("cannot open projects persistence file")
@@ -22,8 +27,12 @@ static func load_persisted_projects() -> Array[String]:
 		push_error("cannot open projects persistence file")
 		return []
 	var stringified := file.get_as_text()
+	var projects_dict = JSON.parse_string(stringified)
+	if projects_dict.file_version != FILE_VERSION:
+		push_error("wrong projects file version!")
+		return []
 	var returnVal: Array[String] = []
-	returnVal.append_array(JSON.parse_string(stringified))
+	returnVal.append_array(projects_dict.projects)
 	return returnVal
 
 
