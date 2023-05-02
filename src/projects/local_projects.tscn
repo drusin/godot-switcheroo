@@ -45,7 +45,6 @@ text = "Sort:"
 
 [node name="ItemList" type="OptionButton" parent="Content/ProjectPane/Filtering"]
 layout_mode = 2
-size_flags_horizontal = 3
 item_count = 3
 selected = 0
 popup/item_0/text = "Last Used"

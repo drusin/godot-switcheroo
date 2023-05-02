@@ -2,11 +2,12 @@
 
 [ext_resource type="Script" path="res://src/installations/import_window.gd" id="1_6ufn5"]
 
-[node name="import_window" type="ConfirmationDialog"]
+[node name="CustomVersionDialog" type="ConfirmationDialog"]
 initial_position = 2
-title = "Importing custom Godot installation"
-size = Vector2i(600, 200)
+title = "Custom Godot Installation"
+size = Vector2i(600, 158)
 visible = true
+dialog_hide_on_ok = false
 script = ExtResource("1_6ufn5")
 
 [node name="Content" type="VBoxContainer" parent="."]
@@ -15,8 +16,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -49.0
+offset_right = 592.0
+offset_bottom = 109.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -28,11 +29,19 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Path: "
 
-[node name="PathEdit" type="LineEdit" parent="Content/Path"]
+[node name="PathContent" type="HBoxContainer" parent="Content/Path"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
-editable = false
+
+[node name="PathEdit" type="LineEdit" parent="Content/Path/PathContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="BrowseButton" type="Button" parent="Content/Path/PathContent"]
+layout_mode = 2
+text = "Browse"
 
 [node name="Version" type="HBoxContainer" parent="Content"]
 layout_mode = 2
@@ -59,3 +68,28 @@ text = "Custom name:"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
+
+[node name="PathDialog" type="FileDialog" parent="."]
+initial_position = 2
+title = "Open a File"
+size = Vector2i(900, 600)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*godot*", "*Godot*")
+
+[node name="MandatoryAlert" type="AcceptDialog" parent="."]
+initial_position = 2
+size = Vector2i(206, 100)
+unresizable = true
+
+[node name="Label" type="Label" parent="MandatoryAlert"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 198.0
+offset_bottom = 51.0
+text = "All fields are mandatory!"
+
+[connection signal="confirmed" from="." to="." method="_on_confirmed"]
+[connection signal="pressed" from="Content/Path/PathContent/BrowseButton" to="." method="_on_browse_button_pressed"]
+[connection signal="file_selected" from="PathDialog" to="." method="_on_path_dialog_file_selected"]
