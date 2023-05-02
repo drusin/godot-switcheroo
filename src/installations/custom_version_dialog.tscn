@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bm51sat7023nd"]
 
-[ext_resource type="Script" path="res://src/installations/import_window.gd" id="1_6ufn5"]
+[ext_resource type="Script" path="res://src/installations/custom_version_dialog.gd" id="1_6ufn5"]
 
 [node name="CustomVersionDialog" type="ConfirmationDialog"]
 initial_position = 2

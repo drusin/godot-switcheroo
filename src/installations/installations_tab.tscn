@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://ba02cqk3mop6o" path="res://src/general/selectables_list.tscn" id="1_ild5m"]
 [ext_resource type="Script" path="res://src/installations/installations_tab.gd" id="1_rq8wk"]
-[ext_resource type="PackedScene" uid="uid://bm51sat7023nd" path="res://src/installations/import_window.tscn" id="3_25vxd"]
+[ext_resource type="PackedScene" uid="uid://bm51sat7023nd" path="res://src/installations/custom_version_dialog.tscn" id="3_cwd4i"]
 
 [node name="InstallationsTab" type="Control"]
 layout_mode = 3
@@ -120,7 +120,7 @@ layout_mode = 2
 disabled = true
 text = "Remove"
 
-[node name="CustomVersionDialog" parent="." instance=ExtResource("3_25vxd")]
+[node name="CustomVersionDialog" parent="." instance=ExtResource("3_cwd4i")]
 visible = false
 
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
