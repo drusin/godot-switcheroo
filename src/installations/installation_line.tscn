@@ -1,0 +1,61 @@
+[gd_scene load_steps=3 format=3 uid="uid://csu7nig0ni2o6"]
+
+[ext_resource type="Script" path="res://src/installations/installation_line.gd" id="1_2q3kk"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_uiaa5"]
+font_size = 36
+
+[node name="InstallationtLine" type="Control"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 64.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+script = ExtResource("1_2q3kk")
+
+[node name="SelectButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+
+[node name="Widgets" type="HBoxContainer" parent="."]
+layout_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Favourite" type="CheckButton" parent="Widgets"]
+layout_mode = 2
+
+[node name="PseudoIcon" type="Label" parent="Widgets"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 1
+text = "4.0"
+label_settings = SubResource("LabelSettings_uiaa5")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Content" type="VBoxContainer" parent="Widgets"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Version" type="Label" parent="Widgets/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "4.0.3 RC 1"
+
+[node name="Path" type="Label" parent="Widgets/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "managed"

@@ -129,3 +129,4 @@ access = 2
 filters = PackedStringArray("Godot*")
 
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
+[connection signal="file_selected" from="ImportDialog" to="." method="_on_import_dialog_file_selected"]

@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://bm51sat7023nd"]
+
+[node name="import_window" type="ConfirmationDialog"]
+initial_position = 2
+title = "Importing custom Godot installation"
+size = Vector2i(600, 200)
+visible = true
+
+[node name="Content" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -49.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Path: "
+
+[node name="LineEdit" type="LineEdit" parent="Content/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+editable = false
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Base version:"
+
+[node name="LineEdit" type="LineEdit" parent="Content/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Custom name:"
+
+[node name="LineEdit" type="LineEdit" parent="Content/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
