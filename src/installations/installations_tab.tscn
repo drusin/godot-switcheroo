@@ -138,6 +138,8 @@ dialog_text = "Installation already exists!"
 
 [connection signal="selection_changed" from="Content/InstallationPane/Installations" to="." method="_on_installations_selection_changed"]
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
+[connection signal="pressed" from="Content/ButtonPane/StartGodot" to="." method="_on_start_godot_pressed"]
+[connection signal="pressed" from="Content/ButtonPane/OpenGodotFolder" to="." method="_on_open_godot_folder_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Remove" to="." method="_on_remove_pressed"]
 [connection signal="version_created" from="CustomVersionDialog" to="." method="_on_custom_version_dialog_version_created"]
 [connection signal="confirmed" from="RemoveConfirmationDialog" to="." method="_on_remove_confirmation_dialog_confirmed"]

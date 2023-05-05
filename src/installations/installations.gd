@@ -13,9 +13,7 @@ func _ready() -> void:
 func add_custom(custom: GodotVersion) -> void:
 	_installations[custom.id()] = custom
 	_persist_cache()
-	var path_fragments := custom.installation_path.split("/")
-	PREFERENCES.values.last_custom_installation_dir = custom.installation_path \
-			.substr(0, custom.installation_path.length() - path_fragments[path_fragments.size() - 1].length())
+	PREFERENCES.values.last_custom_installation_dir = custom.folder_path()
 	PREFERENCES.persist_prefs()
 
 
@@ -73,3 +71,8 @@ class GodotVersion extends RefCounted:
 
 	func id() ->  String:
 		return version + ";" + str(is_custom) + ";" + custom_name
+
+	func folder_path() -> String:
+		var path_fragments := installation_path.split("/")
+		return installation_path \
+			.substr(0, installation_path.length() - path_fragments[path_fragments.size() - 1].length())
