@@ -6,6 +6,7 @@ const FILE_VERSION := 1
 var values := {
 	file_version = FILE_VERSION,
 	scan_dir = "",
+	last_custom_installation_dir = "",
 }
 
 

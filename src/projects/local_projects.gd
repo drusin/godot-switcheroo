@@ -23,7 +23,6 @@ var projects := {}
 
 func _ready() -> void:
 	ConfirmRemoveDialog.get_ok_button().pressed.connect(_on_confirm_remove_pressed)
-	Projects.selection_changed.connect(_on_selection_changed)
 
 	var projects_array := Persistence.load_persisted_projects()
 	for project in  projects_array:
@@ -121,10 +120,6 @@ func _on_confirm_remove_pressed() -> void:
 	Persistence.persist_projects(projects.keys())
 
 
-func _on_selection_changed(selection: Array) -> void:
-	RemoveButton.disabled = selection.is_empty()
-
-
 func _on_import_pressed() -> void:
 	ImportDialog.current_dir = scan_dir
 	ImportDialog.popup()
@@ -134,3 +129,7 @@ func _on_import_dialog_file_selected(path: String) -> void:
 	_scan_single_dir(_project_path_to_dir(path))
 	_refresh_project_list()
 	Persistence.persist_projects(projects.keys())
+
+
+func _on_projects_selection_changed(selection) -> void:
+	RemoveButton.disabled = selection.is_empty()

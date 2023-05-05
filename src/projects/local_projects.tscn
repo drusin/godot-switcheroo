@@ -122,6 +122,7 @@ access = 2
 filters = PackedStringArray("project.godot")
 
 [connection signal="text_changed" from="Content/ProjectPane/Filtering/Filter" to="." method="_on_filter_text_changed"]
+[connection signal="selection_changed" from="Content/ProjectPane/Projects" to="." method="_on_projects_selection_changed"]
 [connection signal="pressed" from="Content/ButtonPane/SetProjectsFolder" to="." method="_on_set_projects_folder_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="perform_scan"]

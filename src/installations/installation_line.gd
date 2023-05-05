@@ -19,9 +19,11 @@ signal favourite_changed(favourite: bool)
 
 @export var path := "managed":
 	set(new_val):
-		path = path
+		path = new_val
 		if PathLabel:
 			PathLabel.text = new_val
+
+@export var id: String
 
 @onready var FavouriteButton: CheckButton = $Widgets/Favourite
 @onready var PseudoIcon: Label = $Widgets/PseudoIcon
@@ -31,3 +33,7 @@ signal favourite_changed(favourite: bool)
 
 func _ready():
 	select_button_path = get_node("SelectButton").get_path()
+	FavouriteButton.button_pressed = is_favourite
+	PseudoIcon.text = version.substr(0, 3)
+	VersionLabel.text = version
+	PathLabel.text = path

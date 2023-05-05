@@ -82,13 +82,7 @@ filters = PackedStringArray("*godot*", "*Godot*")
 initial_position = 2
 size = Vector2i(206, 100)
 unresizable = true
-
-[node name="Label" type="Label" parent="MandatoryAlert"]
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 198.0
-offset_bottom = 51.0
-text = "All fields are mandatory!"
+dialog_text = "All fields are mandatory!"
 
 [connection signal="confirmed" from="." to="." method="_on_confirmed"]
 [connection signal="pressed" from="Content/Path/PathContent/BrowseButton" to="." method="_on_browse_button_pressed"]

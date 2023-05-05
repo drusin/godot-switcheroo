@@ -21,6 +21,7 @@ func _ready() -> void:
 func set_content(items: Array) -> void:
 	last_selected_index = -1
 	for child in Selectables.get_children():
+		child.is_selected = false
 		child.queue_free()
 	for item in items:
 		var list_item := item as ListItem
