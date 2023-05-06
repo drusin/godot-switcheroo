@@ -20,7 +20,7 @@ const CUSTOM_INSTALL_WIDGET_HEIGHT := 98
 
 
 func _ready():
-	select_button_path = get_node("SelectButton").get_path()
+	SelectButton = get_node("SelectButton")
 	FavouriteButton.button_pressed = is_favourite
 	PseudoIcon.text = version.substr(0, 3)
 	if custom_name:

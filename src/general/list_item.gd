@@ -4,23 +4,15 @@ class_name ListItem
 signal selected_changed(selected: bool)
 
 @export var is_selected := false:
-	set(newVal):
-		is_selected = newVal
+	set(new_val):
+		is_selected = new_val
 		if SelectButton:
-			SelectButton.button_pressed = newVal
+			SelectButton.button_pressed = new_val
 
-@export_node_path("Button") var select_button_path:
-	set(newVal):
-		select_button_path = newVal
-		SelectButton = get_node_or_null(newVal)
-		if SelectButton:
-			SelectButton.pressed.connect(_on_select_button_pressed)
-
-var SelectButton: Button
-
-
-func _ready() -> void:
-	SelectButton = get_node(select_button_path)
+@export var SelectButton: Button:
+	set(new_val):
+		SelectButton = new_val
+		SelectButton.pressed.connect(_on_select_button_pressed)
 
 
 func _on_select_button_pressed() -> void:

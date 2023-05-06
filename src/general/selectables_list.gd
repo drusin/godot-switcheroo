@@ -79,7 +79,7 @@ func _select_projects_between(item: ListItem, selected: bool) -> void:
 func _select_single_line(item: ListItem, selected: bool) -> void:
 	_update_last_selected(item)
 	if not selected:
-		if get_selected_items().size() > 1:
+		if get_selected_items().size() > 0:
 			item.is_selected = true
 		else:
 			last_selected_index = -1

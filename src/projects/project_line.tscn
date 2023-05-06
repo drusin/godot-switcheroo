@@ -13,7 +13,6 @@ grow_horizontal = 2
 size_flags_horizontal = 3
 script = ExtResource("1_nwo6l")
 project_icon = "C:/dev/godot/godot-switcheroo/icon.svg"
-select_button_path = NodePath("SelectButton")
 
 [node name="SelectButton" type="Button" parent="."]
 layout_mode = 1

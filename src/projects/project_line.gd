@@ -15,7 +15,7 @@ signal favourite_changed(favourite: bool)
 
 
 func _ready() -> void:
-	select_button_path = get_node("SelectButton").get_path()
+	SelectButton = get_node("SelectButton")
 	FavouriteButton.button_pressed = is_favourite
 	Icon.texture = _create_external_texture(project_icon)
 	NameLabel.text = project_name
