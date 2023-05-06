@@ -50,6 +50,7 @@ mouse_filter = 2
 
 [node name="NameContainer" type="HBoxContainer" parent="Widgets/Content"]
 layout_mode = 2
+mouse_filter = 2
 alignment = 1
 
 [node name="Name" type="Label" parent="Widgets/Content/NameContainer"]
@@ -60,30 +61,36 @@ text = "Project name"
 [node name="PathCenterContainer" type="VBoxContainer" parent="Widgets/Content/NameContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 alignment = 1
 
 [node name="Path" type="RichTextLabel" parent="Widgets/Content/NameContainer/PathCenterContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 theme_override_font_sizes/italics_font_size = 12
 bbcode_enabled = true
 text = "[i]/project/path[/i]"
 fit_content = true
 
-[node name="Version" type="Label" parent="Widgets/Content"]
+[node name="VersionContainer" type="HBoxContainer" parent="Widgets/Content"]
 layout_mode = 2
-text = "No Godot version selected"
+mouse_filter = 2
 
-[node name="SetVersionButton" type="Button" parent="Widgets"]
+[node name="PrimaryVersionLabel" type="Label" parent="Widgets/Content/VersionContainer"]
+visible = false
 layout_mode = 2
-text = "G"
 
-[node name="VersionSelectMenu" type="PopupMenu" parent="."]
-initial_position = 2
-item_count = 2
-item_0/text = "4.0.2"
-item_0/id = 0
-item_1/text = "3.5.2"
-item_1/id = 1
+[node name="VersionCenterContainer" type="VBoxContainer" parent="Widgets/Content/VersionContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+alignment = 1
 
-[connection signal="pressed" from="Widgets/SetVersionButton" to="." method="_on_set_version_button_pressed"]
+[node name="SecondaryVersionLabel" type="RichTextLabel" parent="Widgets/Content/VersionContainer/VersionCenterContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/italics_font_size = 14
+bbcode_enabled = true
+text = "[i]No Godot version selected[/i]"
+fit_content = true

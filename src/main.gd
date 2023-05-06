@@ -9,6 +9,6 @@ func _ready() -> void:
 
 func _on_tabs_tab_changed(tab: int) -> void:
 	for child in Bottom.get_children():
-		if not "index" in child:
+		if not "main_tab_index" in child:
 			continue
-		child.visible = tab == child.index
+		child.visible = tab == child.main_tab_index

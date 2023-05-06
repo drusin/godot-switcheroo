@@ -7,13 +7,17 @@ signal favourite_changed(favourite: bool)
 @export_global_file var project_icon: String
 @export var project_name := "Project name"
 @export var project_path := "project/path"
+var version: INSTALLATIONS.GodotVersion:
+	set(new_val):
+		version = new_val
+		_set_version_label()
 
 @onready var FavouriteButton: CheckButton = $Widgets/Favourite
 @onready var Icon: TextureRect = $Widgets/Icon
 @onready var NameLabel: Label = $Widgets/Content/NameContainer/Name
 @onready var PathLabel: RichTextLabel = $Widgets/Content/NameContainer/PathCenterContainer/Path
-@onready var SetVersionButton: Button = $Widgets/SetVersionButton
-@onready var VersionSelectMenu: PopupMenu = $VersionSelectMenu
+@onready var VersionPrimary: Label = $Widgets/Content/VersionContainer/PrimaryVersionLabel
+@onready var VersionSecondary: RichTextLabel = $Widgets/Content/VersionContainer/VersionCenterContainer/SecondaryVersionLabel
 
 
 func _ready() -> void:
@@ -22,6 +26,7 @@ func _ready() -> void:
 	Icon.texture = _create_external_texture(project_icon)
 	NameLabel.text = project_name
 	PathLabel.text = "[i]" + project_path + "[/i]"
+	_set_version_label()
 
 
 func _create_external_texture(texture_path: String) -> ImageTexture:
@@ -30,6 +35,17 @@ func _create_external_texture(texture_path: String) -> ImageTexture:
 	return ImageTexture.create_from_image(image)
 
 
-func _on_set_version_button_pressed() -> void:
-	VersionSelectMenu.show()
-	VersionSelectMenu.position = SetVersionButton.position
+func _set_version_label() -> void:
+	if not VersionPrimary:
+		return
+	if not version:
+		VersionPrimary.visible = false
+		VersionSecondary.text = "[i]No Godot version selected[/i]"
+		return
+	VersionPrimary.visible = true
+	if version.is_custom:
+		VersionPrimary.text = version.custom_name
+		VersionSecondary.text = "[i]" + version.version + "[/i]"
+	else:
+		VersionPrimary.text = version.version
+		VersionSecondary.text = "[i]managed[/i]"

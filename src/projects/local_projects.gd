@@ -1,12 +1,13 @@
 extends Control
 
-@export var index := 0
+@export var main_tab_index := 0
 
 @onready var SetProjectsFolderDialog: FileDialog = $SetProjectsFolderDialog
 @onready var ConfirmRemoveDialog: ConfirmationDialog = $RemoveConfirmationDialog
 @onready var ImportDialog: FileDialog = $ImportDialog
 @onready var Projects: SelectablesList = $Content/ProjectPane/Projects
 @onready var RemoveButton: Button = $Content/ButtonPane/Remove
+@onready var SetGodotButton: MenuButton = $Content/ButtonPane/SetGodotVersion
 
 @onready var ProjectLineScene := preload("res://src/projects/project_line.tscn")
 
@@ -22,12 +23,12 @@ var projects := {}
 
 
 func _ready() -> void:
-	ConfirmRemoveDialog.get_ok_button().pressed.connect(_on_confirm_remove_pressed)
-
 	var projects_array := Persistence.load_persisted_projects()
-	for project in  projects_array:
+	for project in projects_array:
 		_scan_single_dir(_project_path_to_dir(project))
 	_refresh_project_list()
+	SetGodotButton.get_popup().index_pressed.connect(_on_set_godot_version_selected)
+	_populate_version_menu()
 
 
 func _project_path_to_dir(path: String) -> DirAccess:
@@ -84,7 +85,6 @@ func _scan_single_dir(dir: DirAccess) -> void:
 
 
 func _refresh_project_list() -> void:
-	RemoveButton.disabled = true
 	var project_lines := []
 	for project in projects.values():
 		var line: ProjectLine = ProjectLineScene.instantiate()
@@ -93,6 +93,7 @@ func _refresh_project_list() -> void:
 		line.project_icon = project.icon_path
 		project_lines.append(line)
 	Projects.set_content(project_lines)
+	_set_buttons_state()
 
 
 func _on_scan_folder_dialog_dir_selected(dir: String) -> void:
@@ -131,5 +132,29 @@ func _on_import_dialog_file_selected(path: String) -> void:
 	Persistence.persist_projects(projects.keys())
 
 
-func _on_projects_selection_changed(selection) -> void:
-	RemoveButton.disabled = selection.is_empty()
+func _on_projects_selection_changed(_selection) -> void:
+	_set_buttons_state()
+
+
+func _set_buttons_state() -> void:
+	var selected_amount = Projects.get_selected_items().size()
+	RemoveButton.disabled = selected_amount == 0
+	SetGodotButton.disabled = selected_amount == 0
+
+
+func _populate_version_menu() -> void:
+	var menu := SetGodotButton.get_popup()
+	menu.clear()
+	for installation in INSTALLATIONS.all_versions():
+		menu.add_item(installation.custom_name if installation.is_custom else installation.version)
+		menu.set_item_metadata(-1, installation.id())
+
+
+func _on_visibility_changed() -> void:
+	_populate_version_menu.call_deferred()
+
+
+func _on_set_godot_version_selected(index: int) -> void:
+	var version := INSTALLATIONS.version(SetGodotButton.get_popup().get_item_metadata(index))
+	for line in Projects.get_selected_items():
+		line.version = version

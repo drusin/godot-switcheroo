@@ -1,6 +1,6 @@
 extends Control
 
-@export var index := 1
+@export var main_tab_index := 1
 
 @onready var CustomVersionDialog: CustomVersionDialog = $CustomVersionDialog
 @onready var Installations: SelectablesList = $Content/InstallationPane/Installations
