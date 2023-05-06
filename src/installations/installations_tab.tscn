@@ -77,7 +77,6 @@ popup/item_2/id = 2
 
 [node name="Installations" parent="Content/InstallationPane" instance=ExtResource("1_ild5m")]
 layout_mode = 2
-size_flags_vertical = 3
 
 [node name="ButtonPane" type="VBoxContainer" parent="Content"]
 layout_mode = 2

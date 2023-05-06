@@ -12,7 +12,6 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 64.0
 grow_horizontal = 2
-size_flags_horizontal = 3
 script = ExtResource("1_2q3kk")
 
 [node name="SelectButton" type="Button" parent="."]
@@ -27,7 +26,8 @@ size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Widgets" type="HBoxContainer" parent="."]
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -48,7 +48,13 @@ vertical_alignment = 1
 
 [node name="Content" type="VBoxContainer" parent="Widgets"]
 layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 2
+
+[node name="CustomName" type="Label" parent="Widgets/Content"]
+visible = false
+layout_mode = 2
+text = "Custom Name"
 
 [node name="Version" type="Label" parent="Widgets/Content"]
 layout_mode = 2
@@ -59,3 +65,5 @@ text = "4.0.3 RC 1"
 layout_mode = 2
 size_flags_vertical = 3
 text = "managed"
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
