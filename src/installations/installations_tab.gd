@@ -70,3 +70,11 @@ func _on_start_godot_pressed() -> void:
 func _on_open_godot_folder_pressed() -> void:
 	var installation = INSTALLATIONS.version(Installations.get_selected_items()[0].id)
 	OS.shell_open(installation.folder_path())
+
+
+func _on_filter_text_changed(new_text):
+	for installation in Installations.get_items():
+		installation.visible = new_text == "" or \
+				installation.custom_name.to_lower().contains(new_text.to_lower()) or \
+				installation.version.to_lower().contains(new_text.to_lower()) or \
+				installation.path.to_lower().contains(new_text.to_lower())

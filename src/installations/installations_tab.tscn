@@ -135,6 +135,7 @@ initial_position = 2
 size = Vector2i(219, 100)
 dialog_text = "Installation already exists!"
 
+[connection signal="text_changed" from="Content/InstallationPane/Filtering/Filter" to="." method="_on_filter_text_changed"]
 [connection signal="selection_changed" from="Content/InstallationPane/Installations" to="." method="_on_installations_selection_changed"]
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/StartGodot" to="." method="_on_start_godot_pressed"]
