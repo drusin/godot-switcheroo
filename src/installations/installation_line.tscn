@@ -65,5 +65,3 @@ text = "4.0.3 RC 1"
 layout_mode = 2
 size_flags_vertical = 3
 text = "managed"
-
-[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
