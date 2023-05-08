@@ -1,21 +1,39 @@
 extends Node
+class_name Prefs
 
 const PREFS_FILE := "user://.prefs.godot-switcheroo"
 const FILE_VERSION := 1
+const ABOUT_FILE := "Preferences for https://github.com/drusin/godot-switcheroo"
 
-var values := {
-	file_version = FILE_VERSION,
-	scan_dir = "",
-	last_custom_installation_dir = "",
+enum Keys {
+	SCAN_DIR,
+	LAST_CUSTOM_INSTALLATION_DIR,
 }
 
+var _values := {}
+var _file_dict := {
+	_about = ABOUT_FILE,
+	file_version = FILE_VERSION,
+	values = _values,
+}
 
 func _ready() -> void:
+	write(Keys.SCAN_DIR, "")
+	write(Keys.LAST_CUSTOM_INSTALLATION_DIR, "")
 	load_prefs()
 
 
-func persist_prefs() -> void:
-	var stringified := JSON.stringify(values, "    ")
+func read(key: Keys):
+	return _values[Keys.keys()[key]]
+
+
+func write(key: Keys, value) -> void:
+	_values[Keys.keys()[key]] = value
+	_persist_prefs()
+
+
+func _persist_prefs() -> void:
+	var stringified := JSON.stringify(_file_dict, "    ")
 	var file := FileAccess.open(PREFS_FILE, FileAccess.WRITE)
 	if file == null:
 		push_error("cannot read prefs file")
@@ -32,4 +50,4 @@ func load_prefs() -> void:
 	if read_values.file_version != FILE_VERSION:
 		push_error("Wrong prefs file version!")
 		return
-	values = read_values
+	_values = read_values.values

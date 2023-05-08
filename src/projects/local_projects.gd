@@ -12,12 +12,11 @@ extends Control
 @onready var ProjectLineScene := preload("res://src/projects/project_line.tscn")
 
 var scan_dir: String:
-	set(newVal):
-		PREFERENCES.values.scan_dir = newVal
-		PREFERENCES.persist_prefs()
+	set(new_val):
+		PREFERENCES.write(Prefs.Keys.SCAN_DIR, new_val)
 		perform_scan()
 	get:
-		return PREFERENCES.values.scan_dir
+		return PREFERENCES.read(Prefs.Keys.SCAN_DIR)
 
 var projects := {}
 

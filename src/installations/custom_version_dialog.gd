@@ -22,7 +22,7 @@ func custom_popup(current_name := "") -> void:
 
 
 func _on_browse_button_pressed() -> void:
-	PathDialog.current_dir = PREFERENCES.values.last_custom_installation_dir
+	PathDialog.current_dir = PREFERENCES.read(Prefs.Keys.LAST_CUSTOM_INSTALLATION_DIR)
 	PathDialog.popup()
 
 

@@ -13,8 +13,7 @@ func _ready() -> void:
 func add_custom(custom: GodotVersion) -> void:
 	_installations[custom.id()] = custom
 	_persist_cache()
-	PREFERENCES.values.last_custom_installation_dir = custom.folder_path()
-	PREFERENCES.persist_prefs()
+	PREFERENCES.write(Prefs.Keys.LAST_CUSTOM_INSTALLATION_DIR, custom.folder_path())
 
 
 func version(id: String) -> GodotVersion:
