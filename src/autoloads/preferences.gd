@@ -1,9 +1,9 @@
 extends Node
 class_name Prefs
 
+const ABOUT_FILE := "Preferences for https://github.com/drusin/godot-switcheroo"
 const PREFS_FILE := "user://.prefs.godot-switcheroo"
 const FILE_VERSION := 1
-const ABOUT_FILE := "Preferences for https://github.com/drusin/godot-switcheroo"
 
 enum Keys {
 	SCAN_DIR,
