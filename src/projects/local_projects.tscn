@@ -135,6 +135,7 @@ filters = PackedStringArray("project.godot")
 [connection signal="pressed" from="Content/ButtonPane/SetProjectsFolder" to="." method="_on_set_projects_folder_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="perform_scan"]
+[connection signal="pressed" from="Content/ButtonPane/Edit" to="." method="_on_edit_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Remove" to="." method="_on_remove_pressed"]
 [connection signal="dir_selected" from="SetProjectsFolderDialog" to="." method="_on_scan_folder_dialog_dir_selected"]
 [connection signal="confirmed" from="RemoveConfirmationDialog" to="." method="_on_confirm_remove_pressed"]

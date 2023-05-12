@@ -23,10 +23,13 @@ func reload_projects() -> void:
 
 
 func add(dir: DirAccess) -> ProjectData:
-	if _projects.has(dir.get_current_dir(true)) or not dir.file_exists("project.godot"):
+	if _projects.has(dir.get_current_dir(true)) or \
+			(not dir.file_exists("project.godot") and \
+			not dir.file_exists("engine.cfg")):
 		return null
 	var project_cache_data = ProjectCacheData.new()
-	project_cache_data.path = dir.get_current_dir(true) + "/project.godot"
+	var project_file_name := "project.godot" if dir.file_exists("project.godot") else "engine.cfg"
+	project_cache_data.path = dir.get_current_dir(true) + "/" + project_file_name
 	var project_data = _project_data_from_cache(project_cache_data)
 	_projects[project_cache_data.path] = project_data
 	_persist_cache()
@@ -68,12 +71,13 @@ func _create_version_file_dict(version: INSTALLATIONS.GodotVersion) -> Dictionar
 
 
 func _project_data_from_cache(cache: ProjectCacheData) ->  ProjectData:
-	var project_data = ProjectData.new()
-	var config = ConfigFile.new()
+	var project_data := ProjectData.new()
+	var config := ConfigFile.new()
+	var before_3 := !cache.path.ends_with("project.godot")
 	config.load(cache.path)
-	project_data.project_name = config.get_value("application", "config/name")
+	project_data.project_name = config.get_value("application", "name" if before_3 else "config/name")
 	project_data.icon_path = cache.folder_path() + \
-			(config.get_value("application", "config/icon") as String).substr(5)
+			config.get_value("application", "icon" if before_3 else "config/icon").trim_prefix("res://")
 	project_data.general = cache
 	project_data.godot_version = _read_godot_version(cache)
 	return project_data
@@ -136,7 +140,9 @@ class ProjectCacheData extends RefCounted:
 	var is_favourite: bool
 
 	func folder_path() -> String:
-		return path.substr(0, path.length() - "project.godot".length())
+		var path_fragments := path.split("/")
+		return path \
+			.substr(0, path.length() - path_fragments[-1].length())
 
 	func version_file_path() -> String:
 		return folder_path() + "/" + VERSION_FILE_NAME

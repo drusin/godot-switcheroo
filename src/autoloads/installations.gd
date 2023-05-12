@@ -77,4 +77,4 @@ class GodotVersion extends RefCounted:
 	func folder_path() -> String:
 		var path_fragments := installation_path.split("/")
 		return installation_path \
-			.substr(0, installation_path.length() - path_fragments[path_fragments.size() - 1].length())
+			.substr(0, installation_path.length() - path_fragments[-1].length())

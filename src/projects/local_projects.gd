@@ -8,6 +8,7 @@ extends Control
 @onready var Projects: SelectablesList = $Content/ProjectPane/Projects
 @onready var RemoveButton: Button = $Content/ButtonPane/Remove
 @onready var SetGodotButton: MenuButton = $Content/ButtonPane/SetGodotVersion
+@onready var EditButton: Button = $Content/ButtonPane/Edit
 
 @onready var ProjectLineScene := preload("res://src/projects/project_line.tscn")
 
@@ -94,6 +95,7 @@ func _set_buttons_state() -> void:
 	var selected_amount = Projects.get_selected_items().size()
 	RemoveButton.disabled = selected_amount == 0
 	SetGodotButton.disabled = selected_amount == 0
+	EditButton.disabled = selected_amount != 1 or not Projects.get_selected_items()[0].version
 
 
 func _populate_version_menu() -> void:
@@ -113,3 +115,9 @@ func _on_set_godot_version_selected(index: int) -> void:
 	for line in Projects.get_selected_items():
 		line.version = version
 		PROJECTS.set_godot_version(line.project_path, version)
+	_set_buttons_state()
+
+
+func _on_edit_pressed() -> void:
+	var project: PROJECTS.ProjectData = PROJECTS.get_by_path(Projects.get_selected_items()[0].project_path)
+	OS.create_process(project.godot_version.installation_path, [project.general.path])
