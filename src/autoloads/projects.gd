@@ -11,18 +11,27 @@ func _ready() -> void:
 	_load_cache()
 
 
+func reload_projects() -> void:
+	_load_cache()
+
+
 func add(dir: DirAccess) -> ProjectData:
-	if not dir.file_exists("project.godot"):
+	if _projects.has(dir.get_current_dir(true)) or not dir.file_exists("project.godot"):
 		return null
 	var project_cache_data = ProjectCacheData.new()
 	project_cache_data.path = dir.get_current_dir(true) + "/project.godot"
 	var project_data = _project_data_from_cache(project_cache_data)
-	_projects[project_data.path] = project_data
+	_projects[project_cache_data.path] = project_data
 	_persist_cache()
 	return project_data
 
 
-func from_path(path: String) -> ProjectData:
+func remove(path: String) -> void:
+	_projects.erase(path)
+	_persist_cache()
+
+
+func get_by_path(path: String) -> ProjectData:
 	return _projects[path]
 
 
@@ -67,7 +76,7 @@ func _persist_cache() -> void:
 	var dict = _create_cache_file_dict()
 	for project in _projects.values():
 		dict.values.append(inst_to_dict(project.general))
-	var stringified = JSON.stringify(dict)
+	var stringified = JSON.stringify(dict, "    ")
 	file.store_string(stringified)
 
 
