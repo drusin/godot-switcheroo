@@ -1,5 +1,7 @@
 extends Node
 
+signal versions_loaded(versions: Array[GodotVersion])
+
 const VERSION_CACHE_FILE := "user://.installations.godot-switcheroo"
 const VERSION_CACHE_FILE_VERSION := 1
 
@@ -60,6 +62,7 @@ func _load_cache() -> void:
 	for installation_dict in version_cache.installations:
 		var installation: GodotVersion = dict_to_inst(installation_dict)
 		_installations[installation.id()] = installation
+	emit_signal("versions_loaded", all_versions())
 
 
 class GodotVersion extends RefCounted:

@@ -1,13 +1,20 @@
 extends Node
 
+signal projects_loaded(projects: Array[ProjectData])
+
 const CACHE_FILE_NAME := "user://.projects.godot-switcheroo"
 const ABOUT_CACHE_FILE := "Projects cache file for https://github.com/drusin/godot-switcheroo"
-const FILE_VERSION := 1
+const CACHE_FILE_VERSION := 1
+
+const VERSION_FILE_NAME := ".godot-switcheroo"
+const ABOUT_VERSION_FILE := "Used by https://github.com/drusin/godot-switcheroo to determine which godot version was set for this project"
+const VERSION_FILE_VERSION := 1
 
 var _projects := {}
 
 
 func _ready() -> void:
+	await INSTALLATIONS.versions_loaded
 	_load_cache()
 
 
@@ -41,6 +48,25 @@ func all_projects() -> Array[ProjectData]:
 	return return_val
 
 
+func set_godot_version(project_path: String, version: INSTALLATIONS.GodotVersion) -> void:
+	var project := get_by_path(project_path)
+	project.godot_version = version
+	var file_dict = _create_version_file_dict(version)
+	var file = FileAccess.open(project.general.version_file_path(), FileAccess.WRITE)
+	if not file:
+		push_error("Cannot write version file")
+		return
+	file.store_string(JSON.stringify(file_dict, "    "))
+
+
+func _create_version_file_dict(version: INSTALLATIONS.GodotVersion) -> Dictionary:
+	return {
+		_about = ABOUT_VERSION_FILE,
+		file_version = VERSION_FILE_VERSION,
+		godot_versions = [inst_to_dict(version)],
+	}
+
+
 func _project_data_from_cache(cache: ProjectCacheData) ->  ProjectData:
 	var project_data = ProjectData.new()
 	var config = ConfigFile.new()
@@ -49,7 +75,22 @@ func _project_data_from_cache(cache: ProjectCacheData) ->  ProjectData:
 	project_data.icon_path = cache.folder_path() + \
 			(config.get_value("application", "config/icon") as String).substr(5)
 	project_data.general = cache
+	project_data.godot_version = _read_godot_version(cache)
 	return project_data
+
+
+func _read_godot_version(cache: ProjectCacheData) -> INSTALLATIONS.GodotVersion:
+	if not FileAccess.file_exists(cache.version_file_path()):
+		return null
+	var file := FileAccess.open(cache.version_file_path(), FileAccess.READ)
+	if not file:
+		push_error("Cannot open version file")
+		return null
+	var file_dict: Dictionary = JSON.parse_string(file.get_as_text())
+	if file_dict.file_version != VERSION_FILE_VERSION:
+		push_error("Wrong version file version!")
+		return null
+	return (dict_to_inst(file_dict.godot_versions[0])) as INSTALLATIONS.GodotVersion
 
 
 func _load_cache() -> void:
@@ -61,12 +102,14 @@ func _load_cache() -> void:
 		push_error("Cannot open projects cache file")
 		return
 	var dict = JSON.parse_string(file.get_as_text())
-	if dict.file_version != FILE_VERSION:
+	if dict.file_version != CACHE_FILE_VERSION:
 		push_error("Wrong version of project cache file!")
 		return
 	for project in dict.values:
 		var parsed := dict_to_inst(project) as ProjectCacheData
 		_projects[parsed.path] = _project_data_from_cache(parsed)
+	emit_signal("projects_loaded", all_projects())
+
 
 func _persist_cache() -> void:
 	var file := FileAccess.open(CACHE_FILE_NAME, FileAccess.WRITE)
@@ -83,7 +126,7 @@ func _persist_cache() -> void:
 func _create_cache_file_dict() ->  Dictionary:
 	return {
 		_about = ABOUT_CACHE_FILE,
-		file_version = FILE_VERSION,
+		file_version = CACHE_FILE_VERSION,
 		values = [],
 	}
 
@@ -91,13 +134,16 @@ func _create_cache_file_dict() ->  Dictionary:
 class ProjectCacheData extends RefCounted:
 	var path: String
 	var is_favourite: bool
-	var godot_version: String
-	
+
 	func folder_path() -> String:
 		return path.substr(0, path.length() - "project.godot".length())
+
+	func version_file_path() -> String:
+		return folder_path() + "/" + VERSION_FILE_NAME
 
 
 class ProjectData extends RefCounted:
 	var general: ProjectCacheData
 	var project_name: String
 	var icon_path: String
+	var godot_version: INSTALLATIONS.GodotVersion

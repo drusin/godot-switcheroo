@@ -20,8 +20,8 @@ var scan_dir: String:
 
 
 func _ready() -> void:
-	_refresh_project_list()
 	SetGodotButton.get_popup().index_pressed.connect(_on_set_godot_version_selected)
+	_refresh_project_list()
 	_populate_version_menu()
 
 
@@ -46,6 +46,7 @@ func _refresh_project_list() -> void:
 		line.project_name = project.project_name
 		line.project_path = project.general.path
 		line.project_icon = project.icon_path
+		line.version = project.godot_version
 		project_lines.append(line)
 	Projects.set_content(project_lines)
 	_set_buttons_state()
@@ -111,3 +112,4 @@ func _on_set_godot_version_selected(index: int) -> void:
 	var version := INSTALLATIONS.version(SetGodotButton.get_popup().get_item_metadata(index))
 	for line in Projects.get_selected_items():
 		line.version = version
+		PROJECTS.set_godot_version(line.project_path, version)
