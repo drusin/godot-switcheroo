@@ -9,6 +9,7 @@ extends Control
 @onready var RemoveButton: Button = $Content/ButtonPane/Remove
 @onready var SetGodotButton: MenuButton = $Content/ButtonPane/SetGodotVersion
 @onready var EditButton: Button = $Content/ButtonPane/Edit
+@onready var RunButton: Button = $Content/ButtonPane/Run
 
 @onready var ProjectLineScene := preload("res://src/projects/project_line.tscn")
 
@@ -96,6 +97,7 @@ func _set_buttons_state() -> void:
 	RemoveButton.disabled = selected_amount == 0
 	SetGodotButton.disabled = selected_amount == 0
 	EditButton.disabled = selected_amount != 1 or not Projects.get_selected_items()[0].version
+	RunButton.disabled = selected_amount != 1 or not Projects.get_selected_items()[0].version
 
 
 func _populate_version_menu() -> void:
@@ -120,4 +122,9 @@ func _on_set_godot_version_selected(index: int) -> void:
 
 func _on_edit_pressed() -> void:
 	var project: PROJECTS.ProjectData = PROJECTS.get_by_path(Projects.get_selected_items()[0].project_path)
-	OS.create_process(project.godot_version.installation_path, [project.general.path])
+	OS.create_process(project.godot_version.installation_path, ["--path", project.general.folder_path(), "-e"])
+
+
+func _on_run_pressed():
+	var project: PROJECTS.ProjectData = PROJECTS.get_by_path(Projects.get_selected_items()[0].project_path)
+	OS.create_process(project.godot_version.installation_path, ["--path", project.general.folder_path()])
