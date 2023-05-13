@@ -94,3 +94,10 @@ theme_override_font_sizes/italics_font_size = 14
 bbcode_enabled = true
 text = "[i]No Godot version selected[/i]"
 fit_content = true
+
+[node name="CompatibilityWarning" type="TextureRect" parent="Widgets"]
+visible = false
+layout_mode = 2
+tooltip_text = "Editing and opening of projects run with Godot 1 and 2 is not supported. The project manager will be started instead."
+texture = ExtResource("2_gkym2")
+expand_mode = 3

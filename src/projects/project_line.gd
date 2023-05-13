@@ -18,7 +18,7 @@ var version: GodotVersion:
 @onready var PathLabel: RichTextLabel = $Widgets/Content/NameContainer/PathCenterContainer/Path
 @onready var VersionPrimary: Label = $Widgets/Content/VersionContainer/PrimaryVersionLabel
 @onready var VersionSecondary: RichTextLabel = $Widgets/Content/VersionContainer/VersionCenterContainer/SecondaryVersionLabel
-
+@onready var CompatibilityWarning: TextureRect = $Widgets/CompatibilityWarning
 
 func _ready() -> void:
 	SelectButton = get_node("SelectButton")
@@ -49,3 +49,4 @@ func _set_version_label() -> void:
 	else:
 		VersionPrimary.text = version.version
 		VersionSecondary.text = "[i]managed[/i]"
+	CompatibilityWarning.visible = not version.is_run_supported()

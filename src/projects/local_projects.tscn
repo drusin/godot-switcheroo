@@ -14,7 +14,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 20.0
 script = ExtResource("1_vvilm")
-main_tab_index = null
 
 [node name="Content" type="HBoxContainer" parent="."]
 layout_mode = 1
