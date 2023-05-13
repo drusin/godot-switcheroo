@@ -1,7 +1,7 @@
 extends ConfirmationDialog
 class_name CustomVersionDialog
 
-signal version_created(version: INSTALLATIONS.GodotVersion)
+signal version_created(version: GodotVersion)
 signal version_edited(version: EditedGodotVersion)
 
 @onready var PathEdit: LineEdit = $Content/Path/PathContent/PathEdit
@@ -40,7 +40,7 @@ func _on_confirmed() -> void:
 		MandatoryAlert.popup()
 		return
 
-	var godot_version := INSTALLATIONS.GodotVersion.new()
+	var godot_version := GodotVersion.new()
 	godot_version.installation_path = path
 	godot_version.version = version
 	godot_version.custom_name = custom_name
@@ -58,4 +58,4 @@ func _on_confirmed() -> void:
 
 class EditedGodotVersion extends RefCounted:
 	var old_name := ""
-	var godot_version: INSTALLATIONS.GodotVersion
+	var godot_version: GodotVersion

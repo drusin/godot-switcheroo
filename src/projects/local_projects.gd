@@ -121,10 +121,10 @@ func _on_set_godot_version_selected(index: int) -> void:
 
 
 func _on_edit_pressed() -> void:
-	var project: PROJECTS.ProjectData = PROJECTS.get_by_path(Projects.get_selected_items()[0].project_path)
+	var project: ProjectData = PROJECTS.get_by_path(Projects.get_selected_items()[0].project_path)
 	OS.create_process(project.godot_version.installation_path, ["--path", project.general.folder_path(), "-e"])
 
 
 func _on_run_pressed():
-	var project: PROJECTS.ProjectData = PROJECTS.get_by_path(Projects.get_selected_items()[0].project_path)
+	var project: ProjectData = PROJECTS.get_by_path(Projects.get_selected_items()[0].project_path)
 	OS.create_process(project.godot_version.installation_path, ["--path", project.general.folder_path()])

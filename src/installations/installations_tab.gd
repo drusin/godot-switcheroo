@@ -33,7 +33,7 @@ func _on_import_pressed() -> void:
 	CustomVersionDialog.custom_popup()
 
 
-func _on_custom_version_dialog_version_created(version: INSTALLATIONS.GodotVersion) -> void:
+func _on_custom_version_dialog_version_created(version: GodotVersion) -> void:
 	if INSTALLATIONS.version(version.id()):
 		InstallationExistsAlert.popup()
 		return

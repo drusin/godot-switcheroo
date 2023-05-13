@@ -63,18 +63,3 @@ func _load_cache() -> void:
 		var installation: GodotVersion = dict_to_inst(installation_dict)
 		_installations[installation.id()] = installation
 	emit_signal("versions_loaded", all_versions())
-
-
-class GodotVersion extends RefCounted:
-	var version: String
-	var is_custom := false
-	var custom_name := ""
-	var installation_path := ""
-
-	func id() ->  String:
-		return version + ";" + str(is_custom) + ";" + custom_name
-
-	func folder_path() -> String:
-		var path_fragments := installation_path.split("/")
-		return installation_path \
-			.substr(0, installation_path.length() - path_fragments[-1].length())

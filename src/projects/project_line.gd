@@ -7,7 +7,7 @@ signal favourite_changed(favourite: bool)
 @export_global_file var project_icon: String
 @export var project_name := "Project name"
 @export var project_path := "project/path"
-var version: INSTALLATIONS.GodotVersion:
+var version: GodotVersion:
 	set(new_val):
 		version = new_val
 		_set_version_label()
