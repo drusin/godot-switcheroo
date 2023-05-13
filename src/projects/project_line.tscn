@@ -41,7 +41,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("2_gkym2")
-expand_mode = 5
+expand_mode = 3
 
 [node name="Content" type="VBoxContainer" parent="Widgets"]
 layout_mode = 2
@@ -83,21 +83,36 @@ layout_mode = 2
 
 [node name="VersionCenterContainer" type="VBoxContainer" parent="Widgets/Content/VersionContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
 mouse_filter = 2
 alignment = 1
 
 [node name="SecondaryVersionLabel" type="RichTextLabel" parent="Widgets/Content/VersionContainer/VersionCenterContainer"]
 layout_mode = 2
+size_flags_horizontal = 0
 mouse_filter = 2
 theme_override_font_sizes/italics_font_size = 14
 bbcode_enabled = true
 text = "[i]No Godot version selected[/i]"
 fit_content = true
+autowrap_mode = 0
+
+[node name="VersionInfoIcon" type="TextureRect" parent="Widgets/Content/VersionContainer"]
+visible = false
+layout_mode = 2
+tooltip_text = "The selected managed Godot version will be downloaded when editing or running the project for the first time"
+texture = ExtResource("2_gkym2")
+expand_mode = 3
 
 [node name="CompatibilityWarning" type="TextureRect" parent="Widgets"]
 visible = false
 layout_mode = 2
 tooltip_text = "Editing and opening of projects run with Godot 1 and 2 is not supported. The project manager will be started instead."
+texture = ExtResource("2_gkym2")
+expand_mode = 3
+
+[node name="MissingVersionWarning" type="TextureRect" parent="Widgets"]
+visible = false
+layout_mode = 2
+tooltip_text = "The custom version set for this project is missing. You will be prompted to resolve this problem when trying to edit or run the project."
 texture = ExtResource("2_gkym2")
 expand_mode = 3
