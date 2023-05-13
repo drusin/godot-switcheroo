@@ -66,7 +66,7 @@ func _create_version_file_dict(version: GodotVersion) -> Dictionary:
 	return {
 		_about = ABOUT_VERSION_FILE,
 		file_version = VERSION_FILE_VERSION,
-		godot_versions = [inst_to_dict(version)],
+		godot_versions = [version.id()],
 	}
 
 
@@ -94,7 +94,10 @@ func _read_godot_version(cache: ProjectCacheData) -> GodotVersion:
 	if file_dict.file_version != VERSION_FILE_VERSION:
 		push_error("Wrong version file version!")
 		return null
-	return (dict_to_inst(file_dict.godot_versions[0])) as GodotVersion
+	var return_val := INSTALLATIONS.version(file_dict.godot_versions[0])
+	if not return_val:
+		return_val = GodotVersion.from_id(file_dict.godot_versions[0])
+	return return_val
 
 
 func _load_cache() -> void:

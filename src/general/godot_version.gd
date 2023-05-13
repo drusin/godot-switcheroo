@@ -22,3 +22,13 @@ func is_run_supported() -> bool:
 	if not main_ver_str.is_valid_int():
 		return true
 	return int(main_ver_str) > 2
+
+
+static func from_id(id_str: String) -> GodotVersion:
+	var id_split := id_str.split(";")
+	var return_val = GodotVersion.new()
+	return_val.version = id_split[0]
+	return_val.is_custom = id_split[1] == "true"
+	return_val.custom_name = id_split[2]
+	return return_val
+	
