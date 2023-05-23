@@ -11,11 +11,8 @@ func _ready() -> void:
 
 
 func _fetch_available_versions() -> void:
-	var request = await _request()
-	request.request(JSON_URL)
-	var result_string := ((await request.request_completed)[-1] as PackedByteArray).get_string_from_utf8()
+	var result_string := (await _request(JSON_URL)).body.get_string_from_utf8()
 	_data = JSON.parse_string(result_string)
-	request.queue_free()
 
 
 func available_versions() -> Array[String]:
@@ -34,10 +31,7 @@ func download(version: String) -> String:
 				return line.contains(os_name) and (line.contains(arch) or line.contains("universal")) \
 			)[0]
 	var file_name := link.split("/")[-1]
-	var request := await _request()
-	request.request(link)
-	var bytes: PackedByteArray = (await request.request_completed)[-1]
-	request.queue_free()
+	var bytes := (await _request(link)).body
 	var temp_dir = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
 	DirAccess.make_dir_absolute(temp_dir)
 	var zip_file_path: String = temp_dir + "/" + file_name
@@ -72,8 +66,24 @@ func _get_os_labels() -> Array[String]:
 	return []
 
 
-func _request() -> HTTPRequest:
+func _request(url: String) -> ReqResult:
 	var req = HTTPRequest.new()
 	get_tree().get_root().add_child.call_deferred(req)
 	await req.tree_entered
-	return req
+	req.request(url)
+	var results: Array = await req.request_completed
+	req.queue_free()
+	return ReqResult.new(results)
+
+
+class ReqResult extends RefCounted:
+	var result: int
+	var status_code: int
+	var headers: PackedStringArray
+	var body: PackedByteArray
+	
+	func _init(from: Array) -> void:
+		result = from[0]
+		status_code = from[1]
+		headers = from[2]
+		body = from[3]
