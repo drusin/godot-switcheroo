@@ -7,7 +7,7 @@ var _data: Dictionary
 
 func _ready() -> void:
 	await _fetch_available_versions()
-	#await download("4.0.3")
+	#print(await download("4.0.3"))
 
 
 func _fetch_available_versions() -> void:
@@ -24,9 +24,9 @@ func available_versions() -> Array[String]:
 	return return_val
 
 
-func download(version: String):
+func download(version: String) -> String:
 	### Fixme!!!!!!!!!!!!!!!!
-	var os_name = "win"
+	var os_name := "win"
 	push_error("os name detection is broken!")
 	var arch := "64" if OS.has_feature("64") else "32"
 	var link: String = _data[version].filter( \
@@ -34,15 +34,42 @@ func download(version: String):
 				return line.contains(os_name) and (line.contains(arch) or line.contains("universal")) \
 			)[0]
 	var file_name := link.split("/")[-1]
-	var request = await _request()
+	var request := await _request()
 	request.request(link)
 	var bytes: PackedByteArray = (await request.request_completed)[-1]
 	request.queue_free()
-	if not DirAccess.dir_exists_absolute(PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR)):
-		DirAccess.make_dir_absolute(PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR))
-	var file = FileAccess.open(PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR) + "/" + file_name, FileAccess.WRITE)
+	var temp_dir = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
+	DirAccess.make_dir_absolute(temp_dir)
+	var zip_file_path: String = temp_dir + "/" + file_name
+	var file := FileAccess.open(zip_file_path, FileAccess.WRITE)
 	file.store_buffer(bytes)
-	print("done!")
+	file.close()
+	var zip := ZIPReader.new()
+	zip.open(zip_file_path)
+	var unpacked_file_name := zip.get_files()[0]
+	var unpacked_file := zip.read_file(unpacked_file_name)
+	zip.close()
+	var managed_path = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR) + "/" + version
+	DirAccess.make_dir_recursive_absolute(managed_path)
+	var installation_path: String = managed_path + "/" + unpacked_file_name
+	file = FileAccess.open(installation_path, FileAccess.WRITE)
+	file.store_buffer(unpacked_file)
+	file.close()
+	DirAccess.remove_absolute(zip_file_path)
+	return installation_path
+
+
+func _get_os_labels() -> Array[String]:
+	match OS.get_name():
+		"Windows", "UWP":
+			return ["win"]
+		"macOS":
+			# Don't know enough about apple stuff for support...
+			return []
+		"Linux", "FreeBSD", "NetBSD", "OpenBSD", "BSD":
+			# Support coming, but need to look into it... pre 4.0 stuff is wonky...
+			return []
+	return []
 
 
 func _request() -> HTTPRequest:

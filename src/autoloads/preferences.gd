@@ -9,6 +9,7 @@ enum Keys {
 	SCAN_DIR,
 	LAST_CUSTOM_INSTALLATION_DIR,
 	MANAGED_INSTALLATIONS_DIR,
+	TEMP_DIR,
 }
 
 var _values := {}
@@ -18,6 +19,7 @@ func _ready() -> void:
 	_set_pref(Keys.SCAN_DIR, "")
 	_set_pref(Keys.LAST_CUSTOM_INSTALLATION_DIR, "")
 	_set_pref(Keys.MANAGED_INSTALLATIONS_DIR, "user://.managed")
+	_set_pref(Keys.TEMP_DIR, "user://.temp")
 	load_prefs()
 	_persist_prefs()
 

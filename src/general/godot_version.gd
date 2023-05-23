@@ -1,4 +1,4 @@
-class_name GodotVersion 
+class_name GodotVersion
 extends RefCounted
 
 var version: String
@@ -31,4 +31,4 @@ static func from_id(id_str: String) -> GodotVersion:
 	return_val.is_custom = id_split[1] == "true"
 	return_val.custom_name = id_split[2]
 	return return_val
-	
+
