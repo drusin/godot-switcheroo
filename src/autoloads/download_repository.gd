@@ -1,21 +1,52 @@
 extends Node
 
-const URL := "https://downloads.tuxfamily.org/godotengine/"
-var request := HTTPRequest.new()
+const JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/output.json"
+
+var _data: Dictionary
 
 
 func _ready() -> void:
-	get_tree().get_root().add_child.call_deferred(request)
-	request.tree_entered.connect(_test_await)
-#	request.tree_entered.connect(func(): request.request(URL))
-#	request.request_completed.connect(_on_request_completed)
+	await _fetch_available_versions()
+	#await download("4.0.3")
 
 
-func _test_await() -> void:
-	request.request(URL)
-	var result := ((await request.request_completed)[-1] as PackedByteArray).get_string_from_utf8()
-	print(result)
+func _fetch_available_versions() -> void:
+	var request = await _request()
+	request.request(JSON_URL)
+	var result_string := ((await request.request_completed)[-1] as PackedByteArray).get_string_from_utf8()
+	_data = JSON.parse_string(result_string)
+	request.queue_free()
 
 
-func _on_request_completed(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
-	print(body.get_string_from_utf8())
+func available_versions() -> Array[String]:
+	var return_val: Array[String] = []
+	return_val.append_array(_data.keys())
+	return return_val
+
+
+func download(version: String):
+	### Fixme!!!!!!!!!!!!!!!!
+	var os_name = "win"
+	push_error("os name detection is broken!")
+	var arch := "64" if OS.has_feature("64") else "32"
+	var link: String = _data[version].filter( \
+			func (line: String):
+				return line.contains(os_name) and (line.contains(arch) or line.contains("universal")) \
+			)[0]
+	var file_name := link.split("/")[-1]
+	var request = await _request()
+	request.request(link)
+	var bytes: PackedByteArray = (await request.request_completed)[-1]
+	request.queue_free()
+	if not DirAccess.dir_exists_absolute(PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR)):
+		DirAccess.make_dir_absolute(PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR))
+	var file = FileAccess.open(PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR) + "/" + file_name, FileAccess.WRITE)
+	file.store_buffer(bytes)
+	print("done!")
+
+
+func _request() -> HTTPRequest:
+	var req = HTTPRequest.new()
+	get_tree().get_root().add_child.call_deferred(req)
+	await req.tree_entered
+	return req

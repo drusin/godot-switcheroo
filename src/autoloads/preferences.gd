@@ -8,6 +8,7 @@ const FILE_VERSION := 1
 enum Keys {
 	SCAN_DIR,
 	LAST_CUSTOM_INSTALLATION_DIR,
+	MANAGED_INSTALLATIONS_DIR,
 }
 
 var _values := {}
@@ -16,7 +17,9 @@ var _values := {}
 func _ready() -> void:
 	_set_pref(Keys.SCAN_DIR, "")
 	_set_pref(Keys.LAST_CUSTOM_INSTALLATION_DIR, "")
+	_set_pref(Keys.MANAGED_INSTALLATIONS_DIR, "user://.managed")
 	load_prefs()
+	_persist_prefs()
 
 
 func read(key: Keys):
@@ -58,4 +61,5 @@ func load_prefs() -> void:
 	if read_values.file_version != FILE_VERSION:
 		push_error("Wrong prefs file version!")
 		return
-	_values = read_values.values
+	for key in read_values.values.keys():
+		_values[key] = read_values.values[key]
