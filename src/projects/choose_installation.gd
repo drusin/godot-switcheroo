@@ -36,6 +36,7 @@ func _on_confirmed() -> void:
 	PREFERENCES.write(Prefs.Keys.CHOOSE_RC, Rc.button_pressed)
 	PREFERENCES.write(Prefs.Keys.CHOOSE_MONO, Mono.button_pressed)
 	PREFERENCES.write(Prefs.Keys.CHOOSE_UNISTALLED, Uninstalled.button_pressed)
+	emit_signal("version_set", INSTALLATIONS.version(VersionOption.get_item_metadata(VersionOption.selected)))
 
 
 func _on_about_to_popup() -> void:
@@ -59,8 +60,8 @@ func _refresh_version_list() -> void:
 
 	VersionOption.clear()
 	for version in filtered:
-		VersionOption.add_item(version.custom_name if version.is_custom else version.version, 0)
-		VersionOption.set_item_metadata(0, version.id())
+		VersionOption.add_item(version.custom_name if version.is_custom else version.version)
+		VersionOption.set_item_metadata(-1, version.id())
 
 
 #####################

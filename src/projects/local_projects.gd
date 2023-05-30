@@ -7,9 +7,10 @@ extends Control
 @onready var ImportDialog: FileDialog = $ImportDialog
 @onready var Projects: SelectablesList = $Content/ProjectPane/Projects
 @onready var RemoveButton: Button = $Content/ButtonPane/Remove
-@onready var SetGodotButton: MenuButton = $Content/ButtonPane/SetGodotVersion
+@onready var SetGodotButton: Button = $Content/ButtonPane/SetGodotVersion
 @onready var EditButton: Button = $Content/ButtonPane/Edit
 @onready var RunButton: Button = $Content/ButtonPane/Run
+@onready var ChooseInstallation: ConfirmationDialog = find_child("ChooseInstallation", true)
 
 @onready var ProjectLineScene := preload("res://src/projects/project_line.tscn")
 
@@ -22,9 +23,7 @@ var scan_dir: String:
 
 
 func _ready() -> void:
-	SetGodotButton.get_popup().index_pressed.connect(_on_set_godot_version_selected)
 	_refresh_project_list()
-	_populate_version_menu()
 
 
 func _project_path_to_dir(path: String) -> DirAccess:
@@ -100,26 +99,6 @@ func _set_buttons_state() -> void:
 	RunButton.disabled = selected_amount != 1 or not Projects.get_selected_items()[0].version
 
 
-func _populate_version_menu() -> void:
-	var menu := SetGodotButton.get_popup()
-	menu.clear()
-	for installation in INSTALLATIONS.all_versions():
-		menu.add_item(installation.custom_name if installation.is_custom else installation.version)
-		menu.set_item_metadata(-1, installation.id())
-
-
-func _on_visibility_changed() -> void:
-	_populate_version_menu.call_deferred()
-
-
-func _on_set_godot_version_selected(index: int) -> void:
-	var version := INSTALLATIONS.version(SetGodotButton.get_popup().get_item_metadata(index))
-	for line in Projects.get_selected_items():
-		line.version = version
-		PROJECTS.set_godot_version(line.project_path, version)
-	_set_buttons_state()
-
-
 func _on_edit_pressed() -> void:
 	var project: ProjectData = PROJECTS.get_by_path(Projects.get_selected_items()[0].project_path)
 	var args := ["--path", project.general.folder_path(), "-e"] \
@@ -132,3 +111,14 @@ func _on_run_pressed():
 	var args := ["--path", project.general.folder_path()] \
 			if project.godot_version.is_run_supported() else []
 	OS.create_process(project.godot_version.installation_path, args)
+
+
+func _on_choose_installation_version_set(version: GodotVersion) -> void:
+	for line in Projects.get_selected_items():
+		line.version = version
+		PROJECTS.set_godot_version(line.project_path, version)
+	_set_buttons_state()
+
+
+func _on_set_godot_version_pressed() -> void:
+	ChooseInstallation.popup()

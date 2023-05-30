@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bym3qys3xdgla"]
+[gd_scene load_steps=4 format=3 uid="uid://bym3qys3xdgla"]
 
 [ext_resource type="Script" path="res://src/projects/local_projects.gd" id="1_vvilm"]
 [ext_resource type="PackedScene" uid="uid://ba02cqk3mop6o" path="res://src/general/selectables_list.tscn" id="2_ot0x7"]
+[ext_resource type="PackedScene" uid="uid://btblf2mdnky7n" path="res://src/projects/choose_installation.tscn" id="3_m4nqt"]
 
 [node name="LocalProjects" type="Control"]
 layout_mode = 3
@@ -81,11 +82,10 @@ text = "Rescan Projects Folder"
 [node name="HSeparator" type="HSeparator" parent="Content/ButtonPane"]
 layout_mode = 2
 
-[node name="SetGodotVersion" type="MenuButton" parent="Content/ButtonPane"]
+[node name="SetGodotVersion" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
 disabled = true
 text = "Set Godot Version"
-flat = false
 
 [node name="HSeparator2" type="HSeparator" parent="Content/ButtonPane"]
 layout_mode = 2
@@ -129,15 +129,19 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("project.godot")
 
-[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[node name="ChooseInstallation" parent="." instance=ExtResource("3_m4nqt")]
+visible = false
+
 [connection signal="text_changed" from="Content/ProjectPane/Filtering/Filter" to="." method="_on_filter_text_changed"]
 [connection signal="selection_changed" from="Content/ProjectPane/Projects" to="." method="_on_projects_selection_changed"]
 [connection signal="pressed" from="Content/ButtonPane/SetProjectsFolder" to="." method="_on_set_projects_folder_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="perform_scan"]
+[connection signal="pressed" from="Content/ButtonPane/SetGodotVersion" to="." method="_on_set_godot_version_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Edit" to="." method="_on_edit_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Run" to="." method="_on_run_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Remove" to="." method="_on_remove_pressed"]
 [connection signal="dir_selected" from="SetProjectsFolderDialog" to="." method="_on_scan_folder_dialog_dir_selected"]
 [connection signal="confirmed" from="RemoveConfirmationDialog" to="." method="_on_confirm_remove_pressed"]
 [connection signal="file_selected" from="ImportDialog" to="." method="_on_import_dialog_file_selected"]
+[connection signal="version_set" from="ChooseInstallation" to="." method="_on_choose_installation_version_set"]
