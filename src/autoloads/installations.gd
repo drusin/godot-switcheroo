@@ -2,6 +2,7 @@ extends Node
 
 signal versions_loaded(versions: Array[GodotVersion])
 
+const ABOUT_FILE := "Custom installations dictionairy for https://github.com/drusin/godot-switcheroo"
 const VERSION_CACHE_FILE := "user://.installations.godot-switcheroo"
 const VERSION_CACHE_FILE_VERSION := 1
 
@@ -9,7 +10,9 @@ var _installations := {}
 
 
 func _ready() -> void:
+	DOWNLOAD_REPOSITORY.available_versions_ready.connect(_add_remote_versions)
 	_load_cache()
+	_persist_cache()
 
 
 func add_custom(custom: GodotVersion) -> void:
@@ -28,16 +31,29 @@ func all_versions() -> Array[GodotVersion]:
 	return returnVal
 
 
+func local_versions() -> Array[GodotVersion]:
+	return all_versions().filter(func (ver: GodotVersion): return ver.installation_path != "")
+
+
 func remove(id: String):
 	_installations.erase(id)
 	_persist_cache()
 
 
+func _add_remote_versions():
+	for version_str in DOWNLOAD_REPOSITORY.available_versions():
+		var godot_version = GodotVersion.new()
+		godot_version.version = version_str
+		if not _installations.has(godot_version.id()):
+			_installations[godot_version.id()] = godot_version
+
+
 func _persist_cache() -> void:
 	var installation_dicts := []
-	for installation in _installations.values():
+	for installation in local_versions():
 		installation_dicts.append(inst_to_dict(installation))
 	var version_cache := {
+		_about = ABOUT_FILE,
 		file_version = VERSION_CACHE_FILE_VERSION,
 		installations = installation_dicts
 	}

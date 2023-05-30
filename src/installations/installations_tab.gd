@@ -18,7 +18,7 @@ func _ready() -> void:
 
 func _refresh_installations() -> void:
 	var lines := []
-	for installation in INSTALLATIONS.all_versions():
+	for installation in INSTALLATIONS.local_versions():
 		var line: InstallationLine = InstallationLineScene.instantiate()
 		line.custom_name = installation.custom_name
 		line.version = installation.version

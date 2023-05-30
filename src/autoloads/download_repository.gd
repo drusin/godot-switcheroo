@@ -1,5 +1,7 @@
 extends Node
 
+signal available_versions_ready()
+
 const JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/output.json"
 
 @onready var temp_dir = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
@@ -9,12 +11,13 @@ var _data: Dictionary
 
 func _ready() -> void:
 	DirAccess.make_dir_absolute(temp_dir)
-	await _fetch_available_versions()
+	_fetch_available_versions()
 
 
 func _fetch_available_versions() -> void:
 	var result_string := (await _request(JSON_URL)).body.get_string_from_utf8()
 	_data = JSON.parse_string(result_string)
+	emit_signal("available_versions_ready")
 
 
 func available_versions() -> Array[String]:

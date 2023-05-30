@@ -10,6 +10,14 @@ enum Keys {
 	LAST_CUSTOM_INSTALLATION_DIR,
 	MANAGED_INSTALLATIONS_DIR,
 	TEMP_DIR,
+	CHOOSE_MANAGED,
+	CHOOSE_SORT,
+	CHOOSE_PRE_ALPHA,
+	CHOOSE_ALPHA,
+	CHOOSE_BETA,
+	CHOOSE_RC,
+	CHOOSE_MONO,
+	CHOOSE_UNISTALLED,
 }
 
 var _values := {}
@@ -20,6 +28,14 @@ func _ready() -> void:
 	_set_pref(Keys.LAST_CUSTOM_INSTALLATION_DIR, "")
 	_set_pref(Keys.MANAGED_INSTALLATIONS_DIR, "user://.managed")
 	_set_pref(Keys.TEMP_DIR, "user://.temp")
+	_set_pref(Keys.CHOOSE_MANAGED, 0)
+	_set_pref(Keys.CHOOSE_SORT, 0)
+	_set_pref(Keys.CHOOSE_PRE_ALPHA, false)
+	_set_pref(Keys.CHOOSE_ALPHA, false)
+	_set_pref(Keys.CHOOSE_BETA, false)
+	_set_pref(Keys.CHOOSE_RC, false)
+	_set_pref(Keys.CHOOSE_MONO, false)
+	_set_pref(Keys.CHOOSE_UNISTALLED, true)
 	load_prefs()
 	_persist_prefs()
 
