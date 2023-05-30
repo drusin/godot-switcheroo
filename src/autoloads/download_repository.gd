@@ -2,12 +2,14 @@ extends Node
 
 const JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/output.json"
 
+@onready var temp_dir = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
+
 var _data: Dictionary
 
 
 func _ready() -> void:
+	DirAccess.make_dir_absolute(temp_dir)
 	await _fetch_available_versions()
-	#print(await download("4.0.3"))
 
 
 func _fetch_available_versions() -> void:
@@ -22,18 +24,41 @@ func available_versions() -> Array[String]:
 
 
 func download(version: String) -> String:
-	### Fixme!!!!!!!!!!!!!!!!
-	var os_name := "win"
-	push_error("os name detection is broken!")
-	var arch := "64" if OS.has_feature("64") else "32"
-	var link: String = _data[version].filter( \
-			func (line: String):
-				return line.contains(os_name) and (line.contains(arch) or line.contains("universal")) \
-			)[0]
+	var link := _find_link(version)
+	if link == "":
+		push_error("Could not determine download link")
+		return ""
 	var file_name := link.split("/")[-1]
+	var dl_result := await _download_and_unzip(link, file_name)
+	var unpacked_file: PackedByteArray = dl_result[0]
+	var unpacked_file_name: String = dl_result[1]
+	var installation_path = _move_to_managed_path(unpacked_file, unpacked_file_name, version)
+	return installation_path
+
+
+func _find_link(version: String) -> String:
+	var os_label = _get_os_label(version)
+	var arch := "64" if OS.has_feature("64") else "32"
+	var found_links: Array = _data[version].filter( \
+			func (line: String):
+				return line.contains(os_label) and (line.contains(arch) or line.contains("universal")) \
+			)
+	return "" if found_links.size() == 0 else found_links[0]
+
+
+func _get_os_label(version: String) -> String:
+	var detected_name = OS.get_name()
+	match detected_name:
+		"Windows":
+			return "win"
+		"Linux", "FreeBSD", "NetBSD", "OpenBSD", "BSD":
+			return "linux" if version.begins_with("4") else "x11"
+	push_error("unsupported os: " + detected_name)
+	return ""
+
+
+func _download_and_unzip(link: String, file_name: String) -> Array:
 	var bytes := (await _request(link)).body
-	var temp_dir = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
-	DirAccess.make_dir_absolute(temp_dir)
 	var zip_file_path: String = temp_dir + "/" + file_name
 	var file := FileAccess.open(zip_file_path, FileAccess.WRITE)
 	file.store_buffer(bytes)
@@ -43,27 +68,18 @@ func download(version: String) -> String:
 	var unpacked_file_name := zip.get_files()[0]
 	var unpacked_file := zip.read_file(unpacked_file_name)
 	zip.close()
+	DirAccess.remove_absolute(zip_file_path)
+	return [unpacked_file, unpacked_file_name]
+
+
+func _move_to_managed_path(unpacked_file: PackedByteArray, unpacked_file_name: String, version: String) -> String:
 	var managed_path = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR) + "/" + version
 	DirAccess.make_dir_recursive_absolute(managed_path)
 	var installation_path: String = managed_path + "/" + unpacked_file_name
-	file = FileAccess.open(installation_path, FileAccess.WRITE)
+	var file = FileAccess.open(installation_path, FileAccess.WRITE)
 	file.store_buffer(unpacked_file)
 	file.close()
-	DirAccess.remove_absolute(zip_file_path)
 	return installation_path
-
-
-func _get_os_labels() -> Array[String]:
-	match OS.get_name():
-		"Windows", "UWP":
-			return ["win"]
-		"macOS":
-			# Don't know enough about apple stuff for support...
-			return []
-		"Linux", "FreeBSD", "NetBSD", "OpenBSD", "BSD":
-			# Support coming, but need to look into it... pre 4.0 stuff is wonky...
-			return []
-	return []
 
 
 func _request(url: String) -> ReqResult:
@@ -81,7 +97,7 @@ class ReqResult extends RefCounted:
 	var status_code: int
 	var headers: PackedStringArray
 	var body: PackedByteArray
-	
+
 	func _init(from: Array) -> void:
 		result = from[0]
 		status_code = from[1]
