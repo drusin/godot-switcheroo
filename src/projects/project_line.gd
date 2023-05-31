@@ -15,9 +15,9 @@ var version: GodotVersion:
 @onready var FavouriteButton: CheckButton = $Widgets/Favourite
 @onready var Icon: TextureRect = $Widgets/Icon
 @onready var NameLabel: Label = $Widgets/Content/NameContainer/Name
-@onready var PathLabel: RichTextLabel = $Widgets/Content/NameContainer/PathCenterContainer/Path
+@onready var PathLabel: CenteredCursiveLabel = find_child("PathLabel", true)
 @onready var VersionPrimary: Label = $Widgets/Content/VersionContainer/PrimaryVersionLabel
-@onready var VersionSecondary: RichTextLabel = $Widgets/Content/VersionContainer/VersionCenterContainer/SecondaryVersionLabel
+@onready var VersionSecondary: CenteredCursiveLabel = find_child("SecondaryVersionLabel", true)
 @onready var VersionInfoIcon: TextureRect = $Widgets/Content/VersionContainer/VersionInfoIcon
 @onready var CompatibilityWarning: TextureRect = $Widgets/CompatibilityWarning
 @onready var MissingVersionWarning: TextureRect = $Widgets/MissingVersionWarning
@@ -27,7 +27,7 @@ func _ready() -> void:
 	FavouriteButton.button_pressed = is_favourite
 	Icon.texture = _create_external_texture(project_icon)
 	NameLabel.text = project_name
-	PathLabel.text = "[i]" + project_path + "[/i]"
+	PathLabel.text = project_path
 	_set_version_label()
 
 
@@ -42,15 +42,15 @@ func _set_version_label() -> void:
 		return
 	if not version:
 		VersionPrimary.visible = false
-		VersionSecondary.text = "[i]No Godot version selected[/i]"
+		VersionSecondary.text = "No Godot version selected"
 		return
 	VersionPrimary.visible = true
 	if version.is_custom:
 		VersionPrimary.text = version.custom_name
-		VersionSecondary.text = "[i]" + version.version + "[/i]"
+		VersionSecondary.text = version.version
 	else:
 		VersionPrimary.text = version.version
-		VersionSecondary.text = "[i]managed[/i]"
+		VersionSecondary.text = "managed"
 	VersionInfoIcon.visible = not version.is_custom and version.installation_path == ""
 	CompatibilityWarning.visible = not version.is_run_supported()
 	MissingVersionWarning.visible = version.is_custom and version.installation_path == ""

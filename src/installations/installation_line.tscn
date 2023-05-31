@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://csu7nig0ni2o6"]
+[gd_scene load_steps=4 format=3 uid="uid://csu7nig0ni2o6"]
 
 [ext_resource type="Script" path="res://src/installations/installation_line.gd" id="1_2q3kk"]
+[ext_resource type="PackedScene" uid="uid://dyeem17hdif3i" path="res://src/general/centered_cursive_label.tscn" id="2_4nd38"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_uiaa5"]
 font_size = 36
@@ -48,20 +49,21 @@ vertical_alignment = 1
 
 [node name="Content" type="VBoxContainer" parent="Widgets"]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="CustomName" type="Label" parent="Widgets/Content"]
-visible = false
+[node name="HBoxContainer" type="HBoxContainer" parent="Widgets/Content"]
+layout_mode = 2
+
+[node name="NamePrimary" type="Label" parent="Widgets/Content/HBoxContainer"]
 layout_mode = 2
 text = "Custom Name"
 
-[node name="Version" type="Label" parent="Widgets/Content"]
+[node name="NameSecondary" parent="Widgets/Content/HBoxContainer" instance=ExtResource("2_4nd38")]
+visible = false
 layout_mode = 2
-size_flags_vertical = 3
-text = "4.0.3 RC 1"
 
-[node name="Path" type="Label" parent="Widgets/Content"]
+[node name="Path" parent="Widgets/Content" instance=ExtResource("2_4nd38")]
 layout_mode = 2
-size_flags_vertical = 3
 text = "managed"

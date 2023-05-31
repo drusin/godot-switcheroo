@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c7ih6hxqdjogf"]
+[gd_scene load_steps=4 format=3 uid="uid://c7ih6hxqdjogf"]
 
 [ext_resource type="Script" path="res://src/projects/project_line.gd" id="1_nwo6l"]
 [ext_resource type="Texture2D" uid="uid://bi7wndmqnnyhs" path="res://icon.svg" id="2_gkym2"]
+[ext_resource type="PackedScene" uid="uid://dyeem17hdif3i" path="res://src/general/centered_cursive_label.tscn" id="3_3bd0b"]
 
 [node name="ProjectLine" type="Control"]
 custom_minimum_size = Vector2(0, 64)
@@ -58,20 +59,8 @@ layout_mode = 2
 size_flags_vertical = 3
 text = "Project name"
 
-[node name="PathCenterContainer" type="VBoxContainer" parent="Widgets/Content/NameContainer"]
+[node name="PathLabel" parent="Widgets/Content/NameContainer" instance=ExtResource("3_3bd0b")]
 layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-alignment = 1
-
-[node name="Path" type="RichTextLabel" parent="Widgets/Content/NameContainer/PathCenterContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_font_sizes/italics_font_size = 12
-bbcode_enabled = true
-text = "[i]/project/path[/i]"
-fit_content = true
 
 [node name="VersionContainer" type="HBoxContainer" parent="Widgets/Content"]
 layout_mode = 2
@@ -81,27 +70,16 @@ mouse_filter = 2
 visible = false
 layout_mode = 2
 
-[node name="VersionCenterContainer" type="VBoxContainer" parent="Widgets/Content/VersionContainer"]
-layout_mode = 2
-mouse_filter = 2
-alignment = 1
-
-[node name="SecondaryVersionLabel" type="RichTextLabel" parent="Widgets/Content/VersionContainer/VersionCenterContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-mouse_filter = 2
-theme_override_font_sizes/italics_font_size = 14
-bbcode_enabled = true
-text = "[i]No Godot version selected[/i]"
-fit_content = true
-autowrap_mode = 0
-
 [node name="VersionInfoIcon" type="TextureRect" parent="Widgets/Content/VersionContainer"]
 visible = false
 layout_mode = 2
 tooltip_text = "The selected managed Godot version will be downloaded when editing or running the project for the first time"
 texture = ExtResource("2_gkym2")
 expand_mode = 3
+
+[node name="SecondaryVersionLabel" parent="Widgets/Content/VersionContainer" instance=ExtResource("3_3bd0b")]
+layout_mode = 2
+text = "No Godot version selected"
 
 [node name="CompatibilityWarning" type="TextureRect" parent="Widgets"]
 visible = false
