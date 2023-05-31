@@ -18,6 +18,7 @@ var _alpha_regex = RegEx.new()
 
 
 func _ready() -> void:
+	VersionOption.get_popup().max_size = Vector2i(300, 300)
 	_alpha_regex.compile("\\d-alpha")
 	if allow_custom:
 		ManagedCustomFilter.selected = PREFERENCES.read(Prefs.Keys.CHOOSE_MANAGED)
