@@ -2,6 +2,8 @@ extends ConfirmationDialog
 
 signal version_set(version: GodotVersion)
 
+@export var allow_custom := true
+
 @onready var ManagedCustomFilter: OptionButton = find_child("ManagedCustomFilter", true)
 @onready var AscDescOption: OptionButton = find_child("AscDescOption", true)
 @onready var PreAlpha: CheckBox = find_child("PreAlpha", true)
@@ -16,7 +18,12 @@ var _alpha_regex = RegEx.new()
 
 
 func _ready() -> void:
-	ManagedCustomFilter.selected = PREFERENCES.read(Prefs.Keys.CHOOSE_MANAGED)
+	_alpha_regex.compile("\\d-alpha")
+	if allow_custom:
+		ManagedCustomFilter.selected = PREFERENCES.read(Prefs.Keys.CHOOSE_MANAGED)
+	else:
+		ManagedCustomFilter.selected = 1
+		ManagedCustomFilter.disabled = true
 	AscDescOption.selected = PREFERENCES.read(Prefs.Keys.CHOOSE_SORT)
 	PreAlpha.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_PRE_ALPHA)
 	Alpha.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_ALPHA)
@@ -24,11 +31,11 @@ func _ready() -> void:
 	Rc.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_RC)
 	Mono.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_MONO)
 	Uninstalled.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_UNISTALLED)
-	_alpha_regex.compile("\\d-alpha")
 
 
 func _on_confirmed() -> void:
-	PREFERENCES.write(Prefs.Keys.CHOOSE_MANAGED, ManagedCustomFilter.selected)
+	if allow_custom:
+		PREFERENCES.write(Prefs.Keys.CHOOSE_MANAGED, ManagedCustomFilter.selected)
 	PREFERENCES.write(Prefs.Keys.CHOOSE_SORT, AscDescOption.selected)
 	PREFERENCES.write(Prefs.Keys.CHOOSE_PRE_ALPHA, PreAlpha.button_pressed)
 	PREFERENCES.write(Prefs.Keys.CHOOSE_ALPHA, Alpha.button_pressed)

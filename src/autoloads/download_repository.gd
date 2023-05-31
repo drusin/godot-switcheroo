@@ -1,6 +1,7 @@
 extends Node
 
 signal available_versions_ready()
+signal version_downloaded(version: GodotVersion)
 
 const JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/output.json"
 
@@ -26,17 +27,21 @@ func available_versions() -> Array[String]:
 	return return_val
 
 
-func download(version: String) -> String:
+func download(version: String) -> GodotVersion:
 	var link := _find_link(version)
 	if link == "":
 		push_error("Could not determine download link")
-		return ""
+		return null
 	var file_name := link.split("/")[-1]
 	var dl_result := await _download_and_unzip(link, file_name)
 	var unpacked_file: PackedByteArray = dl_result[0]
 	var unpacked_file_name: String = dl_result[1]
 	var installation_path = _move_to_managed_path(unpacked_file, unpacked_file_name, version)
-	return installation_path
+	var godot_version = GodotVersion.new()
+	godot_version.version = version
+	godot_version.installation_path = installation_path
+	emit_signal("version_downloaded", godot_version)
+	return godot_version
 
 
 func _find_link(version: String) -> String:

@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+CONSTANTS="*res://src/autoloads/constants.gd"
 PREFERENCES="*res://src/autoloads/preferences.gd"
 PROJECTS="*res://src/autoloads/projects.gd"
 INSTALLATIONS="*res://src/autoloads/installations.gd"

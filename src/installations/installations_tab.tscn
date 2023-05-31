@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://6drkvcdycwyq"]
+[gd_scene load_steps=5 format=3 uid="uid://6drkvcdycwyq"]
 
 [ext_resource type="PackedScene" uid="uid://ba02cqk3mop6o" path="res://src/general/selectables_list.tscn" id="1_ild5m"]
 [ext_resource type="Script" path="res://src/installations/installations_tab.gd" id="1_rq8wk"]
 [ext_resource type="PackedScene" uid="uid://bm51sat7023nd" path="res://src/installations/custom_version_dialog.tscn" id="3_cwd4i"]
+[ext_resource type="PackedScene" uid="uid://btblf2mdnky7n" path="res://src/projects/choose_installation.tscn" id="4_gp2bg"]
 
 [node name="InstallationsTab" type="Control"]
 layout_mode = 3
@@ -12,6 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rq8wk")
+main_tab_index = null
 
 [node name="Content" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -89,7 +91,6 @@ text = "Set Managed Folder"
 
 [node name="NewManaged" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
-disabled = true
 text = "New Managed Installation"
 
 [node name="Import" type="Button" parent="Content/ButtonPane"]
@@ -98,7 +99,6 @@ text = "Import Custom Installation"
 
 [node name="Rescan" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
-disabled = true
 text = "Rescan Managed Folder"
 
 [node name="HSeparator" type="HSeparator" parent="Content/ButtonPane"]
@@ -135,11 +135,18 @@ initial_position = 2
 size = Vector2i(219, 100)
 dialog_text = "Installation already exists!"
 
+[node name="ChooseInstallation" parent="." instance=ExtResource("4_gp2bg")]
+visible = false
+allow_custom = false
+
 [connection signal="text_changed" from="Content/InstallationPane/Filtering/Filter" to="." method="_on_filter_text_changed"]
 [connection signal="selection_changed" from="Content/InstallationPane/Installations" to="." method="_on_installations_selection_changed"]
+[connection signal="pressed" from="Content/ButtonPane/NewManaged" to="." method="_on_new_managed_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
+[connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="_on_rescan_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/StartGodot" to="." method="_on_start_godot_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/OpenGodotFolder" to="." method="_on_open_godot_folder_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Remove" to="." method="_on_remove_pressed"]
 [connection signal="version_created" from="CustomVersionDialog" to="." method="_on_custom_version_dialog_version_created"]
 [connection signal="confirmed" from="RemoveConfirmationDialog" to="." method="_on_remove_confirmation_dialog_confirmed"]
+[connection signal="version_set" from="ChooseInstallation" to="." method="_on_choose_installation_version_set"]

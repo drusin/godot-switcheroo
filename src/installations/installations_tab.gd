@@ -10,6 +10,9 @@ extends Control
 @onready var InstallationExistsAlert: AcceptDialog = $InstallationExistsAlert
 @onready var StartGodot: Button = $Content/ButtonPane/StartGodot
 @onready var OpenGodotFolder: Button = $Content/ButtonPane/OpenGodotFolder
+@onready var ChooseInstallation: ConfirmationDialog = find_child("ChooseInstallation", true)
+
+@onready var _managed_folder: String = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR)
 
 
 func _ready() -> void:
@@ -22,7 +25,8 @@ func _refresh_installations() -> void:
 		var line: InstallationLine = InstallationLineScene.instantiate()
 		line.custom_name = installation.custom_name
 		line.version = installation.version
-		line.path = installation.installation_path
+		if installation.is_custom:
+			line.path = installation.installation_path
 		line.id = installation.id()
 		lines.append(line)
 	Installations.set_content(lines)
@@ -78,3 +82,29 @@ func _on_filter_text_changed(new_text):
 				installation.custom_name.to_lower().contains(new_text.to_lower()) or \
 				installation.version.to_lower().contains(new_text.to_lower()) or \
 				installation.path.to_lower().contains(new_text.to_lower())
+
+
+func _on_rescan_pressed() -> void:
+	var dir := DirAccess.open(_managed_folder)
+	for version in dir.get_directories():
+		var path := _managed_folder + "/" + version
+		var subdir := DirAccess.open(path)
+		var files := subdir.get_files()
+		if not files.is_empty():
+			var installation := GodotVersion.new()
+			installation.version = version
+			installation.installation_path = FileAccess.open(path + "/" + files[0], FileAccess.READ).get_path_absolute()
+			INSTALLATIONS.add_managed(installation)
+	_refresh_installations()
+
+
+func _on_new_managed_pressed() -> void:
+	ChooseInstallation.popup()
+
+
+func _on_choose_installation_version_set(version: GodotVersion) -> void:
+	if version.installation_path != "":
+		return
+	version.installation_path = CONSTANTS.DOWLOADING
+	DOWNLOAD_REPOSITORY.download(version.version)
+

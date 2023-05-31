@@ -21,6 +21,11 @@ func add_custom(custom: GodotVersion) -> void:
 	PREFERENCES.write(Prefs.Keys.LAST_CUSTOM_INSTALLATION_DIR, custom.folder_path())
 
 
+func add_managed(managed: GodotVersion) -> void:
+	_installations[managed.id()] = managed
+	_persist_cache()
+
+
 func version(id: String) -> GodotVersion:
 	return _installations[id] if _installations.has(id) else null
 
