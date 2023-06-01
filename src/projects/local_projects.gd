@@ -64,7 +64,11 @@ func _refresh_project_list() -> void:
 		line.project_name = project.project_name
 		line.project_path = project.general.path
 		line.project_icon = project.icon_path
-		line.version = project.godot_version
+		var godot_version = INSTALLATIONS.version(project.godot_version_id)
+		if not godot_version and project.godot_version_id != "":
+			godot_version = GodotVersion.from_id(project.godot_version_id)
+			INSTALLATIONS.add_managed(godot_version)
+		line.version = godot_version
 		project_lines.append(line)
 	Projects.set_content(project_lines)
 	_set_buttons_state()
@@ -86,11 +90,12 @@ func _get_project_data_for_line(line: ProjectLine) -> ProjectData:
 func _open_project(project: ProjectData , open_editor := false) -> void:
 	PROJECTS.update_last_opened(project.general.path)
 	var args := []
-	if project.godot_version.is_run_supported():
+	var godot_version = INSTALLATIONS.version(project.godot_version_id)
+	if godot_version.is_run_supported():
 		args = ["--path", project.general.folder_path()]
 		if open_editor:
 			args.append("-e")
-	OS.create_process(project.godot_version.installation_path, args)
+	OS.create_process(godot_version.installation_path, args)
 	_currently_trying_to_start = null
 
 
@@ -160,11 +165,12 @@ func _on_import_pressed() -> void:
 # Logic for button presses
 func _on_run_or_edit_pressed(edit := false) -> void:
 	var project := _get_project_data_for_line(Projects.get_selected_items()[0])
-	if project.godot_version.installation_path == "":
+	var godot_version := INSTALLATIONS.version(project.godot_version_id)
+	if godot_version.installation_path == "":
 		DownloadingMessage.popup()
 		_currently_trying_to_start = project
 		_currently_trying_to_edit = edit
-		DOWNLOAD_REPOSITORY.download(project.godot_version.version)
+		DOWNLOAD_REPOSITORY.download(godot_version.version)
 		return
 	_open_project(project, edit)
 	_apply_filter_and_sort()
@@ -203,7 +209,7 @@ func _on_downloading_message_canceled() -> void:
 
 func _on_version_downloaded(version: GodotVersion) -> void:
 	_refresh_project_list()
-	if not _currently_trying_to_start or _currently_trying_to_start.godot_version.id() != version.id():
+	if not _currently_trying_to_start or _currently_trying_to_start.godot_version_id != version.id():
 		return
 	DownloadingMessage.hide()
 	_open_project(_currently_trying_to_start, _currently_trying_to_edit)

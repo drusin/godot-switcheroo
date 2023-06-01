@@ -62,8 +62,8 @@ func _on_visibility_changed() -> void:
 func _check_used_versions() -> void:
 	_used_versions.clear()
 	for project in PROJECTS.all_projects():
-		if project.godot_version and not _used_versions.has(project.godot_version.id()):
-			_used_versions.append(project.godot_version.id())
+		if project.godot_version_id != "" and not _used_versions.has(project.godot_version_id):
+			_used_versions.append(project.godot_version_id)
 
 
 func _on_installations_selection_changed(_selection: Array) -> void:

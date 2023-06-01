@@ -53,7 +53,7 @@ func all_projects() -> Array[ProjectData]:
 
 func set_godot_version(project_path: String, version: GodotVersion) -> void:
 	var project := get_by_path(project_path)
-	project.godot_version = version
+	project.godot_version_id = version.id()
 	var file_dict = _create_version_file_dict(version)
 	var file = FileAccess.open(project.general.version_file_path(), FileAccess.WRITE)
 	if not file:
@@ -85,25 +85,22 @@ func _project_data_from_cache(cache: ProjectCacheData) ->  ProjectData:
 	project_data.icon_path = cache.folder_path() + \
 			config.get_value("application", "icon" if before_3 else "config/icon").trim_prefix("res://")
 	project_data.general = cache
-	project_data.godot_version = _read_godot_version(cache)
+	project_data.godot_version_id = _read_godot_version(cache)
 	return project_data
 
 
-func _read_godot_version(cache: ProjectCacheData) -> GodotVersion:
+func _read_godot_version(cache: ProjectCacheData) -> String:
 	if not FileAccess.file_exists(cache.version_file_path()):
-		return null
+		return ""
 	var file := FileAccess.open(cache.version_file_path(), FileAccess.READ)
 	if not file:
 		push_error("Cannot open version file")
-		return null
+		return ""
 	var file_dict: Dictionary = JSON.parse_string(file.get_as_text())
 	if file_dict.file_version != VERSION_FILE_VERSION:
 		push_error("Wrong version file version!")
-		return null
-	var return_val := INSTALLATIONS.version(file_dict.godot_versions[0])
-	if not return_val:
-		return_val = GodotVersion.from_id(file_dict.godot_versions[0])
-	return return_val
+		return ""
+	return file_dict.godot_versions[0]
 
 
 func _load_cache() -> void:
