@@ -64,7 +64,7 @@ func set_godot_version(project_path: String, version: GodotVersion) -> void:
 
 func update_last_opened(project_path: String) -> void:
 	var project := get_by_path(project_path)
-	project.general.last_opened = Time.get_date_string_from_system(true)
+	project.general.last_opened = Time.get_datetime_string_from_system(true)
 	_persist_cache()
 
 
