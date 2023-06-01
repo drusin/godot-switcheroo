@@ -65,6 +65,15 @@ text = "Custom Name"
 visible = false
 layout_mode = 2
 
-[node name="Path" parent="Widgets/Content" instance=ExtResource("2_4nd38")]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Widgets/Content"]
 layout_mode = 2
+
+[node name="Path" parent="Widgets/Content/HBoxContainer2" instance=ExtResource("2_4nd38")]
+layout_mode = 2
+size_flags_horizontal = 1
 text = "managed"
+
+[node name="Downloading" parent="Widgets/Content/HBoxContainer2" instance=ExtResource("2_4nd38")]
+visible = false
+layout_mode = 2
+text = "Downloading"

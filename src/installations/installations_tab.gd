@@ -105,6 +105,7 @@ func _on_new_managed_pressed() -> void:
 func _on_choose_installation_version_set(version: GodotVersion) -> void:
 	if version.installation_path != "":
 		return
-	version.installation_path = CONSTANTS.DOWLOADING
+	version.installation_path = CONSTANTS.DOWNLOADING
 	DOWNLOAD_REPOSITORY.download(version.version)
+	_refresh_installations()
 

@@ -10,12 +10,14 @@ size_flags_horizontal = 3
 mouse_filter = 2
 alignment = 1
 script = ExtResource("1_8eui1")
+text = "Some cursive text"
 
 [node name="Text" type="RichTextLabel" parent="."]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_vertical = 6
 mouse_filter = 2
 theme_override_font_sizes/italics_font_size = 12
 bbcode_enabled = true
-text = "[i]cursive text[/i]"
+text = "[i]Some cursive text[/i]"
 fit_content = true
+autowrap_mode = 0
