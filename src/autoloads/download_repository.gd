@@ -39,7 +39,7 @@ func download(version: String) -> GodotVersion:
 	var installation_path = _move_to_managed_path(unpacked_file, unpacked_file_name, version)
 	var godot_version = GodotVersion.new()
 	godot_version.version = version
-	godot_version.installation_path = installation_path
+	godot_version.installation_path = FileAccess.open(installation_path, FileAccess.READ).get_path_absolute()
 	emit_signal("version_downloaded", godot_version)
 	return godot_version
 
