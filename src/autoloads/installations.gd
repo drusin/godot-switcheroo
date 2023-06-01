@@ -41,6 +41,10 @@ func local_versions() -> Array[GodotVersion]:
 
 
 func remove(id: String):
+	var to_remove := version(id)
+	if not to_remove.is_custom and to_remove.installation_path != "":
+		DirAccess.remove_absolute(to_remove.installation_path)
+		DirAccess.remove_absolute(to_remove.folder_path())
 	_installations.erase(id)
 	_persist_cache()
 
