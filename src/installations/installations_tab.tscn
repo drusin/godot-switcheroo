@@ -87,6 +87,7 @@ popup/item_1/id = 0
 
 [node name="Installations" parent="Content/InstallationPane" instance=ExtResource("1_ild5m")]
 layout_mode = 2
+_dummy_items_count = 0
 
 [node name="ButtonPane" type="VBoxContainer" parent="Content"]
 layout_mode = 2

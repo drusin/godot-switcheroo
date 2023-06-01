@@ -1,5 +1,5 @@
-extends ScrollContainer
 class_name SelectablesList
+extends ScrollContainer
 
 signal selection_changed(selection: Array)
 

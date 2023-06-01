@@ -62,6 +62,12 @@ func set_godot_version(project_path: String, version: GodotVersion) -> void:
 	file.store_string(JSON.stringify(file_dict, "    "))
 
 
+func update_last_opened(project_path: String) -> void:
+	var project := get_by_path(project_path)
+	project.general.last_opened = Time.get_date_string_from_system(true)
+	_persist_cache()
+
+
 func _create_version_file_dict(version: GodotVersion) -> Dictionary:
 	return {
 		_about = ABOUT_VERSION_FILE,
@@ -141,6 +147,7 @@ func _create_cache_file_dict() ->  Dictionary:
 class ProjectCacheData extends RefCounted:
 	var path: String
 	var is_favourite: bool
+	var last_opened := "0"
 
 	func folder_path() -> String:
 		var path_fragments := path.split("/")

@@ -50,6 +50,7 @@ func _refresh_installations() -> void:
 		lines.append(line)
 	Installations.set_content(lines)
 	_set_buttons_state.call_deferred()
+	_apply_filter_and_sort()
 
 
 func _on_visibility_changed() -> void:
@@ -166,7 +167,6 @@ func _on_rescan_pressed() -> void:
 			installation.installation_path = FileAccess.open(path + "/" + files[0], FileAccess.READ).get_path_absolute()
 			INSTALLATIONS.add_managed(installation)
 	_refresh_installations()
-	_apply_filter_and_sort()
 
 
 
@@ -177,14 +177,12 @@ func _on_custom_version_dialog_version_created(version: GodotVersion) -> void:
 		return
 	INSTALLATIONS.add_custom(version)
 	_refresh_installations()
-	_apply_filter_and_sort()
 
 
 func _on_remove_confirmation_dialog_confirmed() -> void:
 	for selected in Installations.get_selected_items():
 		INSTALLATIONS.remove(selected.id)
 	_refresh_installations()
-	_apply_filter_and_sort()
 
 
 func _on_choose_installation_version_set(version: GodotVersion) -> void:
@@ -194,10 +192,8 @@ func _on_choose_installation_version_set(version: GodotVersion) -> void:
 	INSTALLATIONS.add_managed(version)
 	DOWNLOAD_REPOSITORY.download(version.version)
 	_refresh_installations()
-	_apply_filter_and_sort()
 
 
 func _on_version_downloaded(version: GodotVersion) -> void:
 	INSTALLATIONS.add_managed(version)
 	_refresh_installations()
-	_apply_filter_and_sort()

@@ -22,6 +22,9 @@ enum Keys {
 	INST_FILTER_MANAGED,
 	INST_FILTER_SORT,
 	INST_FILTER_ASC_DESC,
+	PROJ_FILTER_VERSION,
+	PROJ_FILTER_SORT,
+	PROJ_FILTER_ASC_DESC,
 }
 
 var _values := {}
@@ -44,6 +47,9 @@ func _ready() -> void:
 	_set_pref(Keys.INST_FILTER_MANAGED, 0)
 	_set_pref(Keys.INST_FILTER_SORT, 1)
 	_set_pref(Keys.INST_FILTER_ASC_DESC, 1)
+	_set_pref(Keys.PROJ_FILTER_VERSION, 0)
+	_set_pref(Keys.PROJ_FILTER_SORT, 0)
+	_set_pref(Keys.PROJ_FILTER_ASC_DESC, 1)
 	load_prefs()
 	_persist_prefs()
 
