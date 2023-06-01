@@ -23,6 +23,7 @@ extends Control
 @onready var ImportDialog: FileDialog = $ImportDialog
 @onready var ChooseInstallation: ConfirmationDialog = find_child("ChooseInstallation", true)
 @onready var ConfirmRemoveDialog: ConfirmationDialog = $RemoveConfirmationDialog
+@onready var DownloadingMessage: AcceptDialog = find_child("DownloadingMessage", true)
 
 
 var scan_dir: String:
@@ -32,11 +33,17 @@ var scan_dir: String:
 	get:
 		return PREFERENCES.read(Prefs.Keys.SCAN_DIR)
 
+var _currently_trying_to_start: ProjectData
+var _currently_trying_to_edit := false
 
 func _ready() -> void:
 	VersionFilter.selected = PREFERENCES.read(Prefs.Keys.PROJ_FILTER_VERSION)
 	Sort.selected = PREFERENCES.read(Prefs.Keys.PROJ_FILTER_SORT)
 	AscDesc.selected = PREFERENCES.read(Prefs.Keys.PROJ_FILTER_ASC_DESC)
+	EditButton.pressed.connect(_on_run_or_edit_pressed.bind(true))
+	RunButton.pressed.connect(_on_run_or_edit_pressed)
+	DownloadingMessage.get_label().horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	DOWNLOAD_REPOSITORY.version_downloaded.connect(_on_version_downloaded)
 	_refresh_project_list()
 
 
@@ -74,6 +81,17 @@ func _set_buttons_state() -> void:
 
 func _get_project_data_for_line(line: ProjectLine) -> ProjectData:
 	return PROJECTS.get_by_path(line.project_path)
+
+
+func _open_project(project: ProjectData , open_editor := false) -> void:
+	PROJECTS.update_last_opened(project.general.path)
+	var args := []
+	if project.godot_version.is_run_supported():
+		args = ["--path", project.general.folder_path()]
+		if open_editor:
+			args.append("-e")
+	OS.create_process(project.godot_version.installation_path, args)
+	_currently_trying_to_start = null
 
 
 # Filtering
@@ -121,6 +139,8 @@ func _get_field_for_sorting(line: ProjectLine) -> String:
 	push_error("unknown sorting property")
 	return ""
 
+
+
 # Open popups
 func _on_set_godot_version_pressed() -> void: ChooseInstallation.popup()
 func _on_remove_pressed() -> void: ConfirmRemoveDialog.popup()
@@ -138,23 +158,16 @@ func _on_import_pressed() -> void:
 
 
 # Logic for button presses
-func _on_edit_pressed() -> void:
+func _on_run_or_edit_pressed(edit := false) -> void:
 	var project := _get_project_data_for_line(Projects.get_selected_items()[0])
-	PROJECTS.update_last_opened(project.general.path)
-	var args := ["--path", project.general.folder_path(), "-e"] \
-			if project.godot_version.is_run_supported() else []
-	OS.create_process(project.godot_version.installation_path, args)
+	if project.godot_version.installation_path == "":
+		DownloadingMessage.popup()
+		_currently_trying_to_start = project
+		_currently_trying_to_edit = edit
+		DOWNLOAD_REPOSITORY.download(project.godot_version.version)
+		return
+	_open_project(project, edit)
 	_apply_filter_and_sort()
-
-
-func _on_run_pressed():
-	var project := _get_project_data_for_line(Projects.get_selected_items()[0])
-	PROJECTS.update_last_opened(project.general.path)
-	var args := ["--path", project.general.folder_path()] \
-			if project.godot_version.is_run_supported() else []
-	OS.create_process(project.godot_version.installation_path, args)
-	_apply_filter_and_sort()
-
 
 
 # Reacting to "external" Signals
@@ -182,3 +195,15 @@ func _on_choose_installation_version_set(version: GodotVersion) -> void:
 		line.version = version
 		PROJECTS.set_godot_version(line.project_path, version)
 	_set_buttons_state()
+
+
+func _on_downloading_message_canceled() -> void:
+	_currently_trying_to_start = null
+
+
+func _on_version_downloaded(version: GodotVersion) -> void:
+	_refresh_project_list()
+	if not _currently_trying_to_start or _currently_trying_to_start.godot_version.id() != version.id():
+		return
+	DownloadingMessage.hide()
+	_open_project(_currently_trying_to_start, _currently_trying_to_edit)

@@ -157,6 +157,14 @@ filters = PackedStringArray("project.godot")
 [node name="ChooseInstallation" parent="." instance=ExtResource("3_m4nqt")]
 visible = false
 
+[node name="DownloadingMessage" type="AcceptDialog" parent="."]
+initial_position = 2
+title = "Please wait"
+size = Vector2i(304, 109)
+ok_button_text = "Cancel"
+dialog_text = "Downloading selected Godot version
+Downloading..."
+
 [connection signal="text_changed" from="Content/ProjectPane/Filtering/Filter" to="." method="_on_filter_or_sorting_changed"]
 [connection signal="item_selected" from="Content/ProjectPane/Filtering/VersionFilter" to="." method="_on_filter_or_sorting_changed"]
 [connection signal="item_selected" from="Content/ProjectPane/Filtering/Sort" to="." method="_on_filter_or_sorting_changed"]
@@ -166,10 +174,10 @@ visible = false
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="perform_scan"]
 [connection signal="pressed" from="Content/ButtonPane/SetGodotVersion" to="." method="_on_set_godot_version_pressed"]
-[connection signal="pressed" from="Content/ButtonPane/Edit" to="." method="_on_edit_pressed"]
-[connection signal="pressed" from="Content/ButtonPane/Run" to="." method="_on_run_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Remove" to="." method="_on_remove_pressed"]
 [connection signal="dir_selected" from="SetProjectsFolderDialog" to="." method="_on_scan_folder_dialog_dir_selected"]
 [connection signal="confirmed" from="RemoveConfirmationDialog" to="." method="_on_confirm_remove_pressed"]
 [connection signal="file_selected" from="ImportDialog" to="." method="_on_import_dialog_file_selected"]
 [connection signal="version_set" from="ChooseInstallation" to="." method="_on_choose_installation_version_set"]
+[connection signal="canceled" from="DownloadingMessage" to="." method="_on_downloading_message_canceled"]
+[connection signal="confirmed" from="DownloadingMessage" to="." method="_on_downloading_message_canceled"]
