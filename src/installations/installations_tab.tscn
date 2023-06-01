@@ -142,7 +142,12 @@ dialog_text = "Installation already exists!"
 visible = false
 allow_custom = false
 
-[connection signal="text_changed" from="Content/InstallationPane/Filtering/Filter" to="." method="_on_filter_text_changed"]
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="text_changed" from="Content/InstallationPane/Filtering/Filter" to="." method="_on_filter_or_sorting_changed"]
+[connection signal="item_selected" from="Content/InstallationPane/Filtering/UsageFilter" to="." method="_on_filter_or_sorting_changed"]
+[connection signal="item_selected" from="Content/InstallationPane/Filtering/ManagedFilter" to="." method="_on_filter_or_sorting_changed"]
+[connection signal="item_selected" from="Content/InstallationPane/Filtering/Sorting" to="." method="_on_filter_or_sorting_changed"]
+[connection signal="item_selected" from="Content/InstallationPane/Filtering/AscDesc" to="." method="_on_filter_or_sorting_changed"]
 [connection signal="selection_changed" from="Content/InstallationPane/Installations" to="." method="_on_installations_selection_changed"]
 [connection signal="pressed" from="Content/ButtonPane/NewManaged" to="." method="_on_new_managed_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]

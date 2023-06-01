@@ -1,5 +1,5 @@
-extends Node
 class_name Prefs
+extends Node
 
 const ABOUT_FILE := "Preferences for https://github.com/drusin/godot-switcheroo"
 const PREFS_FILE := "user://.prefs.godot-switcheroo"
@@ -18,6 +18,10 @@ enum Keys {
 	CHOOSE_RC,
 	CHOOSE_MONO,
 	CHOOSE_UNISTALLED,
+	INST_FILTER_USAGE,
+	INST_FILTER_MANAGED,
+	INST_FILTER_SORT,
+	INST_FILTER_ASC_DESC,
 }
 
 var _values := {}
@@ -36,6 +40,10 @@ func _ready() -> void:
 	_set_pref(Keys.CHOOSE_RC, false)
 	_set_pref(Keys.CHOOSE_MONO, false)
 	_set_pref(Keys.CHOOSE_UNISTALLED, true)
+	_set_pref(Keys.INST_FILTER_USAGE, 0)
+	_set_pref(Keys.INST_FILTER_MANAGED, 0)
+	_set_pref(Keys.INST_FILTER_SORT, 1)
+	_set_pref(Keys.INST_FILTER_ASC_DESC, 1)
 	load_prefs()
 	_persist_prefs()
 

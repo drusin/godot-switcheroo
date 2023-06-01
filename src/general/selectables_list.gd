@@ -37,6 +37,15 @@ func get_selected_items() -> Array:
 	return Selectables.get_children().filter(func (item: ListItem): return item.is_selected)
 
 
+func sort_items(sorter: Callable) -> void:
+	var sorted := Selectables.get_children()
+	sorted.sort_custom(sorter)
+	for child in Selectables.get_children():
+		Selectables.remove_child(child)
+	for child in sorted:
+		Selectables.add_child(child)
+
+
 func _update_last_selected(item: ListItem) -> void:
 	last_selected_index = Selectables.get_children().find(item)
 
