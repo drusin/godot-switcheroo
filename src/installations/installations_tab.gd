@@ -2,15 +2,26 @@ extends Control
 
 @export var main_tab_index := 1
 
-@onready var CustomVersionDialog: CustomVersionDialog = $CustomVersionDialog
+# Filters and sorting
+@onready var UsageFilter: OptionButton = find_child("UsageFilter", true)
+@onready var ManagedFilter: OptionButton = find_child("ManagedFilter", true)
+@onready var Sorting: OptionButton = find_child("Sorting", true)
+@onready var AscDesc: OptionButton = find_child("AscDesc", true)
+
+# Content
 @onready var Installations: SelectablesList = $Content/InstallationPane/Installations
 @onready var InstallationLineScene := preload("res://src/installations/installation_line.tscn")
-@onready var RemoveConfirmationDialog: ConfirmationDialog = $RemoveConfirmationDialog
+
+# Buttons
 @onready var RemoveButton: Button = $Content/ButtonPane/Remove
-@onready var InstallationExistsAlert: AcceptDialog = $InstallationExistsAlert
 @onready var StartGodot: Button = $Content/ButtonPane/StartGodot
 @onready var OpenGodotFolder: Button = $Content/ButtonPane/OpenGodotFolder
-@onready var ChooseInstallation: ConfirmationDialog = find_child("ChooseInstallation", true)
+
+# Dialogs and popups
+@onready var RemoveConfirmationDialog: ConfirmationDialog = $RemoveConfirmationDialog
+@onready var CustomVersionDialog: CustomVersionDialog = $CustomVersionDialog
+@onready var ChooseInstallation: ChooseInstallation = find_child("ChooseInstallation", true)
+@onready var InstallationExistsAlert: AcceptDialog = $InstallationExistsAlert
 
 @onready var _managed_folder: String = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR)
 
@@ -34,28 +45,6 @@ func _refresh_installations() -> void:
 	_set_buttons_state.call_deferred()
 
 
-func _on_import_pressed() -> void:
-	CustomVersionDialog.custom_popup()
-
-
-func _on_custom_version_dialog_version_created(version: GodotVersion) -> void:
-	if INSTALLATIONS.version(version.id()):
-		InstallationExistsAlert.popup()
-		return
-	INSTALLATIONS.add_custom(version)
-	_refresh_installations()
-
-
-func _on_remove_pressed() -> void:
-	RemoveConfirmationDialog.popup()
-
-
-func _on_remove_confirmation_dialog_confirmed() -> void:
-	for selected in Installations.get_selected_items():
-		INSTALLATIONS.remove(selected.id)
-	_refresh_installations()
-
-
 func _on_installations_selection_changed(_selection: Array) -> void:
 	_set_buttons_state()
 
@@ -67,6 +56,22 @@ func _set_buttons_state() -> void:
 	OpenGodotFolder.disabled = selected_amount != 1
 
 
+# filtering
+func _on_filter_text_changed(new_text):
+	for installation in Installations.get_items():
+		installation.visible = new_text == "" or \
+				installation.custom_name.to_lower().contains(new_text.to_lower()) or \
+				installation.version.to_lower().contains(new_text.to_lower()) or \
+				installation.path.to_lower().contains(new_text.to_lower())
+
+
+# open dialogs
+func _on_import_pressed() -> void: CustomVersionDialog.custom_popup()
+func _on_remove_pressed() -> void: RemoveConfirmationDialog.popup()
+func _on_new_managed_pressed() -> void:	ChooseInstallation.popup()
+
+
+# logic for button presses
 func _on_start_godot_pressed() -> void:
 	var installation = INSTALLATIONS.version(Installations.get_selected_items()[0].id)
 	OS.create_process(installation.installation_path, [])
@@ -75,14 +80,6 @@ func _on_start_godot_pressed() -> void:
 func _on_open_godot_folder_pressed() -> void:
 	var installation = INSTALLATIONS.version(Installations.get_selected_items()[0].id)
 	OS.shell_open(installation.folder_path())
-
-
-func _on_filter_text_changed(new_text):
-	for installation in Installations.get_items():
-		installation.visible = new_text == "" or \
-				installation.custom_name.to_lower().contains(new_text.to_lower()) or \
-				installation.version.to_lower().contains(new_text.to_lower()) or \
-				installation.path.to_lower().contains(new_text.to_lower())
 
 
 func _on_rescan_pressed() -> void:
@@ -99,8 +96,19 @@ func _on_rescan_pressed() -> void:
 	_refresh_installations()
 
 
-func _on_new_managed_pressed() -> void:
-	ChooseInstallation.popup()
+# reacting to signals
+func _on_custom_version_dialog_version_created(version: GodotVersion) -> void:
+	if INSTALLATIONS.version(version.id()):
+		InstallationExistsAlert.popup()
+		return
+	INSTALLATIONS.add_custom(version)
+	_refresh_installations()
+
+
+func _on_remove_confirmation_dialog_confirmed() -> void:
+	for selected in Installations.get_selected_items():
+		INSTALLATIONS.remove(selected.id)
+	_refresh_installations()
 
 
 func _on_choose_installation_version_set(version: GodotVersion) -> void:

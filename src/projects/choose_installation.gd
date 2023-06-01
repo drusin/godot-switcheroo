@@ -1,3 +1,4 @@
+class_name ChooseInstallation
 extends ConfirmationDialog
 
 signal version_set(version: GodotVersion)
