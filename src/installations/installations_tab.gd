@@ -16,6 +16,7 @@ extends Control
 
 
 func _ready() -> void:
+	DOWNLOAD_REPOSITORY.version_downloaded.connect(_on_version_downloaded)
 	_refresh_installations()
 
 
@@ -25,9 +26,9 @@ func _refresh_installations() -> void:
 		var line: InstallationLine = InstallationLineScene.instantiate()
 		line.custom_name = installation.custom_name
 		line.version = installation.version
-		if installation.is_custom:
-			line.path = installation.installation_path
+		line.path = installation.installation_path
 		line.id = installation.id()
+		line.is_custom = installation.is_custom
 		lines.append(line)
 	Installations.set_content(lines)
 	_set_buttons_state.call_deferred()
@@ -106,6 +107,11 @@ func _on_choose_installation_version_set(version: GodotVersion) -> void:
 	if version.installation_path != "":
 		return
 	version.installation_path = CONSTANTS.DOWNLOADING
+	INSTALLATIONS.add_managed(version)
 	DOWNLOAD_REPOSITORY.download(version.version)
 	_refresh_installations()
 
+
+func _on_version_downloaded(version: GodotVersion) -> void:
+	INSTALLATIONS.add_managed(version)
+	_refresh_installations()

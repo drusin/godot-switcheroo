@@ -13,7 +13,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rq8wk")
-main_tab_index = null
 
 [node name="Content" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -83,11 +82,6 @@ layout_mode = 2
 [node name="ButtonPane" type="VBoxContainer" parent="Content"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="SetFolder" type="Button" parent="Content/ButtonPane"]
-layout_mode = 2
-disabled = true
-text = "Set Managed Folder"
 
 [node name="NewManaged" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
