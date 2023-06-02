@@ -43,7 +43,7 @@ func _ready() -> void:
 	EditButton.pressed.connect(_on_run_or_edit_pressed.bind(true))
 	RunButton.pressed.connect(_on_run_or_edit_pressed)
 	DownloadingMessage.get_label().horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	DOWNLOAD_REPOSITORY.version_downloaded.connect(_on_version_downloaded)
+	INSTALLATIONS.installations_changed.connect(_on_installations_changed)
 	_refresh_project_list()
 
 
@@ -207,9 +207,10 @@ func _on_downloading_message_canceled() -> void:
 	_currently_trying_to_start = null
 
 
-func _on_version_downloaded(version: GodotVersion) -> void:
+func _on_installations_changed() -> void:
 	_refresh_project_list()
-	if not _currently_trying_to_start or _currently_trying_to_start.godot_version_id != version.id():
+	if not _currently_trying_to_start or \
+			INSTALLATIONS.version(_currently_trying_to_start.godot_version_id).installation_path == "":
 		return
 	DownloadingMessage.hide()
 	_open_project(_currently_trying_to_start, _currently_trying_to_edit)

@@ -93,13 +93,13 @@ _dummy_items_count = 0
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="NewManaged" type="Button" parent="Content/ButtonPane"]
-layout_mode = 2
-text = "New Managed Installation"
-
 [node name="Import" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
 text = "Import Custom Installation"
+
+[node name="NewManaged" type="Button" parent="Content/ButtonPane"]
+layout_mode = 2
+text = "New Managed Installation"
 
 [node name="Rescan" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
@@ -150,8 +150,8 @@ allow_custom = false
 [connection signal="item_selected" from="Content/InstallationPane/Filtering/Sorting" to="." method="_on_filter_or_sorting_changed"]
 [connection signal="item_selected" from="Content/InstallationPane/Filtering/AscDesc" to="." method="_on_filter_or_sorting_changed"]
 [connection signal="selection_changed" from="Content/InstallationPane/Installations" to="." method="_on_installations_selection_changed"]
-[connection signal="pressed" from="Content/ButtonPane/NewManaged" to="." method="_on_new_managed_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
+[connection signal="pressed" from="Content/ButtonPane/NewManaged" to="." method="_on_new_managed_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="_on_rescan_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/StartGodot" to="." method="_on_start_godot_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/OpenGodotFolder" to="." method="_on_open_godot_folder_pressed"]

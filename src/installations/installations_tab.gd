@@ -30,7 +30,8 @@ var _used_versions: Array[String] = []
 
 
 func _ready() -> void:
-	DOWNLOAD_REPOSITORY.version_downloaded.connect(_on_version_downloaded)
+	# DOWNLOAD_REPOSITORY.version_downloaded.connect(_on_version_downloaded)
+	INSTALLATIONS.installations_changed.connect(_refresh_installations)
 	_refresh_installations()
 	UsageFilter.selected = PREFERENCES.read(Prefs.Keys.INST_FILTER_USAGE)
 	ManagedFilter.selected = PREFERENCES.read(Prefs.Keys.INST_FILTER_MANAGED)
@@ -166,7 +167,7 @@ func _on_rescan_pressed() -> void:
 			installation.version = version
 			installation.installation_path = FileAccess.open(path + "/" + files[0], FileAccess.READ).get_path_absolute()
 			INSTALLATIONS.add_managed(installation)
-	_refresh_installations()
+	# _refresh_installations()
 
 
 
@@ -176,13 +177,13 @@ func _on_custom_version_dialog_version_created(version: GodotVersion) -> void:
 		InstallationExistsAlert.popup()
 		return
 	INSTALLATIONS.add_custom(version)
-	_refresh_installations()
+	# _refresh_installations()
 
 
 func _on_remove_confirmation_dialog_confirmed() -> void:
 	for selected in Installations.get_selected_items():
 		INSTALLATIONS.remove(selected.id)
-	_refresh_installations()
+	# _refresh_installations()
 
 
 func _on_choose_installation_version_set(version: GodotVersion) -> void:
@@ -191,9 +192,9 @@ func _on_choose_installation_version_set(version: GodotVersion) -> void:
 	version.installation_path = CONSTANTS.DOWNLOADING
 	INSTALLATIONS.add_managed(version)
 	DOWNLOAD_REPOSITORY.download(version.version)
-	_refresh_installations()
+	# _refresh_installations()
 
 
 func _on_version_downloaded(version: GodotVersion) -> void:
 	INSTALLATIONS.add_managed(version)
-	_refresh_installations()
+	# _refresh_installations()

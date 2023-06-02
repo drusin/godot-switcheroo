@@ -1,6 +1,7 @@
 extends Node
 
 signal versions_loaded(versions: Array[GodotVersion])
+signal installations_changed()
 
 const ABOUT_FILE := "Custom installations dictionairy for https://github.com/drusin/godot-switcheroo"
 const VERSION_CACHE_FILE := "user://.installations.godot-switcheroo"
@@ -11,6 +12,7 @@ var _installations := {}
 
 func _ready() -> void:
 	DOWNLOAD_REPOSITORY.available_versions_ready.connect(_add_remote_versions)
+	DOWNLOAD_REPOSITORY.version_downloaded.connect(add_managed)
 	_load_cache()
 	_persist_cache()
 
@@ -19,11 +21,13 @@ func add_custom(custom: GodotVersion) -> void:
 	_installations[custom.id()] = custom
 	_persist_cache()
 	PREFERENCES.write(Prefs.Keys.LAST_CUSTOM_INSTALLATION_DIR, custom.folder_path())
+	emit_signal("installations_changed")
 
 
 func add_managed(managed: GodotVersion) -> void:
 	_installations[managed.id()] = managed
 	_persist_cache()
+	emit_signal("installations_changed")
 
 
 func version(id: String) -> GodotVersion:
@@ -45,8 +49,11 @@ func remove(id: String):
 	if not to_remove.is_custom and to_remove.installation_path != "":
 		DirAccess.remove_absolute(to_remove.installation_path)
 		DirAccess.remove_absolute(to_remove.folder_path())
-	_installations.erase(id)
+		to_remove.installation_path = ""
+	else:
+		_installations.erase(id)
 	_persist_cache()
+	emit_signal("installations_changed")
 
 
 func _add_remote_versions():
