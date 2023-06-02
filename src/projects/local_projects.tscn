@@ -87,10 +87,6 @@ _dummy_items_count = 0
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SetProjectsFolder" type="Button" parent="Content/ButtonPane"]
-layout_mode = 2
-text = "Set Projects Folder"
-
 [node name="NewProject" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
 disabled = true
@@ -99,6 +95,10 @@ text = "New Project"
 [node name="Import" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
 text = "Import"
+
+[node name="SetProjectsFolder" type="Button" parent="Content/ButtonPane"]
+layout_mode = 2
+text = "Set Projects Folder"
 
 [node name="Rescan" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
@@ -170,8 +170,8 @@ Downloading..."
 [connection signal="item_selected" from="Content/ProjectPane/Filtering/Sort" to="." method="_on_filter_or_sorting_changed"]
 [connection signal="item_selected" from="Content/ProjectPane/Filtering/AscDesc" to="." method="_on_filter_or_sorting_changed"]
 [connection signal="selection_changed" from="Content/ProjectPane/Projects" to="." method="_on_projects_selection_changed"]
-[connection signal="pressed" from="Content/ButtonPane/SetProjectsFolder" to="." method="_on_set_projects_folder_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
+[connection signal="pressed" from="Content/ButtonPane/SetProjectsFolder" to="." method="_on_set_projects_folder_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="_perform_scan"]
 [connection signal="pressed" from="Content/ButtonPane/SetGodotVersion" to="." method="_on_set_godot_version_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Remove" to="." method="_on_remove_pressed"]

@@ -93,6 +93,7 @@ func _get_project_data_for_line(line: ProjectLine) -> ProjectData:
 
 func _open_project(project: ProjectData , open_editor := false) -> void:
 	PROJECTS.update_last_opened(project.general.path)
+	_apply_filter_and_sort()
 	var args := []
 	var godot_version = INSTALLATIONS.version(project.godot_version_id)
 	if godot_version.is_run_supported():
@@ -177,7 +178,6 @@ func _on_run_or_edit_pressed(edit := false) -> void:
 		DOWNLOADS.download(godot_version.version)
 		return
 	_open_project(project, edit)
-	_apply_filter_and_sort()
 
 
 # Reacting to "external" Signals

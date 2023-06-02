@@ -5,13 +5,14 @@ signal version_downloaded(version: GodotVersion)
 
 const JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/output.json"
 
-@onready var temp_dir = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
+@onready var _temp_dir:String = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
+@onready var _managed_folder: String = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR)
 
 var _data: Dictionary
 
 
 func _ready() -> void:
-	DirAccess.make_dir_absolute(temp_dir)
+	DirAccess.make_dir_absolute(_temp_dir)
 	_fetch_available_versions()
 
 
@@ -27,11 +28,11 @@ func available_versions() -> Array[String]:
 	return return_val
 
 
-func download(version: String) -> GodotVersion:
+func download(version: String) -> void:
 	var link := _find_link(version)
 	if link == "":
 		push_error("Could not determine download link")
-		return null
+		return
 	var file_name := link.split("/")[-1]
 	var dl_result := await _download_and_unzip(link, file_name)
 	var unpacked_file: PackedByteArray = dl_result[0]
@@ -41,7 +42,6 @@ func download(version: String) -> GodotVersion:
 	godot_version.version = version
 	godot_version.installation_path = FileAccess.open(installation_path, FileAccess.READ).get_path_absolute()
 	emit_signal("version_downloaded", godot_version)
-	return godot_version
 
 
 func _find_link(version: String) -> String:
@@ -51,7 +51,7 @@ func _find_link(version: String) -> String:
 			func (line: String):
 				return line.contains(os_label) and (line.contains(arch) or line.contains("universal")) \
 			)
-	return "" if found_links.size() == 0 else found_links[0]
+	return "" if found_links.is_empty() else found_links[0]
 
 
 func _get_os_label(version: String) -> String:
@@ -67,7 +67,7 @@ func _get_os_label(version: String) -> String:
 
 func _download_and_unzip(link: String, file_name: String) -> Array:
 	var bytes := (await _request(link)).body
-	var zip_file_path: String = temp_dir + "/" + file_name
+	var zip_file_path: String = _temp_dir + "/" + file_name
 	var file := FileAccess.open(zip_file_path, FileAccess.WRITE)
 	file.store_buffer(bytes)
 	file.close()
@@ -81,10 +81,10 @@ func _download_and_unzip(link: String, file_name: String) -> Array:
 
 
 func _move_to_managed_path(unpacked_file: PackedByteArray, unpacked_file_name: String, version: String) -> String:
-	var managed_path = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR) + "/" + version
+	var managed_path := _managed_folder + "/" + version
 	DirAccess.make_dir_recursive_absolute(managed_path)
-	var installation_path: String = managed_path + "/" + unpacked_file_name
-	var file = FileAccess.open(installation_path, FileAccess.WRITE)
+	var installation_path := managed_path + "/" + unpacked_file_name
+	var file := FileAccess.open(installation_path, FileAccess.WRITE)
 	file.store_buffer(unpacked_file)
 	file.close()
 	return installation_path
