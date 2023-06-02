@@ -1,6 +1,7 @@
 extends Node
 
 signal projects_loaded(projects: Array[ProjectData])
+signal projects_changed()
 
 const CACHE_FILE_NAME := "user://.projects.godot-switcheroo"
 const ABOUT_CACHE_FILE := "Projects cache file for https://github.com/drusin/godot-switcheroo"
@@ -22,23 +23,40 @@ func reload_projects() -> void:
 	_load_cache()
 
 
-func add(dir: DirAccess) -> ProjectData:
-	if _projects.has(dir.get_current_dir(true)) or \
-			(not dir.file_exists("project.godot") and \
-			not dir.file_exists("engine.cfg")):
-		return null
+func add_from_dirs(dir_paths: Array) -> void:
+	for dir_path in dir_paths:
+		var dir := DirAccess.open(dir_path)
+		if not dir.file_exists("project.godot") and \
+				not dir.file_exists("engine.cfg"):
+			continue
+		var project_file_name := "project.godot" if dir.file_exists("project.godot") else "engine.cfg"
+		var file_path := dir.get_current_dir(true) + "/" + project_file_name
+		_add_internal(file_path)
+	_persist_cache()
+	emit_signal("projects_changed")
+
+
+func add(file_path: String) -> void:
+	_add_internal(file_path)
+	_persist_cache()
+	emit_signal("projects_changed")
+
+
+func _add_internal(file_path: String) -> ProjectData:
+	if _projects.has(file_path):
+		return _projects[file_path]
 	var project_cache_data = ProjectCacheData.new()
-	var project_file_name := "project.godot" if dir.file_exists("project.godot") else "engine.cfg"
-	project_cache_data.path = dir.get_current_dir(true) + "/" + project_file_name
+	project_cache_data.path = file_path
 	var project_data = _project_data_from_cache(project_cache_data)
 	_projects[project_cache_data.path] = project_data
-	_persist_cache()
 	return project_data
 
 
-func remove(path: String) -> void:
-	_projects.erase(path)
+func remove(paths: Array) -> void:
+	for path in paths:
+		_projects.erase(path)
 	_persist_cache()
+	emit_signal("projects_changed")
 
 
 func get_by_path(path: String) -> ProjectData:

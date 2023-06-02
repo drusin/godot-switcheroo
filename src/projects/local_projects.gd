@@ -44,17 +44,18 @@ func _ready() -> void:
 	RunButton.pressed.connect(_on_run_or_edit_pressed)
 	DownloadingMessage.get_label().horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	INSTALLATIONS.installations_changed.connect(_on_installations_changed)
+	PROJECTS.projects_changed.connect(_refresh_project_list)
 	_refresh_project_list()
 
 
 func _perform_scan() -> void:
 	PROJECTS.reload_projects()
-	var dir = DirAccess.open(scan_dir)
-	PROJECTS.add(dir)
+	var dirs_to_add: Array[String] = [scan_dir]
+	var dir := DirAccess.open(scan_dir)
 	for subdir in dir.get_directories():
 		dir.change_dir(scan_dir + "/" + subdir)
-		PROJECTS.add(dir)
-	_refresh_project_list()
+		dirs_to_add.append(dir.get_current_dir(true))
+	PROJECTS.add_from_dirs(dirs_to_add)
 
 
 func _refresh_project_list() -> void:
@@ -67,10 +68,13 @@ func _refresh_project_list() -> void:
 		var godot_version = INSTALLATIONS.version(project.godot_version_id)
 		if not godot_version and project.godot_version_id != "":
 			godot_version = GodotVersion.from_id(project.godot_version_id)
-			INSTALLATIONS.add_managed(godot_version)
+			if godot_version.is_custom:
+				INSTALLATIONS.add_custom(godot_version)
+			else:
+				INSTALLATIONS.add_managed([godot_version])
 		line.version = godot_version
 		project_lines.append(line)
-	Projects.set_content(project_lines)
+	await Projects.set_content(project_lines)
 	_set_buttons_state()
 	_apply_filter_and_sort()
 
@@ -113,7 +117,7 @@ func _apply_filter_and_sort() -> void:
 		var project_line = line as ProjectLine
 		project_line.visible = _filter_text(project_line) and \
 				_version_filter(project_line)
-	Projects.sort_items(_sort)
+	Projects.sort_items.call_deferred(_sort)
 
 
 func _filter_text(line: ProjectLine) -> bool:
@@ -170,7 +174,7 @@ func _on_run_or_edit_pressed(edit := false) -> void:
 		DownloadingMessage.popup()
 		_currently_trying_to_start = project
 		_currently_trying_to_edit = edit
-		DOWNLOAD_REPOSITORY.download(godot_version.version)
+		DOWNLOADS.download(godot_version.version)
 		return
 	_open_project(project, edit)
 	_apply_filter_and_sort()
@@ -178,14 +182,14 @@ func _on_run_or_edit_pressed(edit := false) -> void:
 
 # Reacting to "external" Signals
 func _on_confirm_remove_pressed() -> void:
+	var to_remove: Array[String] = []
 	for line in Projects.get_selected_items():
-		PROJECTS.remove(line.project_path)
-	_refresh_project_list()
+		to_remove.append(line.project_path)
+	PROJECTS.remove(to_remove)
 
 
 func _on_import_dialog_file_selected(path: String) -> void:
-	PROJECTS.add(DirAccess.open(path))
-	_refresh_project_list()
+	PROJECTS.add(path)
 
 
 func _on_projects_selection_changed(_selection) -> void:

@@ -23,6 +23,7 @@ func set_content(items: Array) -> void:
 	for child in Selectables.get_children():
 		child.is_selected = false
 		child.queue_free()
+		await child.tree_exited
 	for item in items:
 		var list_item := item as ListItem
 		list_item.selected_changed.connect(_item_selected_behaviour(list_item))

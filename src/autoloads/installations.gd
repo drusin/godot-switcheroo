@@ -11,8 +11,8 @@ var _installations := {}
 
 
 func _ready() -> void:
-	DOWNLOAD_REPOSITORY.available_versions_ready.connect(_add_remote_versions)
-	DOWNLOAD_REPOSITORY.version_downloaded.connect(add_managed)
+	DOWNLOADS.available_versions_ready.connect(_add_remote_versions)
+	DOWNLOADS.version_downloaded.connect(_on_version_downloaded)
 	_load_cache()
 	_persist_cache()
 
@@ -24,8 +24,9 @@ func add_custom(custom: GodotVersion) -> void:
 	emit_signal("installations_changed")
 
 
-func add_managed(managed: GodotVersion) -> void:
-	_installations[managed.id()] = managed
+func add_managed(installations: Array) -> void:
+	for installation in installations:
+		_installations[installation.id()] = installation
 	_persist_cache()
 	emit_signal("installations_changed")
 
@@ -44,7 +45,14 @@ func local_versions() -> Array[GodotVersion]:
 	return all_versions().filter(func (ver: GodotVersion): return ver.installation_path != "")
 
 
-func remove(id: String):
+func remove(ids: Array):
+	for id in ids:
+		_remove(id)
+		_persist_cache()
+	emit_signal("installations_changed")
+
+
+func _remove(id: String) -> void:
 	var to_remove := version(id)
 	if not to_remove.is_custom and to_remove.installation_path != "":
 		DirAccess.remove_absolute(to_remove.installation_path)
@@ -52,12 +60,14 @@ func remove(id: String):
 		to_remove.installation_path = ""
 	else:
 		_installations.erase(id)
-	_persist_cache()
-	emit_signal("installations_changed")
+
+
+func _on_version_downloaded(downloaded: GodotVersion) -> void:
+	add_managed([downloaded])
 
 
 func _add_remote_versions():
-	for version_str in DOWNLOAD_REPOSITORY.available_versions():
+	for version_str in DOWNLOADS.available_versions():
 		var godot_version = GodotVersion.new()
 		godot_version.version = version_str
 		if not _installations.has(godot_version.id()):

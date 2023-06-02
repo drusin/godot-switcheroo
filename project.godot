@@ -21,7 +21,7 @@ CONSTANTS="*res://src/autoloads/constants.gd"
 PREFERENCES="*res://src/autoloads/preferences.gd"
 PROJECTS="*res://src/autoloads/projects.gd"
 INSTALLATIONS="*res://src/autoloads/installations.gd"
-DOWNLOAD_REPOSITORY="*res://src/autoloads/download_repository.gd"
+DOWNLOADS="*res://src/autoloads/downloads.gd"
 
 [display]
 
