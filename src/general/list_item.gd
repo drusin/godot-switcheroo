@@ -1,5 +1,5 @@
-extends Control
 class_name ListItem
+extends Control
 
 signal selected_changed(selected: bool)
 
@@ -13,6 +13,11 @@ signal selected_changed(selected: bool)
 	set(new_val):
 		SelectButton = new_val
 		SelectButton.pressed.connect(_on_select_button_pressed)
+
+
+func _ready() -> void:
+	if not SelectButton:
+		SelectButton = $SelectButton
 
 
 func _on_select_button_pressed() -> void:

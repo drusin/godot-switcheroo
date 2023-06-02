@@ -6,12 +6,14 @@ signal selection_changed(selection: Array)
 @export var _dummy_items_count := 0
 
 @onready var Selectables: VBoxContainer = $Selectables
-@onready var ListItemScene := preload("res://src/general/list_item.tscn")
 
 var last_selected_index := -1
 
 
 func _ready() -> void:
+	if _dummy_items_count == 0:
+		return
+	var ListItemScene = load("res://src/general/list_item.tscn")
 	var dummy_items = []
 	for i in range(0, _dummy_items_count):
 		dummy_items.append(ListItemScene.instantiate())
@@ -22,8 +24,8 @@ func set_content(items: Array) -> void:
 	last_selected_index = -1
 	for child in Selectables.get_children():
 		child.is_selected = false
+		Selectables.remove_child(child)
 		child.queue_free()
-		await child.tree_exited
 	for item in items:
 		var list_item := item as ListItem
 		list_item.selected_changed.connect(_item_selected_behaviour(list_item))

@@ -48,7 +48,7 @@ func _refresh_installations() -> void:
 		line.id = installation.id()
 		line.is_custom = installation.is_custom
 		lines.append(line)
-	await Installations.set_content(lines)
+	Installations.set_content(lines)
 	_set_buttons_state.call_deferred()
 	_apply_filter_and_sort()
 

@@ -74,7 +74,7 @@ func _refresh_project_list() -> void:
 				INSTALLATIONS.add_managed([godot_version])
 		line.version = godot_version
 		project_lines.append(line)
-	await Projects.set_content(project_lines)
+	Projects.set_content(project_lines)
 	_set_buttons_state()
 	_apply_filter_and_sort()
 
