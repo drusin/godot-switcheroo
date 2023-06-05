@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://src/general/list_item.gd" id="1_q0eol"]
 
-[node name="ListItem" type="Control" node_paths=PackedStringArray("SelectButton")]
+[node name="ListItem" type="Control"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 3
 anchors_preset = 10
@@ -11,7 +11,6 @@ offset_bottom = 64.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 script = ExtResource("1_q0eol")
-SelectButton = NodePath("SelectButton")
 
 [node name="SelectButton" type="Button" parent="."]
 layout_mode = 1

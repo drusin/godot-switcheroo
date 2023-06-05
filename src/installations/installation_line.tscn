@@ -1,32 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://csu7nig0ni2o6"]
+[gd_scene load_steps=5 format=3 uid="uid://csu7nig0ni2o6"]
 
 [ext_resource type="Script" path="res://src/installations/installation_line.gd" id="1_2q3kk"]
+[ext_resource type="PackedScene" uid="uid://dynsj8r4qw1vd" path="res://src/general/list_item.tscn" id="1_8bdew"]
 [ext_resource type="PackedScene" uid="uid://dyeem17hdif3i" path="res://src/general/centered_cursive_label.tscn" id="2_4nd38"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_uiaa5"]
+[sub_resource type="LabelSettings" id="LabelSettings_fpoh0"]
 font_size = 36
 
-[node name="InstallationtLine" type="Control"]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 3
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 64.0
-grow_horizontal = 2
+[node name="InstallationLine" instance=ExtResource("1_8bdew")]
 script = ExtResource("1_2q3kk")
+is_favourite = false
+custom_name = ""
+version = "4.0.3 RC 1"
+path = "managed"
+id = ""
+is_custom = false
 
-[node name="SelectButton" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-toggle_mode = true
-
-[node name="Widgets" type="HBoxContainer" parent="."]
+[node name="Widgets" type="HBoxContainer" parent="." index="1"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,46 +25,46 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Favourite" type="CheckButton" parent="Widgets"]
+[node name="Favourite" type="CheckButton" parent="Widgets" index="0"]
 layout_mode = 2
 
-[node name="PseudoIcon" type="Label" parent="Widgets"]
+[node name="PseudoIcon" type="Label" parent="Widgets" index="1"]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 1
 text = "4.0"
-label_settings = SubResource("LabelSettings_uiaa5")
+label_settings = SubResource("LabelSettings_fpoh0")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Content" type="VBoxContainer" parent="Widgets"]
+[node name="Content" type="VBoxContainer" parent="Widgets" index="2"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Widgets/Content"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Widgets/Content" index="0"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="NamePrimary" type="Label" parent="Widgets/Content/HBoxContainer"]
+[node name="NamePrimary" type="Label" parent="Widgets/Content/HBoxContainer" index="0"]
 layout_mode = 2
 text = "Custom Name"
 
-[node name="NameSecondary" parent="Widgets/Content/HBoxContainer" instance=ExtResource("2_4nd38")]
+[node name="NameSecondary" parent="Widgets/Content/HBoxContainer" index="1" instance=ExtResource("2_4nd38")]
 visible = false
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Widgets/Content"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Widgets/Content" index="1"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="InfoPrimary" parent="Widgets/Content/HBoxContainer2" instance=ExtResource("2_4nd38")]
+[node name="InfoPrimary" parent="Widgets/Content/HBoxContainer2" index="0" instance=ExtResource("2_4nd38")]
 layout_mode = 2
 size_flags_horizontal = 1
 text = "managed"
 
-[node name="Downloading" parent="Widgets/Content/HBoxContainer2" instance=ExtResource("2_4nd38")]
+[node name="Downloading" parent="Widgets/Content/HBoxContainer2" index="1" instance=ExtResource("2_4nd38")]
 visible = false
 layout_mode = 2
 text = "Downloading"

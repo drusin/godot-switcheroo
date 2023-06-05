@@ -1,94 +1,81 @@
-[gd_scene load_steps=4 format=3 uid="uid://c7ih6hxqdjogf"]
+[gd_scene load_steps=5 format=3 uid="uid://c7ih6hxqdjogf"]
 
+[ext_resource type="PackedScene" uid="uid://dynsj8r4qw1vd" path="res://src/general/list_item.tscn" id="1_ekshv"]
 [ext_resource type="Script" path="res://src/projects/project_line.gd" id="1_nwo6l"]
 [ext_resource type="Texture2D" uid="uid://bi7wndmqnnyhs" path="res://icon.svg" id="2_gkym2"]
 [ext_resource type="PackedScene" uid="uid://dyeem17hdif3i" path="res://src/general/centered_cursive_label.tscn" id="3_3bd0b"]
 
-[node name="ProjectLine" type="Control"]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 3
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 64.0
-grow_horizontal = 2
-size_flags_horizontal = 3
+[node name="ProjectLine" instance=ExtResource("1_ekshv")]
 script = ExtResource("1_nwo6l")
-project_icon = "C:/dev/godot/godot-switcheroo/icon.svg"
+is_favourite = false
+project_icon = ""
+project_name = "Project name"
+project_path = "project/path"
 
-[node name="SelectButton" type="Button" parent="."]
+[node name="Widgets" type="HBoxContainer" parent="." index="1"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-toggle_mode = true
-
-[node name="Widgets" type="HBoxContainer" parent="."]
-layout_mode = 2
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 mouse_filter = 2
 
-[node name="Favourite" type="CheckButton" parent="Widgets"]
+[node name="Favourite" type="CheckButton" parent="Widgets" index="0"]
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Widgets"]
+[node name="Icon" type="TextureRect" parent="Widgets" index="1"]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("2_gkym2")
 expand_mode = 3
 
-[node name="Content" type="VBoxContainer" parent="Widgets"]
+[node name="Content" type="VBoxContainer" parent="Widgets" index="2"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="NameContainer" type="HBoxContainer" parent="Widgets/Content"]
+[node name="NameContainer" type="HBoxContainer" parent="Widgets/Content" index="0"]
 layout_mode = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="Name" type="Label" parent="Widgets/Content/NameContainer"]
+[node name="Name" type="Label" parent="Widgets/Content/NameContainer" index="0"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "Project name"
 
-[node name="PathLabel" parent="Widgets/Content/NameContainer" instance=ExtResource("3_3bd0b")]
+[node name="PathLabel" parent="Widgets/Content/NameContainer" index="1" instance=ExtResource("3_3bd0b")]
 layout_mode = 2
 
-[node name="VersionContainer" type="HBoxContainer" parent="Widgets/Content"]
+[node name="VersionContainer" type="HBoxContainer" parent="Widgets/Content" index="1"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="PrimaryVersionLabel" type="Label" parent="Widgets/Content/VersionContainer"]
+[node name="PrimaryVersionLabel" type="Label" parent="Widgets/Content/VersionContainer" index="0"]
 visible = false
 layout_mode = 2
 
-[node name="VersionInfoIcon" type="TextureRect" parent="Widgets/Content/VersionContainer"]
+[node name="VersionInfoIcon" type="TextureRect" parent="Widgets/Content/VersionContainer" index="1"]
 visible = false
 layout_mode = 2
 tooltip_text = "The selected managed Godot version will be downloaded when editing or running the project for the first time"
 texture = ExtResource("2_gkym2")
 expand_mode = 3
 
-[node name="SecondaryVersionLabel" parent="Widgets/Content/VersionContainer" instance=ExtResource("3_3bd0b")]
+[node name="SecondaryVersionLabel" parent="Widgets/Content/VersionContainer" index="2" instance=ExtResource("3_3bd0b")]
 layout_mode = 2
 text = "No Godot version selected"
 
-[node name="CompatibilityWarning" type="TextureRect" parent="Widgets"]
+[node name="CompatibilityWarning" type="TextureRect" parent="Widgets" index="3"]
 visible = false
 layout_mode = 2
 tooltip_text = "Directly editing or opening  Godot 1 and 2 projects is not supported. The project manager will be started instead."
 texture = ExtResource("2_gkym2")
 expand_mode = 3
 
-[node name="MissingVersionWarning" type="TextureRect" parent="Widgets"]
+[node name="MissingVersionWarning" type="TextureRect" parent="Widgets" index="4"]
 visible = false
 layout_mode = 2
 tooltip_text = "The custom version set for this project is missing. You will be prompted to resolve this problem when trying to edit or run the project."

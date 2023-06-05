@@ -9,10 +9,7 @@ signal selected_changed(selected: bool)
 		if SelectButton and SelectButton.button_pressed != new_val:
 			SelectButton.button_pressed = new_val
 
-@export var SelectButton: Button:
-	set(new_val):
-		SelectButton = new_val
-		SelectButton.pressed.connect(_on_select_button_pressed)
+@onready var SelectButton: Button = find_child("SelectButton", true)
 
 
 func _on_select_button_pressed() -> void:

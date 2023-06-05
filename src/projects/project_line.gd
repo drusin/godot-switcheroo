@@ -23,7 +23,6 @@ var version: GodotVersion:
 @onready var MissingVersionWarning: TextureRect = $Widgets/MissingVersionWarning
 
 func _ready() -> void:
-	SelectButton = get_node("SelectButton")
 	FavouriteButton.button_pressed = is_favourite
 	Icon.texture = _create_external_texture(project_icon)
 	NameLabel.text = project_name
