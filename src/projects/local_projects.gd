@@ -16,6 +16,7 @@ extends Control
 @onready var SetGodotButton: Button = $Content/ButtonPane/SetGodotVersion
 @onready var EditButton: Button = $Content/ButtonPane/Edit
 @onready var RunButton: Button = $Content/ButtonPane/Run
+@onready var OpenFolder: Button = find_child("OpenFolder", true)
 @onready var RemoveButton: Button = $Content/ButtonPane/Remove
 
 # Dialogs
@@ -85,6 +86,7 @@ func _set_buttons_state() -> void:
 	SetGodotButton.disabled = selected_amount == 0
 	EditButton.disabled = selected_amount != 1 or not Projects.get_selected_items()[0].version
 	RunButton.disabled = selected_amount != 1 or not Projects.get_selected_items()[0].version
+	OpenFolder.disabled = selected_amount != 1
 
 
 func _get_project_data_for_line(line: ProjectLine) -> ProjectData:
@@ -178,6 +180,11 @@ func _on_run_or_edit_pressed(edit := false) -> void:
 		DOWNLOADS.download(godot_version.version)
 		return
 	_open_project(project, edit)
+
+
+func _on_open_folder_pressed() -> void:
+	var project := PROJECTS.get_by_path(Projects.get_selected_items()[0].project_path)
+	OS.shell_open(project.general.folder_path())
 
 
 # Reacting to "external" Signals

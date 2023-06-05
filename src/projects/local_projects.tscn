@@ -125,6 +125,11 @@ layout_mode = 2
 disabled = true
 text = "Run"
 
+[node name="OpenFolder" type="Button" parent="Content/ButtonPane"]
+layout_mode = 2
+disabled = true
+text = "Open Folder"
+
 [node name="Remove" type="Button" parent="Content/ButtonPane"]
 layout_mode = 2
 disabled = true
@@ -174,6 +179,7 @@ Downloading..."
 [connection signal="pressed" from="Content/ButtonPane/SetProjectsFolder" to="." method="_on_set_projects_folder_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="_perform_scan"]
 [connection signal="pressed" from="Content/ButtonPane/SetGodotVersion" to="." method="_on_set_godot_version_pressed"]
+[connection signal="pressed" from="Content/ButtonPane/OpenFolder" to="." method="_on_open_folder_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Remove" to="." method="_on_remove_pressed"]
 [connection signal="dir_selected" from="SetProjectsFolderDialog" to="." method="_on_scan_folder_dialog_dir_selected"]
 [connection signal="confirmed" from="RemoveConfirmationDialog" to="." method="_on_confirm_remove_pressed"]
