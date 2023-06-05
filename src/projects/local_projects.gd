@@ -25,6 +25,7 @@ extends Control
 @onready var ChooseInstallation: ConfirmationDialog = find_child("ChooseInstallation", true)
 @onready var ConfirmRemoveDialog: ConfirmationDialog = $RemoveConfirmationDialog
 @onready var DownloadingMessage: AcceptDialog = find_child("DownloadingMessage", true)
+@onready var MissingCustomVersion: MissingCustomVersion = find_child("MissingCustomVersion", true)
 
 
 var scan_dir: String:
@@ -173,13 +174,16 @@ func _on_import_pressed() -> void:
 func _on_run_or_edit_pressed(edit := false) -> void:
 	var project := _get_project_data_for_line(Projects.get_selected_items()[0])
 	var godot_version := INSTALLATIONS.version(project.godot_version_id)
-	if godot_version.installation_path == "":
-		DownloadingMessage.popup()
-		_currently_trying_to_start = project
-		_currently_trying_to_edit = edit
-		DOWNLOADS.download(godot_version.version)
+	if godot_version.installation_path != "":
+		_open_project(project, edit)
 		return
-	_open_project(project, edit)
+	_currently_trying_to_start = project
+	_currently_trying_to_edit = edit
+	if godot_version.is_custom:
+		MissingCustomVersion.popup()
+	else:
+		DownloadingMessage.popup()
+		DOWNLOADS.download(godot_version.version)
 
 
 func _on_open_folder_pressed() -> void:
