@@ -40,9 +40,9 @@ func get_selected_items() -> Array:
 	return Selectables.get_children().filter(func (item: ListItem): return item.is_selected)
 
 
-func sort_items(sorter: Callable) -> void:
+func sort_items(comparator: Callable) -> void:
 	var sorted := Selectables.get_children()
-	sorted.sort_custom(sorter)
+	Arrays.sort(sorted, comparator)
 	for child in Selectables.get_children():
 		Selectables.remove_child(child)
 	for child in sorted:

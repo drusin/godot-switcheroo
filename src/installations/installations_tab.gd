@@ -119,12 +119,12 @@ func _managed(line: InstallationLine) -> bool:
 	return true
 
 
-func _sort(left: InstallationLine, right: InstallationLine) -> bool:
+func _sort(left: InstallationLine, right: InstallationLine) -> int:
 	var left_field := _get_field_for_sorting(left)
 	var right_field := _get_field_for_sorting(right)
 	if AscDesc.selected == 0:
-		return left_field.naturalnocasecmp_to(right_field) <= 0
-	return right_field.naturalnocasecmp_to(left_field) <= 0
+		return left_field.naturalnocasecmp_to(right_field)
+	return right_field.naturalnocasecmp_to(left_field)
 
 
 func _get_field_for_sorting(line: InstallationLine) -> String:

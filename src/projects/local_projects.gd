@@ -121,7 +121,10 @@ func _apply_filter_and_sort() -> void:
 		var project_line = line as ProjectLine
 		project_line.visible = _filter_text(project_line) and \
 				_version_filter(project_line)
-	Projects.sort_items.call_deferred(_sort)
+	if not Sort.selected == 1:
+		Projects.sort_items(func (left, right): 
+			return left.project_name.naturalnocasecmp_to(right.project_name))
+	Projects.sort_items(_sort)
 
 
 func _filter_text(line: ProjectLine) -> bool:
@@ -136,12 +139,12 @@ func _version_filter(line: ProjectLine) -> bool:
 	return true
 
 
-func _sort(left: ProjectLine, right: ProjectLine) -> bool:
+func _sort(left: ProjectLine, right: ProjectLine) -> int:
 	var left_field := _get_field_for_sorting(left)
 	var right_field := _get_field_for_sorting(right)
 	if AscDesc.selected == 0:
-		return left_field.naturalnocasecmp_to(right_field) <= 0
-	return right_field.naturalnocasecmp_to(left_field) <= 0
+		return left_field.naturalnocasecmp_to(right_field)
+	return right_field.naturalnocasecmp_to(left_field)
 
 
 func _get_field_for_sorting(line: ProjectLine) -> String:
