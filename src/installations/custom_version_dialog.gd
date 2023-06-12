@@ -2,7 +2,16 @@ extends ConfirmationDialog
 class_name CustomVersionDialog
 
 signal version_created(version: GodotVersion)
-signal version_edited(version: EditedGodotVersion)
+
+@export var locating_set_version := false
+@export var version := "":
+	set(new_val):
+		version = new_val
+		VersionEdit.text = version
+@export var custom_name := "":
+	set(new_val):
+		custom_name = new_val
+		NameEdit.text = custom_name
 
 @onready var PathEdit: LineEdit = $Content/Path/PathContent/PathEdit
 @onready var VersionEdit: LineEdit = $Content/Version/VersionEdit
@@ -10,19 +19,25 @@ signal version_edited(version: EditedGodotVersion)
 @onready var PathDialog: FileDialog = $PathDialog
 @onready var MandatoryAlert: AcceptDialog = $MandatoryAlert
 
-var old_name := ""
+var last_dir: String:
+	set(new_val):
+		PREFERENCES.write(Prefs.Keys.LAST_CUSTOM_INSTALLATION_DIR, new_val)
+	get:
+		return PREFERENCES.read(Prefs.Keys.LAST_CUSTOM_INSTALLATION_DIR)
 
 
-func custom_popup(current_name := "") -> void:
+func custom_popup() -> void:
 	PathEdit.clear()
-	VersionEdit.clear()
-	NameEdit.clear()
-	old_name = current_name
+	VersionEdit.editable = not locating_set_version
+	NameEdit.editable = not locating_set_version
+	if not locating_set_version:
+		VersionEdit.clear()
+		NameEdit.clear()
 	popup()
 
 
 func _on_browse_button_pressed() -> void:
-	PathDialog.current_dir = PREFERENCES.read(Prefs.Keys.LAST_CUSTOM_INSTALLATION_DIR)
+	PathDialog.current_dir = last_dir
 	PathDialog.popup()
 
 
@@ -32,9 +47,9 @@ func _on_path_dialog_file_selected(new_path: String) -> void:
 
 
 func _on_confirmed() -> void:
-	var path = PathEdit.text
-	var version = VersionEdit.text
-	var custom_name = NameEdit.text
+	var path := PathEdit.text
+	version = VersionEdit.text
+	custom_name = NameEdit.text
 
 	if path == "" or version == "" or custom_name == "":
 		MandatoryAlert.popup()
@@ -45,17 +60,7 @@ func _on_confirmed() -> void:
 	godot_version.version = version
 	godot_version.custom_name = custom_name
 	godot_version.is_custom = true
-
-	if old_name == "":
-		emit_signal("version_created", godot_version)
-	else:
-		var edited_version := EditedGodotVersion.new()
-		edited_version.old_name = old_name
-		edited_version.godot_version = godot_version
-		emit_signal("version_edited", edited_version)
+	
+	last_dir = path
+	emit_signal("version_created", godot_version)
 	hide()
-
-
-class EditedGodotVersion extends RefCounted:
-	var old_name := ""
-	var godot_version: GodotVersion

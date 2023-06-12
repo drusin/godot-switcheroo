@@ -26,6 +26,7 @@ extends Control
 @onready var ConfirmRemoveDialog: ConfirmationDialog = $RemoveConfirmationDialog
 @onready var DownloadingMessage: AcceptDialog = find_child("DownloadingMessage", true)
 @onready var MissingCustomVersion: MissingCustomVersion = find_child("MissingCustomVersion", true)
+@onready var CustomVersionDialog: CustomVersionDialog = find_child("CustomVersionDialog", true)
 
 
 var scan_dir: String:
@@ -232,3 +233,19 @@ func _on_installations_changed() -> void:
 		return
 	DownloadingMessage.hide()
 	_open_project(_currently_trying_to_start, _currently_trying_to_edit)
+
+
+func _on_missing_custom_version_locate_custom_version():
+	var installation := INSTALLATIONS.version(_currently_trying_to_start.godot_version_id)
+	CustomVersionDialog.version = installation.version
+	CustomVersionDialog.custom_name = installation.custom_name
+	CustomVersionDialog.custom_popup()
+
+
+func _on_missing_custom_version_select_new_version():
+	ChooseInstallation.popup()
+
+
+func _on_custom_version_dialog_version_created(version):
+	INSTALLATIONS.add_custom(version)
+	_refresh_project_list()

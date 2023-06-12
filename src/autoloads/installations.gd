@@ -20,7 +20,6 @@ func _ready() -> void:
 func add_custom(custom: GodotVersion) -> void:
 	_installations[custom.id()] = custom
 	_persist_cache()
-	PREFERENCES.write(Prefs.Keys.LAST_CUSTOM_INSTALLATION_DIR, custom.folder_path())
 	emit_signal("installations_changed")
 
 
