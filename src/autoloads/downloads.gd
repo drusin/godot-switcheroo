@@ -2,29 +2,36 @@ extends Node
 
 signal available_versions_ready()
 signal version_downloaded(version: GodotVersion)
+signal single_update(version: String, percent: int)
+signal all_update(downloads: int, percent: int)
 
 const JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/output.json"
 
 @onready var _temp_dir:String = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
 @onready var _managed_folder: String = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR)
 
-var _data: Dictionary
+var _available_versions: Dictionary
+var _current_downloads := {}
+var _update_timer := Timer.new()
 
 
 func _ready() -> void:
 	DirAccess.make_dir_absolute(_temp_dir)
 	_fetch_available_versions()
-
+	_update_timer.timeout.connect(_send_updates)
+	_update_timer.wait_time = CONSTANTS.DOWNLOAD_TIMER_UPDATE
+	_update_timer.autostart = true
+	add_child(_update_timer)
 
 func _fetch_available_versions() -> void:
 	var result_string := (await _request(JSON_URL)).body.get_string_from_utf8()
-	_data = JSON.parse_string(result_string)
+	_available_versions = JSON.parse_string(result_string)
 	emit_signal("available_versions_ready")
 
 
 func available_versions() -> Array[String]:
 	var return_val: Array[String] = []
-	return_val.append_array(_data.keys())
+	return_val.append_array(_available_versions.keys())
 	return return_val
 
 
@@ -34,7 +41,7 @@ func download(version: String) -> void:
 		push_error("Could not determine download link")
 		return
 	var file_name := link.split("/")[-1]
-	var dl_result := await _download_and_unzip(link, file_name)
+	var dl_result := await _download_and_unzip(version, link, file_name)
 	var unpacked_file: PackedByteArray = dl_result[0]
 	var unpacked_file_name: String = dl_result[1]
 	var installation_path = _move_to_managed_path(unpacked_file, unpacked_file_name, version)
@@ -47,7 +54,7 @@ func download(version: String) -> void:
 func _find_link(version: String) -> String:
 	var os_label = _get_os_label(version)
 	var arch := "64" if OS.has_feature("64") else "32"
-	var found_links: Array = _data[version].filter( \
+	var found_links: Array = _available_versions[version].filter( \
 			func (line: String):
 				return line.contains(os_label) and (line.contains(arch) or line.contains("universal")) \
 			)
@@ -65,8 +72,8 @@ func _get_os_label(version: String) -> String:
 	return ""
 
 
-func _download_and_unzip(link: String, file_name: String) -> Array:
-	var bytes := (await _request(link)).body
+func _download_and_unzip(version: String, link: String, file_name: String) -> Array:
+	var bytes := (await _request(link, version)).body
 	var zip_file_path: String = _temp_dir + "/" + file_name
 	var file := FileAccess.open(zip_file_path, FileAccess.WRITE)
 	file.store_buffer(bytes)
@@ -90,13 +97,34 @@ func _move_to_managed_path(unpacked_file: PackedByteArray, unpacked_file_name: S
 	return installation_path
 
 
-func _request(url: String) -> ReqResult:
+func _send_updates():
+	var keys := _current_downloads.keys()
+	var summed_percentage := 0
+	for version in keys:
+		var req: HTTPRequest = _current_downloads[version]
+		var percentage := _calc_percentage(version, req.get_downloaded_bytes())
+		summed_percentage += percentage
+		single_update.emit(version, percentage)
+	@warning_ignore("integer_division")
+	var all_percentage := 0 if summed_percentage == 0 else summed_percentage / keys.size()
+	all_update.emit(keys.size(), all_percentage)
+
+
+func _calc_percentage(version: String, amount: int) -> int:
+	return int(100 * amount / CONSTANTS.DOWNLOADS_SIZES[version.substr(0, 1)])
+
+
+func _request(url: String, version := "") -> ReqResult:
 	var req = HTTPRequest.new()
 	get_tree().get_root().add_child.call_deferred(req)
 	await req.tree_entered
 	req.request(url)
+	if version != "":
+		_current_downloads[version] = req
 	var results: Array = await req.request_completed
 	req.queue_free()
+	if version != "":
+		_current_downloads.erase(version)
 	return ReqResult.new(results)
 
 
