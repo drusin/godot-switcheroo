@@ -1,8 +1,6 @@
 class_name SelectablesList
 extends ScrollContainer
 
-signal selection_changed(selection: Array)
-
 @export var _dummy_items_count := 0
 
 @onready var Selectables: VBoxContainer = $Selectables
@@ -30,6 +28,9 @@ func set_content(items: Array) -> void:
 		var list_item := item as ListItem
 		list_item.selected_changed.connect(_item_selected_behaviour(list_item))
 		Selectables.add_child(list_item)
+	
+	if visible:
+		SIGNALS.list_amount_changed.emit(items.size())
 
 
 func get_items() -> Array:
@@ -54,7 +55,7 @@ func _update_last_selected(item: ListItem) -> void:
 
 
 func _send_selection_signal() -> void:
-	emit_signal("selection_changed", get_selected_items())
+	SIGNALS.selected_amount_changed.emit(get_selected_items().size())
 
 
 func _item_selected_behaviour(item: ListItem) -> Callable:

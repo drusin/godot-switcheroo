@@ -31,6 +31,7 @@ var _used_versions: Array[String] = []
 
 func _ready() -> void:
 	INSTALLATIONS.installations_changed.connect(_refresh_installations)
+	SIGNALS.selected_amount_changed.connect(_on_installations_selection_changed)
 	_refresh_installations()
 	UsageFilter.selected = PREFERENCES.read(Prefs.Keys.INST_FILTER_USAGE)
 	ManagedFilter.selected = PREFERENCES.read(Prefs.Keys.INST_FILTER_MANAGED)
@@ -66,7 +67,7 @@ func _check_used_versions() -> void:
 			_used_versions.append(project.godot_version_id)
 
 
-func _on_installations_selection_changed(_selection: Array) -> void:
+func _on_installations_selection_changed(_selection: int) -> void:
 	_set_buttons_state()
 
 

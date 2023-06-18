@@ -1,6 +1,6 @@
 extends Control
 
-@onready var Bottom := $Content/Bottom
+@onready var MainContent: Control = find_child("MainContent", true)
 
 
 func _ready() -> void:
@@ -8,7 +8,7 @@ func _ready() -> void:
 
 
 func _on_tabs_tab_changed(tab: int) -> void:
-	for child in Bottom.get_children():
+	for child in MainContent.get_children():
 		if not "main_tab_index" in child:
 			continue
 		child.visible = tab == child.main_tab_index

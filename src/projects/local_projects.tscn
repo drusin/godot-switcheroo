@@ -183,7 +183,6 @@ locating_set_version = true
 [connection signal="item_selected" from="Content/ProjectPane/Filtering/VersionFilter" to="." method="_on_filter_or_sorting_changed"]
 [connection signal="item_selected" from="Content/ProjectPane/Filtering/Sort" to="." method="_on_filter_or_sorting_changed"]
 [connection signal="item_selected" from="Content/ProjectPane/Filtering/AscDesc" to="." method="_on_filter_or_sorting_changed"]
-[connection signal="selection_changed" from="Content/ProjectPane/Projects" to="." method="_on_projects_selection_changed"]
 [connection signal="pressed" from="Content/ButtonPane/Import" to="." method="_on_import_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/SetProjectsFolder" to="." method="_on_set_projects_folder_pressed"]
 [connection signal="pressed" from="Content/ButtonPane/Rescan" to="." method="_perform_scan"]

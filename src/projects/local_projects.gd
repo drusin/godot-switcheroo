@@ -48,6 +48,7 @@ func _ready() -> void:
 	DownloadingMessage.get_label().horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	INSTALLATIONS.installations_changed.connect(_on_installations_changed)
 	PROJECTS.projects_changed.connect(_refresh_project_list)
+	SIGNALS.selected_amount_changed.connect(_on_projects_selection_changed)
 	_refresh_project_list()
 
 
@@ -207,7 +208,7 @@ func _on_import_dialog_file_selected(path: String) -> void:
 	PROJECTS.add(path)
 
 
-func _on_projects_selection_changed(_selection) -> void:
+func _on_projects_selection_changed(_selection: int) -> void:
 	_set_buttons_state()
 
 
