@@ -10,6 +10,7 @@ var last_selected_index := -1
 
 func _ready() -> void:
 	if _dummy_items_count == 0:
+		_on_visibility_changed.call_deferred()
 		return
 	var ListItemScene = load("res://src/general/list_item.tscn")
 	var dummy_items = []
@@ -34,11 +35,11 @@ func set_content(items: Array) -> void:
 
 
 func get_items() -> Array:
-	return Selectables.get_children()
+	return Selectables.get_children() if Selectables else []
 
 
 func get_selected_items() -> Array:
-	return Selectables.get_children().filter(func (item: ListItem): return item.is_selected)
+	return get_items().filter(func (item: ListItem): return item.is_selected)
 
 
 func sort_items(comparator: Callable) -> void:
@@ -99,3 +100,9 @@ func _select_single_line(item: ListItem, selected: bool) -> void:
 	for child in Selectables.get_children():
 		if child != item:
 			child.is_selected = false
+
+
+func _on_visibility_changed():
+	if is_visible_in_tree():
+		SIGNALS.list_amount_changed.emit(get_items().size())
+		SIGNALS.selected_amount_changed.emit(get_selected_items().size())
