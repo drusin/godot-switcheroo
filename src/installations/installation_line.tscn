@@ -9,12 +9,16 @@ font_size = 36
 
 [node name="InstallationLine" instance=ExtResource("1_8bdew")]
 script = ExtResource("1_2q3kk")
-is_favourite = false
 custom_name = ""
 version = "4.0.3 RC 1"
 path = "managed"
 id = ""
 is_custom = false
+is_favourite = null
+top_main_text = null
+top_secondary_text = null
+bottom_main_text = null
+bottom_secondary_text = null
 
 [node name="Widgets" type="HBoxContainer" parent="." index="1"]
 layout_mode = 1
@@ -68,3 +72,6 @@ text = "managed"
 visible = false
 layout_mode = 2
 text = "Downloading"
+
+[node name="HBoxContainer" parent="." index="2"]
+visible = false

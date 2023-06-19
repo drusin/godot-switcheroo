@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://dynsj8r4qw1vd"]
+[gd_scene load_steps=5 format=3 uid="uid://dynsj8r4qw1vd"]
 
 [ext_resource type="Script" path="res://src/general/list_item.gd" id="1_q0eol"]
+[ext_resource type="Texture2D" uid="uid://bi7wndmqnnyhs" path="res://icon.svg" id="2_p4nsx"]
+[ext_resource type="PackedScene" uid="uid://dyeem17hdif3i" path="res://src/general/centered_cursive_label.tscn" id="3_nn8v6"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_12wlj"]
+font_size = 36
 
 [node name="ListItem" type="Control"]
 custom_minimum_size = Vector2(0, 64)
@@ -20,5 +25,64 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 toggle_mode = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FavouriteButton" type="CheckButton" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="TextureIcon" type="TextureRect" parent="HBoxContainer/BoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("2_p4nsx")
+expand_mode = 4
+
+[node name="TextIcon" type="Label" parent="HBoxContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "4.0"
+label_settings = SubResource("LabelSettings_12wlj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Top" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TopMain" type="Label" parent="HBoxContainer/VBoxContainer/Top"]
+layout_mode = 2
+text = "top main text"
+
+[node name="TopSecondary" parent="HBoxContainer/VBoxContainer/Top" instance=ExtResource("3_nn8v6")]
+layout_mode = 2
+text = "top secondary text"
+
+[node name="Bottom" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BottomMain" type="Label" parent="HBoxContainer/VBoxContainer/Bottom"]
+layout_mode = 2
+text = "bottom main text"
+
+[node name="BottomSecondary" parent="HBoxContainer/VBoxContainer/Bottom" instance=ExtResource("3_nn8v6")]
+layout_mode = 2
+text = "bottom secondary text"
 
 [connection signal="pressed" from="SelectButton" to="." method="_on_select_button_pressed"]

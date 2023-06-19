@@ -7,10 +7,14 @@
 
 [node name="ProjectLine" instance=ExtResource("1_ekshv")]
 script = ExtResource("1_nwo6l")
-is_favourite = false
 project_icon = ""
 project_name = "Project name"
 project_path = "project/path"
+is_favourite = null
+top_main_text = null
+top_secondary_text = null
+bottom_main_text = null
+bottom_secondary_text = null
 
 [node name="Widgets" type="HBoxContainer" parent="." index="1"]
 layout_mode = 1
@@ -81,3 +85,6 @@ layout_mode = 2
 tooltip_text = "The custom version set for this project is missing. You will be prompted to resolve this problem when trying to edit or run the project."
 texture = ExtResource("2_gkym2")
 expand_mode = 3
+
+[node name="HBoxContainer" parent="." index="2"]
+visible = false

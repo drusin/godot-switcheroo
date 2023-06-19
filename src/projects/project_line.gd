@@ -3,7 +3,7 @@ class_name ProjectLine
 
 signal favourite_changed(favourite: bool)
 
-@export var is_favourite := false
+# @export var is_favourite := false
 @export_global_file var project_icon: String
 @export var project_name := "Project name"
 @export var project_path := "project/path"
@@ -12,7 +12,7 @@ var version: GodotVersion:
 		version = new_val
 		_set_version_label()
 
-@onready var FavouriteButton: CheckButton = $Widgets/Favourite
+# @onready var FavouriteButton: CheckButton = $Widgets/Favourite
 @onready var Icon: TextureRect = $Widgets/Icon
 @onready var NameLabel: Label = $Widgets/Content/NameContainer/Name
 @onready var PathLabel: CenteredCursiveLabel = find_child("PathLabel", true)
@@ -23,7 +23,7 @@ var version: GodotVersion:
 @onready var MissingVersionWarning: TextureRect = $Widgets/MissingVersionWarning
 
 func _ready() -> void:
-	FavouriteButton.button_pressed = is_favourite
+	#FavouriteButton.button_pressed = is_favourite
 	Icon.texture = _create_external_texture(project_icon)
 	NameLabel.text = project_name
 	PathLabel.text = project_path
