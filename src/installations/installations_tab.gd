@@ -43,11 +43,7 @@ func _refresh_installations() -> void:
 	var lines := []
 	for installation in INSTALLATIONS.local_versions():
 		var line: InstallationLine = InstallationLineScene.instantiate()
-		line.custom_name = installation.custom_name
-		line.version = installation.version
-		line.path = installation.installation_path
-		line.id = installation.id()
-		line.is_custom = installation.is_custom
+		line.godot_version = installation
 		lines.append(line)
 	Installations.set_content(lines)
 	_set_buttons_state.call_deferred()
@@ -130,9 +126,9 @@ func _sort(left: InstallationLine, right: InstallationLine) -> int:
 
 func _get_field_for_sorting(line: InstallationLine) -> String:
 	match Sorting.selected:
-		0: return line.custom_name if line.is_custom else line.version
-		1: return line.version
-		2: return line.path
+		0: return line.godot_version.custom_name if line.godot_version.is_custom else line.godot_version.version
+		1: return line.godot_version.version
+		2: return line.godot_version.installation_path
 	push_error("unknown sorting option!")
 	return ""
 

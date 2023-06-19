@@ -10,11 +10,6 @@ script = ExtResource("1_nwo6l")
 project_icon = ""
 project_name = "Project name"
 project_path = "project/path"
-is_favourite = null
-top_main_text = null
-top_secondary_text = null
-bottom_main_text = null
-bottom_secondary_text = null
 
 [node name="Widgets" type="HBoxContainer" parent="." index="1"]
 layout_mode = 1
