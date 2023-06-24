@@ -23,21 +23,25 @@ enum IconType { TEXTURE, TEXT }
 	set(new_val):
 		top_main_text = new_val
 		TopMain.text = new_val
+		TopMain.visible = new_val != ""
 
 @onready var top_secondary_text := "top secondary text":
 	set(new_val):
 		top_secondary_text = new_val
 		TopSecondary.text = new_val
+		TopSecondary.visible = new_val != ""
 
 @onready var bottom_main_text := "bottom main text":
 	set(new_val):
 		bottom_main_text = new_val
 		BottomMain.text = new_val
+		BottomMain.visible = new_val != ""
 
 @onready var bottom_secondary_text := "bottom secondary text":
 	set(new_val):
 		bottom_secondary_text = new_val
 		BottomSecondary.text = new_val
+		BottomSecondary.visible = new_val != ""
 
 @onready var warnings: Array[Warning] = []
 
