@@ -58,14 +58,14 @@ func _some_filter_changed(_ignore) -> void:
 
 func _refresh_version_list() -> void:
 	var versions := INSTALLATIONS.all_versions() if Uninstalled.button_pressed else INSTALLATIONS.local_versions()
-	var filtered := versions\
-			.filter(_managed)\
-			.filter(_pre_alpha)\
-			.filter(_alpha)\
-			.filter(_beta)\
-			.filter(_rc)\
+	var filtered := versions \
+			.filter(_managed) \
+			.filter(_pre_alpha) \
+			.filter(_alpha) \
+			.filter(_beta) \
+			.filter(_rc) \
 			.filter(_mono)
-	filtered.sort_custom(_sort)
+	Arrays.sort(filtered, _sort)
 
 	VersionOption.clear()
 	for version in filtered:
@@ -99,7 +99,7 @@ func _rc(version: GodotVersion) -> bool:
 func _mono(version: GodotVersion) -> bool:
 	return Mono.button_pressed or not version.version.contains("mono")
 
-func _sort(left: GodotVersion, right: GodotVersion) -> bool:
+func _sort(left: GodotVersion, right: GodotVersion) -> int:
 	if AscDescOption.selected == 0:
-		return right.version.naturalnocasecmp_to(left.version) <= 0
-	return left.version.naturalnocasecmp_to(right.version) <= 0
+		return right.version.naturalnocasecmp_to(left.version)
+	return left.version.naturalnocasecmp_to(right.version)

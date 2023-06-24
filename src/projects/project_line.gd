@@ -2,6 +2,7 @@ class_name ProjectLine
 extends ListItem
 
 var project: ProjectData
+var can_run := false
 
 
 func _ready() -> void:
@@ -12,6 +13,7 @@ func _ready() -> void:
 
 
 func _setup() -> void:
+	can_run = project.godot_version_id != ""
 	top_main_text = project.project_name
 	top_secondary_text = project.general.path
 	if project.godot_version_id == "":
@@ -28,3 +30,8 @@ func _setup() -> void:
 	else:
 		bottom_main_text = godot_version.version
 		bottom_secondary_text = "managed"
+
+
+func reset() -> void:
+	project = PROJECTS.get_by_path(project.general.path)
+	_setup()

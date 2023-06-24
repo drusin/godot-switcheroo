@@ -77,8 +77,8 @@ func _set_buttons_state() -> void:
 	var selected_amount = Projects.get_selected_items().size()
 	RemoveButton.disabled = selected_amount == 0
 	SetGodotButton.disabled = selected_amount == 0
-	EditButton.disabled = selected_amount != 1 or not Projects.get_selected_items()[0].version
-	RunButton.disabled = selected_amount != 1 or not Projects.get_selected_items()[0].version
+	EditButton.disabled = selected_amount != 1 or not Projects.get_selected_items()[0].can_run
+	RunButton.disabled = selected_amount != 1 or not Projects.get_selected_items()[0].can_run
 	OpenFolder.disabled = selected_amount != 1
 
 
@@ -208,8 +208,9 @@ func _on_scan_folder_dialog_dir_selected(dir: String) -> void:
 
 func _on_choose_installation_version_set(version: GodotVersion) -> void:
 	for line in Projects.get_selected_items():
-		line.version = version
-		PROJECTS.set_godot_version(line.project_path, version)
+		#line.version = version
+		PROJECTS.set_godot_version(line.project.general.path, version)
+		line.reset()
 	_set_buttons_state()
 
 
