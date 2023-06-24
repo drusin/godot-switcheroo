@@ -66,17 +66,7 @@ func _refresh_project_list() -> void:
 	var project_lines := []
 	for project in PROJECTS.all_projects():
 		var line: ProjectLine = ProjectLineScene.instantiate()
-		line.project_name = project.project_name
-		line.project_path = project.general.path
-		line.project_icon = project.icon_path
-		var godot_version = INSTALLATIONS.version(project.godot_version_id)
-		if not godot_version and project.godot_version_id != "":
-			godot_version = GodotVersion.from_id(project.godot_version_id)
-			if godot_version.is_custom:
-				INSTALLATIONS.add_custom(godot_version)
-			else:
-				INSTALLATIONS.add_managed([godot_version])
-		line.version = godot_version
+		line.project = project
 		project_lines.append(line)
 	Projects.set_content(project_lines)
 	_set_buttons_state()
@@ -93,7 +83,7 @@ func _set_buttons_state() -> void:
 
 
 func _get_project_data_for_line(line: ProjectLine) -> ProjectData:
-	return PROJECTS.get_by_path(line.project_path)
+	return PROJECTS.get_by_path(line.project.general.path)
 
 
 func _open_project(project: ProjectData , open_editor := false) -> void:
@@ -125,7 +115,7 @@ func _apply_filter_and_sort() -> void:
 				_version_filter(project_line)
 	if not Sort.selected == 1:
 		Projects.sort_items(func (left, right): 
-			return left.project_name.naturalnocasecmp_to(right.project_name))
+			return left.project.project_name.naturalnocasecmp_to(right.project.project_name))
 	Projects.sort_items(_sort)
 
 
