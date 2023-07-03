@@ -26,20 +26,18 @@ func reload_projects() -> void:
 func add_from_dirs(dir_paths: Array) -> void:
 	for dir_path in dir_paths:
 		var dir := DirAccess.open(dir_path)
-		if not dir.file_exists("project.godot") and \
-				not dir.file_exists("engine.cfg"):
+		if not dir.file_exists(CONSTANTS.PROJECT_FILE_NAME):
 			continue
-		var project_file_name := "project.godot" if dir.file_exists("project.godot") else "engine.cfg"
-		var file_path := dir.get_current_dir(true) + "/" + project_file_name
+		var file_path := dir.get_current_dir(true) + "/" + CONSTANTS.PROJECT_FILE_NAME
 		_add_internal(file_path)
 	_persist_cache()
-	emit_signal("projects_changed")
+	projects_changed.emit()
 
 
 func add(file_path: String) -> void:
 	_add_internal(file_path)
 	_persist_cache()
-	emit_signal("projects_changed")
+	projects_changed.emit()
 
 
 func _add_internal(file_path: String) -> ProjectData:
@@ -56,7 +54,7 @@ func remove(paths: Array) -> void:
 	for path in paths:
 		_projects.erase(path)
 	_persist_cache()
-	emit_signal("projects_changed")
+	projects_changed.emit()
 
 
 func get_by_path(path: String) -> ProjectData:
@@ -97,11 +95,10 @@ func _create_version_file_dict(version: GodotVersion) -> Dictionary:
 func _project_data_from_cache(cache: ProjectCacheData) ->  ProjectData:
 	var project_data := ProjectData.new()
 	var config := ConfigFile.new()
-	var before_3 := !cache.path.ends_with("project.godot")
 	config.load(cache.path)
-	project_data.project_name = config.get_value("application", "name" if before_3 else "config/name")
+	project_data.project_name = config.get_value("application", "config/name")
 	project_data.icon_path = cache.folder_path() + \
-			config.get_value("application", "icon" if before_3 else "config/icon").trim_prefix("res://")
+			config.get_value("application", "config/icon").trim_prefix("res://")
 	project_data.general = cache
 	project_data.godot_version_id = _read_godot_version(cache)
 	return project_data

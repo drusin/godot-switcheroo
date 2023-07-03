@@ -9,3 +9,4 @@ const DOWNLOADS_SIZES := {
 	"3": 70_000_000,
 	"4": 60_000_000,
 }
+const PROJECT_FILE_NAME := "project.godot"
