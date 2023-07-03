@@ -7,10 +7,10 @@ signal all_update(downloads: int, percent: int)
 
 const JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/output.json"
 
-@onready var _temp_dir:String = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
+@onready var _temp_dir: String = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
 @onready var _managed_folder: String = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR)
 
-var _available_versions: Dictionary
+var _available_versions := {}
 var _current_downloads := {}
 var _update_timer := Timer.new()
 
@@ -23,10 +23,15 @@ func _ready() -> void:
 	_update_timer.autostart = true
 	add_child(_update_timer)
 
+
 func _fetch_available_versions() -> void:
 	var result_string := (await _request(JSON_URL)).body.get_string_from_utf8()
-	_available_versions = JSON.parse_string(result_string)
-	emit_signal("available_versions_ready")
+	var parsed_versions: Dictionary = JSON.parse_string(result_string)
+	var filtered_names = parsed_versions.keys() \
+			.filter(func (key: String): return !key.begins_with("1") and !key.begins_with("2"))
+	for filtered in filtered_names:
+		_available_versions[filtered] = parsed_versions[filtered]
+	available_versions_ready.emit()
 
 
 func available_versions() -> Array[String]:

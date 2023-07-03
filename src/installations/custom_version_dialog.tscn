@@ -51,7 +51,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Base version:"
 
-[node name="VersionEdit" type="LineEdit" parent="Content/Version"]
+[node name="VersionButton" type="OptionButton" parent="Content/Version"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0

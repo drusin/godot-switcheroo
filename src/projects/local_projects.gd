@@ -89,12 +89,10 @@ func _get_project_data_for_line(line: ProjectLine) -> ProjectData:
 func _open_project(project: ProjectData , open_editor := false) -> void:
 	PROJECTS.update_last_opened(project.general.path)
 	_apply_filter_and_sort()
-	var args := []
+	var args := ["--path", project.general.folder_path()]
 	var godot_version = INSTALLATIONS.version(project.godot_version_id)
-	if godot_version.is_run_supported():
-		args = ["--path", project.general.folder_path()]
-		if open_editor:
-			args.append("-e")
+	if open_editor:
+		args.append("-e")
 	OS.create_process(godot_version.installation_path, args)
 	_currently_trying_to_start = null
 

@@ -20,14 +20,14 @@ func _ready() -> void:
 func add_custom(custom: GodotVersion) -> void:
 	_installations[custom.id()] = custom
 	_persist_cache()
-	emit_signal("installations_changed")
+	installations_changed.emit()
 
 
 func add_managed(installations: Array) -> void:
 	for installation in installations:
 		_installations[installation.id()] = installation
 	_persist_cache()
-	emit_signal("installations_changed")
+	installations_changed.emit()
 
 
 func version(id: String) -> GodotVersion:
@@ -48,7 +48,7 @@ func remove(ids: Array):
 	for id in ids:
 		_remove(id)
 		_persist_cache()
-	emit_signal("installations_changed")
+	installations_changed.emit()
 
 
 func _remove(id: String) -> void:
@@ -103,4 +103,4 @@ func _load_cache() -> void:
 	for installation_dict in version_cache.installations:
 		var installation: GodotVersion = dict_to_inst(installation_dict)
 		_installations[installation.id()] = installation
-	emit_signal("versions_loaded", all_versions())
+	versions_loaded.emit(all_versions())

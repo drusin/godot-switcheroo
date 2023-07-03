@@ -179,7 +179,7 @@ func _on_custom_version_dialog_version_created(version: GodotVersion) -> void:
 func _on_remove_confirmation_dialog_confirmed() -> void:
 	var ids_to_remove: Array[String] = []
 	for selected in Installations.get_selected_items():
-		ids_to_remove.append(selected.id)
+		ids_to_remove.append(selected.godot_version.id())
 	INSTALLATIONS.remove(ids_to_remove)
 
 

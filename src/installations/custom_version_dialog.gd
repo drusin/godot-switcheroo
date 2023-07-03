@@ -7,17 +7,19 @@ signal version_created(version: GodotVersion)
 @export var version := "":
 	set(new_val):
 		version = new_val
-		VersionEdit.text = version
+		VersionButton.select(_version_index_mapping[version])
 @export var custom_name := "":
 	set(new_val):
 		custom_name = new_val
 		NameEdit.text = custom_name
 
 @onready var PathEdit: LineEdit = $Content/Path/PathContent/PathEdit
-@onready var VersionEdit: LineEdit = $Content/Version/VersionEdit
+@onready var VersionButton: OptionButton = find_child("VersionButton", true)
 @onready var NameEdit: LineEdit = $Content/CustomName/NameEdit
 @onready var PathDialog: FileDialog = $PathDialog
 @onready var MandatoryAlert: AcceptDialog = $MandatoryAlert
+
+var _version_index_mapping := {}
 
 var last_dir: String:
 	set(new_val):
@@ -26,12 +28,21 @@ var last_dir: String:
 		return PREFERENCES.read(Prefs.Keys.LAST_CUSTOM_INSTALLATION_DIR)
 
 
+func _ready():
+	VersionButton.get_popup().max_size = Vector2i(300, 300)
+	var versions := DOWNLOADS.available_versions()
+	Arrays.sort(versions, Comparators.which(Comparators.STR_NATURAL_NO_CASE))
+	for i in versions.size():
+		VersionButton.add_item(versions[i], i)
+		_version_index_mapping[versions[i]] = i
+
+
 func custom_popup() -> void:
 	PathEdit.clear()
-	VersionEdit.editable = not locating_set_version
+	VersionButton.editable = not locating_set_version
 	NameEdit.editable = not locating_set_version
 	if not locating_set_version:
-		VersionEdit.clear()
+		VersionButton.select(0)
 		NameEdit.clear()
 	popup()
 
@@ -48,7 +59,7 @@ func _on_path_dialog_file_selected(new_path: String) -> void:
 
 func _on_confirmed() -> void:
 	var path := PathEdit.text
-	version = VersionEdit.text
+	version = VersionButton.get_item_text(VersionButton.get_selected_id())
 	custom_name = NameEdit.text
 
 	if path == "" or version == "" or custom_name == "":

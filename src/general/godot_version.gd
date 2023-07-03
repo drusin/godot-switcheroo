@@ -17,13 +17,6 @@ func folder_path() -> String:
 		.substr(0, installation_path.length() - path_fragments[-1].length())
 
 
-func is_run_supported() -> bool:
-	var main_ver_str := version.split(".")[0]
-	if not main_ver_str.is_valid_int():
-		return true
-	return int(main_ver_str) > 2
-
-
 static func from_id(id_str: String) -> GodotVersion:
 	var id_split := id_str.split(";")
 	var return_val = GodotVersion.new()
