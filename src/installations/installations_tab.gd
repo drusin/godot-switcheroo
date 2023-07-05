@@ -97,22 +97,23 @@ func _apply_filter_and_sort() -> void:
 func _filter_text(line: InstallationLine) -> bool:
 	var text = Filter.text
 	return text == "" or \
-		line.custom_name.to_lower().contains(text.to_lower()) or \
-		line.version.to_lower().contains(text.to_lower()) or \
-		(line.is_custom and line.path.to_lower().contains(text.to_lower()))
+		line.godot_version.custom_name.to_lower().contains(text.to_lower()) or \
+		line.godot_version.version.to_lower().contains(text.to_lower()) or \
+		(line.godot_version.is_custom and \
+			line.godot_version.installation_path.to_lower().contains(text.to_lower()))
 
 
 func _usage(line: InstallationLine) -> bool:
 	match UsageFilter.selected:
-		1: return _used_versions.has(line.id)
-		2: return not _used_versions.has(line.id)
+		1: return _used_versions.has(line.godot_version.id())
+		2: return not _used_versions.has(line.godot_version.id())
 	return true
 
 
 func _managed(line: InstallationLine) -> bool:
 	match ManagedFilter.selected:
-		1: return not line.is_custom
-		2: return line.is_custom
+		1: return not line.godot_version.is_custom
+		2: return line.godot_version.is_custom
 	return true
 
 
@@ -126,7 +127,8 @@ func _sort(left: InstallationLine, right: InstallationLine) -> int:
 
 func _get_field_for_sorting(line: InstallationLine) -> String:
 	match Sorting.selected:
-		0: return line.godot_version.custom_name if line.godot_version.is_custom else line.godot_version.version
+		0: return line.godot_version.custom_name if line.godot_version.is_custom \
+				else line.godot_version.version
 		1: return line.godot_version.version
 		2: return line.godot_version.installation_path
 	push_error("unknown sorting option!")
@@ -143,12 +145,12 @@ func _on_new_managed_pressed() -> void:	ChooseInstallation.popup()
 
 # logic for button presses
 func _on_start_godot_pressed() -> void:
-	var installation = INSTALLATIONS.version(Installations.get_selected_items()[0].id)
+	var installation = INSTALLATIONS.version(Installations.get_selected_items()[0].godot_version.id())
 	OS.create_process(installation.installation_path, [])
 
 
 func _on_open_godot_folder_pressed() -> void:
-	var installation = INSTALLATIONS.version(Installations.get_selected_items()[0].id)
+	var installation = INSTALLATIONS.version(Installations.get_selected_items()[0].godot_version.id())
 	OS.shell_open(installation.folder_path())
 
 
@@ -162,7 +164,8 @@ func _on_rescan_pressed() -> void:
 		if not files.is_empty():
 			var installation := GodotVersion.new()
 			installation.version = version
-			installation.installation_path = FileAccess.open(path + "/" + files[0], FileAccess.READ).get_path_absolute()
+			installation.installation_path = FileAccess.open(path + "/" + files[0], \
+					FileAccess.READ).get_path_absolute()
 			installations_to_add.append(installation)
 	INSTALLATIONS.add_managed(installations_to_add)
 

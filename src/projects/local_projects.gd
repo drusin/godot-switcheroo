@@ -28,7 +28,6 @@ extends Control
 @onready var MissingCustomVersion: MissingCustomVersion = find_child("MissingCustomVersion", true)
 @onready var CustomVersionDialog: CustomVersionDialog = find_child("CustomVersionDialog", true)
 
-
 var scan_dir: String:
 	set(new_val):
 		PREFERENCES.write(Prefs.Keys.SCAN_DIR, new_val)
@@ -38,6 +37,7 @@ var scan_dir: String:
 
 var _currently_trying_to_start: ProjectData
 var _currently_trying_to_edit := false
+
 
 func _ready() -> void:
 	VersionFilter.selected = PREFERENCES.read(Prefs.Keys.PROJ_FILTER_VERSION)
@@ -82,10 +82,6 @@ func _set_buttons_state() -> void:
 	OpenFolder.disabled = selected_amount != 1
 
 
-func _get_project_data_for_line(line: ProjectLine) -> ProjectData:
-	return PROJECTS.get_by_path(line.project.general.path)
-
-
 func _open_project(project: ProjectData , open_editor := false) -> void:
 	PROJECTS.update_last_opened(project.general.path)
 	_apply_filter_and_sort()
@@ -119,13 +115,13 @@ func _apply_filter_and_sort() -> void:
 
 func _filter_text(line: ProjectLine) -> bool:
 	var text = Filter.text
-	return text == "" or line.project_name.to_lower().contains(text.to_lower())
+	return text == "" or line.project.project_name.to_lower().contains(text.to_lower())
 
 
 func _version_filter(line: ProjectLine) -> bool:
 	match VersionFilter.selected:
-		1: return line.version != null
-		2: return line.version == null
+		1: return line.project.godot_version_id != ""
+		2: return line.project.godot_version_id == ""
 	return true
 
 
@@ -139,9 +135,9 @@ func _sort(left: ProjectLine, right: ProjectLine) -> int:
 
 func _get_field_for_sorting(line: ProjectLine) -> String:
 	match Sort.selected:
-		0: return _get_project_data_for_line(line).general.last_opened
-		1: return line.project_name
-		2: return line.project_path
+		0: return line.project.general.last_opened
+		1: return line.project.project_name
+		2: return line.project.general.path
 	push_error("unknown sorting property")
 	return ""
 
@@ -165,7 +161,7 @@ func _on_import_pressed() -> void:
 
 # Logic for button presses
 func _on_run_or_edit_pressed(edit := false) -> void:
-	var project := _get_project_data_for_line(Projects.get_selected_items()[0])
+	var project: ProjectData = Projects.get_selected_items()[0].project
 	var godot_version := INSTALLATIONS.version(project.godot_version_id)
 	if godot_version.installation_path != "":
 		_open_project(project, edit)
@@ -206,7 +202,6 @@ func _on_scan_folder_dialog_dir_selected(dir: String) -> void:
 
 func _on_choose_installation_version_set(version: GodotVersion) -> void:
 	for line in Projects.get_selected_items():
-		#line.version = version
 		PROJECTS.set_godot_version(line.project.general.path, version)
 		line.reset()
 	_set_buttons_state()
