@@ -39,7 +39,9 @@ func get_items() -> Array:
 
 
 func get_selected_items() -> Array:
-	return get_items().filter(func (item: ListItem): return item.is_selected)
+	return get_items() \
+			.filter(func (item: ListItem): return item.visible) \
+			.filter(func (item: ListItem): return item.is_selected)
 
 
 func sort_items(comparator: Callable) -> void:
