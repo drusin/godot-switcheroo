@@ -46,7 +46,7 @@ func get_selected_items() -> Array:
 
 func sort_items(comparator: Callable) -> void:
 	var sorted := Selectables.get_children()
-	Arrays.sort(sorted, comparator)
+	ArrayUtils.sort(sorted, comparator)
 	for child in Selectables.get_children():
 		Selectables.remove_child(child)
 	for child in sorted:

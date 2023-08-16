@@ -31,7 +31,7 @@ var last_dir: String:
 func _ready():
 	VersionButton.get_popup().max_size = Vector2i(300, 300)
 	var versions := DOWNLOADS.available_versions()
-	Arrays.sort(versions, Comparators.which(Comparators.STR_NATURAL_NO_CASE))
+	ArrayUtils.sort(versions, Comparators.STR_NATURAL_NO_CASE)
 	for i in versions.size():
 		VersionButton.add_item(versions[i], i)
 		_version_index_mapping[versions[i]] = i

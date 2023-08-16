@@ -65,7 +65,7 @@ func _refresh_version_list() -> void:
 			.filter(_beta) \
 			.filter(_rc) \
 			.filter(_mono)
-	Arrays.sort(filtered, _sort)
+	ArrayUtils.sort(filtered, _sort)
 
 	VersionOption.clear()
 	for version in filtered:

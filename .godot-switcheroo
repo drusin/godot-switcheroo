@@ -2,6 +2,6 @@
     "_about": "Used by https://github.com/drusin/godot-switcheroo to determine which godot version was set for this project",
     "file_version": 1,
     "godot_versions": [
-        "4.0.3;false;"
+        "4.1.1;false;"
     ]
 }
