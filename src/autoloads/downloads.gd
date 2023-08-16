@@ -5,6 +5,8 @@ signal version_downloaded(version: GodotVersion)
 signal single_update(version: String, percent: int)
 signal all_update(downloads: int, percent: int)
 
+const MAIN_JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/main.json"
+
 const JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/output.json"
 
 @onready var _temp_dir: String = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
@@ -25,7 +27,7 @@ func _ready() -> void:
 
 
 func _fetch_available_versions() -> void:
-	var result_string := (await _request(JSON_URL)).body.get_string_from_utf8()
+	var result_string := (await _request(MAIN_JSON_URL)).body.get_string_from_utf8()
 	var parsed_versions: Dictionary = JSON.parse_string(result_string)
 	var filtered_names = parsed_versions.keys() \
 			.filter(func (key: String): return !key.begins_with("1") and !key.begins_with("2"))
@@ -41,12 +43,13 @@ func available_versions() -> Array[String]:
 
 
 func download(version: String) -> void:
-	var link := _find_link(version)
-	if link == "":
+	var all_os_metadata := await _fetch_version_specific_data(_available_versions[version])
+	var filtered_metadata := _find_needed_data(version, all_os_metadata)
+	if filtered_metadata.is_empty():
 		push_error("Could not determine download link")
 		return
-	var file_name := link.split("/")[-1]
-	var dl_result := await _download_and_unzip(version, link, file_name)
+	var dl_result := await _download_and_unzip(version, filtered_metadata.url, filtered_metadata.name)
+	# continue here!
 	var unpacked_file: PackedByteArray = dl_result[0]
 	var unpacked_file_name: String = dl_result[1]
 	var installation_path = _move_to_managed_path(unpacked_file, unpacked_file_name, version)
@@ -56,14 +59,21 @@ func download(version: String) -> void:
 	emit_signal("version_downloaded", godot_version)
 
 
-func _find_link(version: String) -> String:
+func _fetch_version_specific_data(url: String) -> Array[Dictionary]:
+	var result_string := (await _request(url)).body.get_string_from_utf8()
+	var parsed_versions: Array = JSON.parse_string(result_string)
+	var return_val: Array[Dictionary] = []
+	return_val.append_array(parsed_versions)
+	return return_val
+
+
+func _find_needed_data(version: String, metadatas: Array[Dictionary]) -> Dictionary:
 	var os_label = _get_os_label(version)
 	var arch := "64" if OS.has_feature("64") else "32"
-	var found_links: Array = _available_versions[version].filter( \
-			func (line: String):
-				return line.contains(os_label) and (line.contains(arch) or line.contains("universal")) \
-			)
-	return "" if found_links.is_empty() else found_links[0]
+	for data in metadatas:
+		if data["name"].contains(os_label) and (data["name"].contains(arch) or data["name"].contains("universal")):
+			return data
+	return {}
 
 
 func _get_os_label(version: String) -> String:
