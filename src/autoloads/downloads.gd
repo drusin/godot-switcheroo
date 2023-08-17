@@ -7,8 +7,6 @@ signal all_update(downloads: int, percent: int)
 
 const MAIN_JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/main.json"
 
-const JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/output.json"
-
 @onready var _temp_dir: String = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
 @onready var _managed_folder: String = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR)
 
@@ -43,20 +41,20 @@ func available_versions() -> Array[String]:
 
 
 func download(version: String) -> void:
-	var all_os_metadata := await _fetch_version_specific_data(_available_versions[version])
-	var filtered_metadata := _find_needed_data(version, all_os_metadata)
-	if filtered_metadata.is_empty():
+	var all_version_metadata := await _fetch_version_specific_data(_available_versions[version])
+	var relevant_metadata := _find_needed_data(version, all_version_metadata)
+	if relevant_metadata.is_empty():
 		push_error("Could not determine download link")
 		return
-	var dl_result := await _download_and_unzip(version, filtered_metadata.url, filtered_metadata.name)
-	# continue here!
+	relevant_metadata["version"] = version
+	var dl_result := await _download_and_unzip(relevant_metadata)
 	var unpacked_file: PackedByteArray = dl_result[0]
 	var unpacked_file_name: String = dl_result[1]
 	var installation_path = _move_to_managed_path(unpacked_file, unpacked_file_name, version)
 	var godot_version = GodotVersion.new()
 	godot_version.version = version
 	godot_version.installation_path = FileAccess.open(installation_path, FileAccess.READ).get_path_absolute()
-	emit_signal("version_downloaded", godot_version)
+	version_downloaded.emit(godot_version)
 
 
 func _fetch_version_specific_data(url: String) -> Array[Dictionary]:
@@ -87,9 +85,9 @@ func _get_os_label(version: String) -> String:
 	return ""
 
 
-func _download_and_unzip(version: String, link: String, file_name: String) -> Array:
-	var bytes := (await _request(link, version)).body
-	var zip_file_path: String = _temp_dir + "/" + file_name
+func _download_and_unzip(metadata: Dictionary) -> Array:
+	var bytes := (await _request("", metadata)).body
+	var zip_file_path: String = _temp_dir + "/" + metadata["name"]
 	var file := FileAccess.open(zip_file_path, FileAccess.WRITE)
 	file.store_buffer(bytes)
 	file.close()
@@ -116,8 +114,8 @@ func _send_updates():
 	var keys := _current_downloads.keys()
 	var summed_percentage := 0
 	for version in keys:
-		var req: HTTPRequest = _current_downloads[version]
-		var percentage := _calc_percentage(version, req.get_downloaded_bytes())
+		var metadata: Dictionary = _current_downloads[version]
+		var percentage := _calc_percentage(metadata)
 		summed_percentage += percentage
 		single_update.emit(version, percentage)
 	@warning_ignore("integer_division")
@@ -125,22 +123,28 @@ func _send_updates():
 	all_update.emit(keys.size(), all_percentage)
 
 
-func _calc_percentage(version: String, amount: int) -> int:
-	return int(100 * amount / CONSTANTS.DOWNLOADS_SIZES[version.substr(0, 1)])
+func _calc_percentage(metadata: Dictionary) -> int:
+	return int(100 * metadata["req"].get_downloaded_bytes() / metadata["size_in_bytes"])
 
 
-func _request(url: String, version := "") -> ReqResult:
+func _request(url := "", metadata := {}) -> ReqResult:
 	var req = HTTPRequest.new()
 	get_tree().get_root().add_child.call_deferred(req)
 	await req.tree_entered
-	req.request(url)
-	if version != "":
-		_current_downloads[version] = req
+	req.request(url if not url == "" else metadata["url"])
+	if not metadata.is_empty():
+		metadata["size_in_bytes"] = _mb_to_byte(metadata["size"])
+		metadata["req"] = req
+		_current_downloads[metadata["version"]] = metadata
 	var results: Array = await req.request_completed
 	req.queue_free()
-	if version != "":
-		_current_downloads.erase(version)
+	if not metadata.is_empty():
+		_current_downloads.erase(metadata["version"])
 	return ReqResult.new(results)
+
+
+func _mb_to_byte(mb: String) -> int:
+	return int(mb.rstrip("M").to_float() * 1_000_000)
 
 
 class ReqResult extends RefCounted:
