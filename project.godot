@@ -28,11 +28,6 @@ DOWNLOADS="*res://src/autoloads/downloads.gd"
 
 window/subwindows/embed_subwindows=false
 
-[editor]
-
-version_control/plugin_name="GitPlugin"
-version_control/autoload_on_startup=true
-
 [filesystem]
 
 import/blender/enabled=false
