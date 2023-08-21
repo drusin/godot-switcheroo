@@ -2,10 +2,11 @@ class_name ListItem
 extends Control
 
 signal selected_changed(selected: bool)
+signal double_clicked
 
 enum IconType { TEXTURE, TEXT }
 
-@export var icon_type:IconType = IconType.TEXT
+@export var icon_type: IconType = IconType.TEXT
 @export_global_file var icon_texture_path: String
 @export var icon_text := "4.0"
 
@@ -54,6 +55,8 @@ enum IconType { TEXTURE, TEXT }
 @onready var BottomMain: Label = find_child("BottomMain", true)
 @onready var BottomSecondary: CenteredCursiveLabel = find_child("BottomSecondary", true)
 
+var _double_clicked := false
+
 
 func _ready() -> void:
 	TextureIcon.visible = icon_type == IconType.TEXTURE
@@ -67,8 +70,24 @@ func _ready() -> void:
 
 
 func _on_select_button_pressed() -> void:
-	is_selected = SelectButton.button_pressed
-	emit_signal("selected_changed", is_selected)
+	if not _double_clicked:
+		is_selected = SelectButton.button_pressed
+		selected_changed.emit(is_selected)
+		return
+	_double_clicked = false
+	is_selected = true
+	SelectButton.button_pressed = true
+	double_clicked.emit()
+
+
+func _on_select_button_gui_input(event: InputEvent) -> void:
+	if not event is InputEventMouseButton:
+		return
+	var button_event := event as InputEventMouseButton
+	if button_event.double_click and \
+			not Input.is_key_pressed(KEY_SHIFT) and not Input.is_key_pressed(KEY_CTRL):
+		_double_clicked = true
+
 
 class Warning extends Node:
 	enum Type { INFO, WARNING }

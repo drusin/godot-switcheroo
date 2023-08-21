@@ -67,6 +67,7 @@ func _refresh_project_list() -> void:
 	for project in PROJECTS.all_projects():
 		var line: ProjectLine = ProjectLineScene.instantiate()
 		line.project = project
+		line.double_clicked.connect(_on_run_or_edit_pressed.bind(true, project))
 		project_lines.append(line)
 	Projects.set_content(project_lines)
 	_set_buttons_state()
@@ -160,8 +161,8 @@ func _on_import_pressed() -> void:
 
 
 # Logic for button presses
-func _on_run_or_edit_pressed(edit := false) -> void:
-	var project: ProjectData = Projects.get_selected_items()[0].project
+func _on_run_or_edit_pressed(edit := false, selected: ProjectData = null) -> void:
+	var project: ProjectData = Projects.get_selected_items()[0].project if selected == null else selected
 	var godot_version := INSTALLATIONS.version(project.godot_version_id)
 	if godot_version.installation_path != "":
 		_open_project(project, edit)

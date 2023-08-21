@@ -138,8 +138,8 @@ disabled = true
 text = "Remove"
 
 [node name="SetProjectsFolderDialog" type="FileDialog" parent="."]
-initial_position = 2
 title = "Open a Directory"
+initial_position = 2
 size = Vector2i(900, 500)
 ok_button_text = "Select Current Folder"
 file_mode = 2
@@ -153,8 +153,8 @@ dialog_text = "Are you sure you want to remove the selcted project(s)
 from the list (no files will be deleted)?"
 
 [node name="ImportDialog" type="FileDialog" parent="."]
-initial_position = 2
 title = "Open a File"
+initial_position = 2
 size = Vector2i(900, 500)
 ok_button_text = "Open"
 file_mode = 0
@@ -165,8 +165,8 @@ filters = PackedStringArray("project.godot")
 visible = false
 
 [node name="DownloadingMessage" type="AcceptDialog" parent="."]
-initial_position = 2
 title = "Please wait"
+initial_position = 2
 size = Vector2i(304, 109)
 ok_button_text = "Cancel"
 dialog_text = "Downloading selected Godot version

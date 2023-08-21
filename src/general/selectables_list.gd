@@ -27,7 +27,7 @@ func set_content(items: Array) -> void:
 		child.queue_free()
 	for item in items:
 		var list_item := item as ListItem
-		list_item.selected_changed.connect(_item_selected_behaviour(list_item))
+		list_item.selected_changed.connect(_on_item_selected.bind(list_item))
 		Selectables.add_child(list_item)
 	
 	if visible:
@@ -61,15 +61,14 @@ func _send_selection_signal() -> void:
 	SIGNALS.selected_amount_changed.emit(get_selected_items().size())
 
 
-func _item_selected_behaviour(item: ListItem) -> Callable:
-	return func (selected: bool) -> void:
-		if Input.is_key_pressed(KEY_CTRL):
-			_update_last_selected(item)
-		elif Input.is_key_pressed(KEY_SHIFT):
-			_select_projects_between(item, selected)
-		else:
-			_select_single_line(item, selected)
-		_send_selection_signal()
+func _on_item_selected(selected: bool, item: ListItem) -> void:
+	if Input.is_key_pressed(KEY_CTRL):
+		_update_last_selected(item)
+	elif Input.is_key_pressed(KEY_SHIFT):
+		_select_projects_between(item, selected)
+	else:
+		_select_single_line(item, selected)
+	_send_selection_signal()
 
 
 func _select_projects_between(item: ListItem, selected: bool) -> void:

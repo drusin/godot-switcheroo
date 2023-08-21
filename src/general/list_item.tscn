@@ -91,4 +91,5 @@ text = "bottom main text"
 layout_mode = 2
 text = "bottom secondary text"
 
+[connection signal="gui_input" from="SelectButton" to="." method="_on_select_button_gui_input"]
 [connection signal="pressed" from="SelectButton" to="." method="_on_select_button_pressed"]
