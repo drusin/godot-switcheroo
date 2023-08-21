@@ -1,6 +1,5 @@
 extends Node
 
-signal available_versions_ready()
 signal version_downloaded(version: GodotVersion)
 signal single_update(version: String, percent: int)
 signal all_update(downloads: int, percent: int)
@@ -17,7 +16,6 @@ var _update_timer := Timer.new()
 
 func _ready() -> void:
 	DirAccess.make_dir_absolute(_temp_dir)
-	_fetch_available_versions()
 	_update_timer.timeout.connect(_send_updates)
 	_update_timer.wait_time = CONSTANTS.DOWNLOAD_TIMER_UPDATE
 	_update_timer.autostart = true
@@ -31,10 +29,11 @@ func _fetch_available_versions() -> void:
 			.filter(func (key: String): return !key.begins_with("1") and !key.begins_with("2"))
 	for filtered in filtered_names:
 		_available_versions[filtered] = parsed_versions[filtered]
-	available_versions_ready.emit()
 
 
 func available_versions() -> Array[String]:
+	if _available_versions.is_empty():
+		await _fetch_available_versions()
 	var return_val: Array[String] = []
 	return_val.append_array(_available_versions.keys())
 	return return_val

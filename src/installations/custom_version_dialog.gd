@@ -30,15 +30,15 @@ var last_dir: String:
 
 func _ready():
 	VersionButton.get_popup().max_size = Vector2i(300, 300)
-	var versions := DOWNLOADS.available_versions()
-	ArrayUtils.sort(versions, Comparators.STR_NATURAL_NO_CASE)
-	for i in versions.size():
-		VersionButton.add_item(versions[i], i)
-		_version_index_mapping[versions[i]] = i
 
 
 func custom_popup() -> void:
 	PathEdit.clear()
+	var versions := await DOWNLOADS.available_versions()
+	ArrayUtils.sort(versions, Comparators.STR_NATURAL_NO_CASE)
+	for i in versions.size():
+		VersionButton.add_item(versions[i], i)
+		_version_index_mapping[versions[i]] = i
 	VersionButton.editable = not locating_set_version
 	NameEdit.editable = not locating_set_version
 	if not locating_set_version:

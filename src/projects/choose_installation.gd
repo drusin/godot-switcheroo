@@ -21,18 +21,6 @@ var _alpha_regex = RegEx.new()
 func _ready() -> void:
 	VersionOption.get_popup().max_size = Vector2i(300, 300)
 	_alpha_regex.compile("\\d-alpha")
-	if allow_custom:
-		ManagedCustomFilter.selected = PREFERENCES.read(Prefs.Keys.CHOOSE_MANAGED)
-	else:
-		ManagedCustomFilter.selected = 1
-		ManagedCustomFilter.disabled = true
-	AscDescOption.selected = PREFERENCES.read(Prefs.Keys.CHOOSE_SORT)
-	PreAlpha.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_PRE_ALPHA)
-	Alpha.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_ALPHA)
-	Beta.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_BETA)
-	Rc.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_RC)
-	Mono.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_MONO)
-	Uninstalled.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_UNISTALLED)
 
 
 func _on_confirmed() -> void:
@@ -45,19 +33,31 @@ func _on_confirmed() -> void:
 	PREFERENCES.write(Prefs.Keys.CHOOSE_RC, Rc.button_pressed)
 	PREFERENCES.write(Prefs.Keys.CHOOSE_MONO, Mono.button_pressed)
 	PREFERENCES.write(Prefs.Keys.CHOOSE_UNISTALLED, Uninstalled.button_pressed)
-	emit_signal("version_set", INSTALLATIONS.version(VersionOption.get_item_metadata(VersionOption.selected)))
+	version_set.emit(INSTALLATIONS.version(VersionOption.get_item_metadata(VersionOption.selected)))
 
 
 func _on_about_to_popup() -> void:
-	_refresh_version_list()
+	if allow_custom:
+		ManagedCustomFilter.selected = PREFERENCES.read(Prefs.Keys.CHOOSE_MANAGED)
+	else:
+		ManagedCustomFilter.selected = 1
+		ManagedCustomFilter.disabled = true
+	AscDescOption.selected = PREFERENCES.read(Prefs.Keys.CHOOSE_SORT)
+	PreAlpha.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_PRE_ALPHA)
+	Alpha.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_ALPHA)
+	Beta.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_BETA)
+	Rc.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_RC)
+	Mono.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_MONO)
+	Uninstalled.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_UNISTALLED)
+	await _refresh_version_list()
 
 
 func _some_filter_changed(_ignore) -> void:
-	_refresh_version_list()
+	await _refresh_version_list()
 
 
 func _refresh_version_list() -> void:
-	var versions := INSTALLATIONS.all_versions() if Uninstalled.button_pressed else INSTALLATIONS.local_versions()
+	var versions := await INSTALLATIONS.all_versions() if Uninstalled.button_pressed else INSTALLATIONS.local_versions()
 	var filtered := versions \
 			.filter(_managed) \
 			.filter(_pre_alpha) \
