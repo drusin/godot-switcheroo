@@ -1,7 +1,7 @@
 extends Node
 
-signal versions_loaded(versions: Array[GodotVersion])
-signal installations_changed()
+signal versions_loaded
+signal installations_changed
 
 const ABOUT_FILE := "Custom installations dictionairy for https://github.com/drusin/godot-switcheroo"
 const VERSION_CACHE_FILE := "user://.installations.godot-switcheroo"
@@ -103,4 +103,4 @@ func _load_cache() -> void:
 	for installation_dict in version_cache.installations:
 		var installation: GodotVersion = dict_to_inst(installation_dict)
 		_installations[installation.id()] = installation
-	versions_loaded.emit(all_versions())
+	versions_loaded.emit()

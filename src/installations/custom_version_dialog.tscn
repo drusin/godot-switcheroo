@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://src/installations/custom_version_dialog.gd" id="1_6ufn5"]
 
 [node name="CustomVersionDialog" type="ConfirmationDialog"]
-initial_position = 2
 title = "Custom Godot Installation"
+initial_position = 2
 size = Vector2i(600, 158)
 visible = true
 dialog_hide_on_ok = false
@@ -70,8 +70,8 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
 
 [node name="PathDialog" type="FileDialog" parent="."]
-initial_position = 2
 title = "Open a File"
+initial_position = 2
 size = Vector2i(900, 600)
 ok_button_text = "Open"
 file_mode = 0
