@@ -164,16 +164,16 @@ func _on_import_pressed() -> void:
 func _on_run_or_edit_pressed(edit := false, selected: ProjectData = null) -> void:
 	var project: ProjectData = Projects.get_selected_items()[0].project if selected == null else selected
 	var godot_version := INSTALLATIONS.version(project.godot_version_id)
-	if godot_version.installation_path != "":
+	if godot_version != null and godot_version.installation_path != "":
 		_open_project(project, edit)
 		return
 	_currently_trying_to_start = project
 	_currently_trying_to_edit = edit
-	if godot_version.is_custom:
+	if godot_version == null:
 		MissingCustomVersion.popup()
-	else:
-		DownloadingMessage.popup()
-		DOWNLOADS.download(godot_version.version)
+		return
+	DownloadingMessage.popup()
+	DOWNLOADS.download(godot_version.version)
 
 
 func _on_open_folder_pressed() -> void:
@@ -222,7 +222,7 @@ func _on_installations_changed() -> void:
 
 
 func _on_missing_custom_version_locate_custom_version():
-	var installation := INSTALLATIONS.version(_currently_trying_to_start.godot_version_id)
+	var installation := GodotVersion.from_id(_currently_trying_to_start.godot_version_id)
 	CustomVersionDialog.version = installation.version
 	CustomVersionDialog.custom_name = installation.custom_name
 	CustomVersionDialog.custom_popup()

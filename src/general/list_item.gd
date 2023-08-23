@@ -44,8 +44,6 @@ enum IconType { TEXTURE, TEXT }
 		BottomSecondary.text = new_val
 		BottomSecondary.visible = new_val != ""
 
-@onready var warnings: Array[Warning] = []
-
 @onready var SelectButton: Button = find_child("SelectButton", true)
 @onready var FavouriteButton: CheckButton = find_child("FavouriteButton", true)
 @onready var TextureIcon: TextureRect = find_child("TextureIcon", true)
@@ -87,9 +85,3 @@ func _on_select_button_gui_input(event: InputEvent) -> void:
 	if button_event.double_click and \
 			not Input.is_key_pressed(KEY_SHIFT) and not Input.is_key_pressed(KEY_CTRL):
 		_double_clicked = true
-
-
-class Warning extends Node:
-	enum Type { INFO, WARNING }
-	@export var type: Type = Type.INFO
-	@export var tooltipp := ""
