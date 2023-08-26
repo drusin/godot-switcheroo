@@ -44,6 +44,7 @@ func _refresh_installations() -> void:
 	for installation in INSTALLATIONS.local_versions():
 		var line: InstallationLine = InstallationLineScene.instantiate()
 		line.godot_version = installation
+		line.double_clicked.connect(_on_start_godot_pressed)
 		lines.append(line)
 	Installations.set_content(lines)
 	_set_buttons_state.call_deferred()
