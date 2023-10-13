@@ -51,9 +51,10 @@ func download(version: String) -> void:
 	var unpacked_file: PackedByteArray = dl_result[0]
 	var unpacked_file_name: String = dl_result[1]
 	var installation_path = _move_to_managed_path(unpacked_file, unpacked_file_name, version)
+	make_executable(installation_path, version)
 	var godot_version = GodotVersion.new()
 	godot_version.version = version
-	godot_version.installation_path = FileAccess.open(installation_path, FileAccess.READ).get_path_absolute()
+	godot_version.installation_path = installation_path
 	version_downloaded.emit(godot_version)
 
 
@@ -107,10 +108,21 @@ func _move_to_managed_path(unpacked_file: PackedByteArray, unpacked_file_name: S
 	var file := FileAccess.open(installation_path, FileAccess.WRITE)
 	file.store_buffer(unpacked_file)
 	file.close()
-	return installation_path
+	return FileAccess.open(installation_path, FileAccess.READ).get_path_absolute()
 
 
-func _send_updates():
+func make_executable(installation_path: String, version: String) -> void:
+	var os_label = _get_os_label(version)
+	if not (os_label == "linux" or os_label == "x11"):
+		pass
+	var output = []
+	OS.execute("chmod", ["+x", installation_path], output, true)
+	if not (output.is_empty() or output[0] == ""):
+		printerr("chmod output:")
+		printerr(output)
+
+
+func _send_updates() -> void:
 	var keys := _current_downloads.keys()
 	var summed_percentage := 0
 	for version in keys:
