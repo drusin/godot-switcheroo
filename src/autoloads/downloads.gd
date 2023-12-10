@@ -15,7 +15,7 @@ var _current_downloads := {}
 var _update_timer := Timer.new()
 
 
-func _ready() -> void:
+func _ready() -> void:	
 	DirAccess.make_dir_absolute(_temp_dir)
 	_fetch_available_versions()
 	_update_timer.timeout.connect(_send_updates)
@@ -69,6 +69,8 @@ func _fetch_version_specific_data(url: String) -> Array[Dictionary]:
 func _find_needed_data(version: String, metadatas: Array[Dictionary]) -> Dictionary:
 	var os_label = _get_os_label(version)
 	var arch := "64" if OS.has_feature("64") else "32"
+	if os_label == "linux":
+		arch = "arm" if OS.has_feature("arm") else "x86_" + arch
 	for data in metadatas:
 		if data["name"].contains(os_label) and (data["name"].contains(arch) or data["name"].contains("universal")):
 			return data
