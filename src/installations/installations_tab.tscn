@@ -41,10 +41,9 @@ text = "Show:"
 
 [node name="UsageFilter" type="OptionButton" parent="Content/InstallationPane/Filtering"]
 layout_mode = 2
-item_count = 3
 selected = 0
+item_count = 3
 popup/item_0/text = "All"
-popup/item_0/id = 0
 popup/item_1/text = "Used"
 popup/item_1/id = 1
 popup/item_2/text = "Unused"
@@ -52,10 +51,9 @@ popup/item_2/id = 2
 
 [node name="ManagedFilter" type="OptionButton" parent="Content/InstallationPane/Filtering"]
 layout_mode = 2
-item_count = 3
 selected = 0
+item_count = 3
 popup/item_0/text = "All"
-popup/item_0/id = 0
 popup/item_1/text = "Managed"
 popup/item_1/id = 1
 popup/item_2/text = "Custom"
@@ -67,10 +65,9 @@ text = "Sort:"
 
 [node name="Sorting" type="OptionButton" parent="Content/InstallationPane/Filtering"]
 layout_mode = 2
-item_count = 3
 selected = 1
+item_count = 3
 popup/item_0/text = "Name"
-popup/item_0/id = 0
 popup/item_1/text = "Version"
 popup/item_1/id = 1
 popup/item_2/text = "Path"
@@ -78,12 +75,11 @@ popup/item_2/id = 2
 
 [node name="AscDesc" type="OptionButton" parent="Content/InstallationPane/Filtering"]
 layout_mode = 2
-item_count = 2
 selected = 1
+item_count = 2
 popup/item_0/text = "Asc"
 popup/item_0/id = 1
 popup/item_1/text = "Desc"
-popup/item_1/id = 0
 
 [node name="Installations" parent="Content/InstallationPane" instance=ExtResource("1_ild5m")]
 layout_mode = 2

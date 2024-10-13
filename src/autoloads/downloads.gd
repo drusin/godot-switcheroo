@@ -5,7 +5,7 @@ signal version_downloaded(version: GodotVersion)
 signal single_update(version: String, percent: int)
 signal all_update(downloads: int, percent: int)
 
-const MAIN_JSON_URL := "https://drusin.github.io/gd-dl-json-wrapper/json/main.json"
+const MAIN_JSON_URL := "https://drusin.github.io/gd-gh-dl-json-wrapper/json/main.json"
 
 @onready var _temp_dir: String = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
 @onready var _managed_folder: String = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR)
@@ -138,16 +138,15 @@ func _send_updates() -> void:
 
 
 func _calc_percentage(metadata: Dictionary) -> int:
-	return int(100 * metadata["req"].get_downloaded_bytes() / metadata["size_in_bytes"])
+	return int(100 * metadata["req"].get_downloaded_bytes() / metadata["size"])
 
 
 func _request(url := "", metadata := {}) -> ReqResult:
 	var req = HTTPRequest.new()
 	get_tree().get_root().add_child.call_deferred(req)
 	await req.tree_entered
-	req.request(url if not url == "" else metadata["url"])
+	req.request(url if not url == "" else metadata["browser_download_url"])
 	if not metadata.is_empty():
-		metadata["size_in_bytes"] = _mb_to_byte(metadata["size"])
 		metadata["req"] = req
 		_current_downloads[metadata["version"]] = metadata
 	var results: Array = await req.request_completed
