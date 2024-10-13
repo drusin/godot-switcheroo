@@ -12,7 +12,7 @@ enum Direction {
 }
 
 ## Sorts the provided input in a [b]stable[/b] manner, which means that elements already in the right
-## will not be rearranged. Current implementation might degrade in performance for big arrays 
+## will not be rearranged. Current implementation might degrade in performance for big arrays
 ## (>100 elements).[br]
 ## [br]
 ## [param input]: the Array that should be sorted. It should usually contain objects of the same type,

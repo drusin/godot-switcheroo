@@ -109,7 +109,7 @@ func _apply_filter_and_sort() -> void:
 		project_line.visible = _filter_text(project_line) and \
 				_version_filter(project_line)
 	if not Sort.selected == 1:
-		Projects.sort_items(func (left, right): 
+		Projects.sort_items(func (left, right):
 			return left.project.project_name.naturalnocasecmp_to(right.project.project_name))
 	Projects.sort_items(_sort)
 

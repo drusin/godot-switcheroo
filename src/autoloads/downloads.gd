@@ -15,7 +15,7 @@ var _current_downloads := {}
 var _update_timer := Timer.new()
 
 
-func _ready() -> void:	
+func _ready() -> void:
 	DirAccess.make_dir_absolute(_temp_dir)
 	_fetch_available_versions()
 	_update_timer.timeout.connect(_send_updates)
