@@ -28,6 +28,10 @@ DOWNLOADS="*res://src/autoloads/downloads.gd"
 
 window/subwindows/embed_subwindows=false
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
+
 [filesystem]
 
 import/blender/enabled=false
