@@ -21,4 +21,5 @@ jobs:
         name: Run tests
         with:
           godot-version: '4.3.0'
+          godot-status: 'stable'
           paths: 'res://tests'
