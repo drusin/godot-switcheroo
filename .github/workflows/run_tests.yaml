@@ -27,4 +27,5 @@ jobs:
       - name: Run tests
         run: |
           export GODOT_BIN=$GODOT
+          chmod +x addons/gdUnit4/runtest.sh
           addons/gdUnit4/runtest.sh
