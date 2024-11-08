@@ -23,3 +23,4 @@ jobs:
           godot-version: '4.3'
           godot-status: 'stable'
           paths: 'res://tests'
+          version: 'installed'
