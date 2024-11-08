@@ -9,23 +9,16 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Checkout
-
-      - uses: chickensoft-games/setup-godot@v2.0.1
-        name: Setup Godot
-        with:
-          version: 4.3.0
-          use-dotnet: false
-          include-templates: false
 
       - uses: actions/setup-node@v4
         name: Setup Node
         with:
           node-version: 20
 
-      - name: Run tests
-        run: |
-          export GODOT_BIN=$GODOT
-          chmod +x addons/gdUnit4/runtest.sh
-          addons/gdUnit4/runtest.sh
+      - uses: MikeSchulze/gdUnit4-action@v1
+        name: Run tests
+        with:
+          godot-version: '4.3.0'
+          paths: 'res://tests'
