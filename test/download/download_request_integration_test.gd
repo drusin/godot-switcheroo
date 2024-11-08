@@ -6,7 +6,15 @@ const NODE_PROJECT_PATH := "res://test/download/webserver/"
 var pid: int
 
 func before() -> void:
-	pid = OS.create_process("powershell.exe", ["-Command", "npm", "start", "--prefix", ProjectSettings.globalize_path(NODE_PROJECT_PATH)])
+	var exec: String
+	var param: String
+	if (OS.get_name() == "Windows"):
+		exec = "powershell.exe"
+		param = "-Command"
+	else:
+		exec = "sh"
+		param = "-c"
+	pid = OS.create_process(exec, [param, "npm", "start", "--prefix", ProjectSettings.globalize_path(NODE_PROJECT_PATH)])
 
 
 func test_download_return() -> void:
