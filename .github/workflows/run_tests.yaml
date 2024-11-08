@@ -1,0 +1,30 @@
+name: Run Tests
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  doit:
+    name: Deploy Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout
+
+      - uses: chickensoft-games/setup-godot@v2.0.1
+        name: Setup Godot
+        with:
+          version: 4.3
+          use-dotnet: false
+          include-templates: false
+
+      - uses: actions/setup-node@v4
+        name: Setup Node
+        with:
+          node-version: 20
+
+      - name: Run tests
+        run: |
+          export GODOT_BIN=$GODOT
+          addons/gdUnit4/runtest.sh
