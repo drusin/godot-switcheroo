@@ -12,10 +12,15 @@ func _init(tree: SceneTree) -> void:
 
 
 func request(url: String) -> ReqResult:
+	return await _request(url, func (): return _HTTPRequestInternal.new())
+
+
+func _request(url: String, httpRequestCreator: Callable) -> ReqResult:
 	var timer = Timer.new()
 	_tree.get_root().add_child.call_deferred(timer)
 	await timer.tree_entered
-	var req = HTTPRequest.new()
+	var req: _HTTPRequestInternal = httpRequestCreator.call()
+	print(req.name)
 	_tree.get_root().add_child.call_deferred(req)
 	await req.tree_entered
 	req.request(url)
@@ -41,3 +46,30 @@ class ReqResult extends RefCounted:
 		status_code = from[1]
 		headers = from[2]
 		body = from[3]
+
+
+class _HTTPRequestInternal extends Node:
+	signal request_completed(result: int, status_code: int, headers: PackedStringArray, body: PackedByteArray)
+
+	var httpRequest: HTTPRequest
+
+	func _enter_tree() -> void:
+		httpRequest = HTTPRequest.new()
+		get_tree().get_root().add_child(httpRequest)
+
+
+	func _exit_tree() -> void:
+		httpRequest.queue_free()
+
+
+	func get_downloaded_bytes() -> int:
+		return httpRequest.get_downloaded_bytes()
+
+
+	func _emit_req_completed(result: int, status_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+		request_completed.emit(result, status_code, headers, body)
+
+
+	func request(url: String) -> int:
+		httpRequest.request_completed.connect(_emit_req_completed)
+		return httpRequest.request(url)
