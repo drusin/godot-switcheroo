@@ -133,7 +133,7 @@ func _load_cache() -> void:
 	for project in dict.values:
 		var parsed := dict_to_inst(project) as ProjectCacheData
 		_projects[parsed.path] = _project_data_from_cache(parsed)
-	emit_signal("projects_loaded", all_projects())
+	projects_loaded.emit(all_projects())
 
 
 func _persist_cache() -> void:
