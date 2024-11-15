@@ -19,6 +19,7 @@ mono_crash.*.json
 # custom export folder
 target/
 !.gdignore
+reports/
 
 # node
 node_modules/

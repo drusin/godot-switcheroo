@@ -20,9 +20,9 @@ func _request(url: String, httpRequestCreator: Callable) -> ReqResult:
 	_tree.get_root().add_child.call_deferred(timer)
 	await timer.tree_entered
 	var req: _HTTPRequestInternal = httpRequestCreator.call()
-	print(req.name)
 	_tree.get_root().add_child.call_deferred(req)
 	await req.tree_entered
+
 	req.request(url)
 	timer.timeout.connect(func (): update.emit(req.get_downloaded_bytes()))
 	timer.start()
@@ -31,6 +31,7 @@ func _request(url: String, httpRequestCreator: Callable) -> ReqResult:
 	timer.queue_free()
 	req.queue_free()
 	var reqResult: = ReqResult.new(results)
+	
 	downloaded.emit(reqResult)
 	return reqResult
 
@@ -49,21 +50,23 @@ class ReqResult extends RefCounted:
 
 
 class _HTTPRequestInternal extends Node:
+## Facade over [HTTPRequest] for testability/mocking
+
 	signal request_completed(result: int, status_code: int, headers: PackedStringArray, body: PackedByteArray)
 
-	var httpRequest: HTTPRequest
+	var _httpRequest: HTTPRequest
 
 	func _enter_tree() -> void:
-		httpRequest = HTTPRequest.new()
-		get_tree().get_root().add_child(httpRequest)
+		_httpRequest = HTTPRequest.new()
+		get_tree().get_root().add_child(_httpRequest)
 
 
 	func _exit_tree() -> void:
-		httpRequest.queue_free()
+		_httpRequest.queue_free()
 
 
 	func get_downloaded_bytes() -> int:
-		return httpRequest.get_downloaded_bytes()
+		return _httpRequest.get_downloaded_bytes()
 
 
 	func _emit_req_completed(result: int, status_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
@@ -71,5 +74,5 @@ class _HTTPRequestInternal extends Node:
 
 
 	func request(url: String) -> int:
-		httpRequest.request_completed.connect(_emit_req_completed)
-		return httpRequest.request(url)
+		_httpRequest.request_completed.connect(_emit_req_completed)
+		return _httpRequest.request(url)
