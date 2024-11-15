@@ -1,3 +1,4 @@
+class_name DownloadRequestIntegrationTest
 extends GdUnitTestSuite
 
 const TEST_FILE_ADDRESS := "http://127.0.0.1:9615/testfile.txt"
