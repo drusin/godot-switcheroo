@@ -36,6 +36,10 @@ enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 
 import/blender/enabled=false
 
+[gdunit4]
+
+settings/test/test_discovery=true
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
