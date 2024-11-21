@@ -2,6 +2,10 @@ name: Run Tests
 on:
   push:
   workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+  checks: write
 
 jobs:
   doit:
