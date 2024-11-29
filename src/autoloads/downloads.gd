@@ -7,8 +7,8 @@ signal all_update(downloads: int, percent: int)
 
 const MAIN_JSON_URL := "https://drusin.github.io/gd-gh-dl-json-wrapper/json/main.json"
 
-@onready var _temp_dir: String = PREFERENCES.read(Prefs.Keys.TEMP_DIR)
-@onready var _managed_folder: String = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR)
+@onready var _temp_dir := Preferences.system.temp_dir
+@onready var _managed_folder := Preferences.system.managed_installations_dir
 
 var _available_versions := {}
 var _current_downloads := {}

@@ -15,12 +15,6 @@ signal version_created(version: GodotVersion)
 
 var _version_index_mapping := {}
 
-var last_dir: String:
-	set(new_val):
-		PREFERENCES.write(Prefs.Keys.LAST_CUSTOM_INSTALLATION_DIR, new_val)
-	get:
-		return PREFERENCES.read(Prefs.Keys.LAST_CUSTOM_INSTALLATION_DIR)
-
 
 func _ready():
 	VersionButton.get_popup().max_size = Vector2i(300, 300)
@@ -50,7 +44,7 @@ func _update_versions_options() -> void:
 
 
 func _on_browse_button_pressed() -> void:
-	PathDialog.current_dir = last_dir
+	PathDialog.current_dir = Preferences.installations.last_custom_installation_dir
 	PathDialog.popup()
 
 
@@ -74,6 +68,6 @@ func _on_confirmed() -> void:
 	godot_version.custom_name = custom_name
 	godot_version.is_custom = true
 	
-	last_dir = path
+	Preferences.installations.last_custom_installation_dir = path
 	emit_signal("version_created", godot_version)
 	hide()

@@ -22,29 +22,29 @@ func _ready() -> void:
 	VersionOption.get_popup().max_size = Vector2i(300, 300)
 	_alpha_regex.compile("\\d-alpha")
 	if allow_custom:
-		ManagedCustomFilter.selected = PREFERENCES.read(Prefs.Keys.CHOOSE_MANAGED)
+		ManagedCustomFilter.selected = Preferences.choose_version.managed
 	else:
 		ManagedCustomFilter.selected = 1
 		ManagedCustomFilter.disabled = true
-	AscDescOption.selected = PREFERENCES.read(Prefs.Keys.CHOOSE_SORT)
-	PreAlpha.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_PRE_ALPHA)
-	Alpha.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_ALPHA)
-	Beta.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_BETA)
-	Rc.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_RC)
-	Mono.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_MONO)
-	Uninstalled.button_pressed = PREFERENCES.read(Prefs.Keys.CHOOSE_UNISTALLED)
+	AscDescOption.selected = Preferences.choose_version.sort
+	PreAlpha.button_pressed = Preferences.choose_version.pre_alpha
+	Alpha.button_pressed = Preferences.choose_version.alpha
+	Beta.button_pressed = Preferences.choose_version.beta
+	Rc.button_pressed = Preferences.choose_version.rc
+	Mono.button_pressed = Preferences.choose_version.mono
+	Uninstalled.button_pressed = Preferences.choose_version.not_installed
 
 
 func _on_confirmed() -> void:
 	if allow_custom:
-		PREFERENCES.write(Prefs.Keys.CHOOSE_MANAGED, ManagedCustomFilter.selected)
-	PREFERENCES.write(Prefs.Keys.CHOOSE_SORT, AscDescOption.selected)
-	PREFERENCES.write(Prefs.Keys.CHOOSE_PRE_ALPHA, PreAlpha.button_pressed)
-	PREFERENCES.write(Prefs.Keys.CHOOSE_ALPHA, Alpha.button_pressed)
-	PREFERENCES.write(Prefs.Keys.CHOOSE_BETA, Beta.button_pressed)
-	PREFERENCES.write(Prefs.Keys.CHOOSE_RC, Rc.button_pressed)
-	PREFERENCES.write(Prefs.Keys.CHOOSE_MONO, Mono.button_pressed)
-	PREFERENCES.write(Prefs.Keys.CHOOSE_UNISTALLED, Uninstalled.button_pressed)
+		Preferences.choose_version.managed = ManagedCustomFilter.selected
+	Preferences.choose_version.sort = AscDescOption.selected
+	Preferences.choose_version.pre_alpha = PreAlpha.button_pressed
+	Preferences.choose_version.alpha = Alpha.button_pressed
+	Preferences.choose_version.beta = Beta.button_pressed
+	Preferences.choose_version.rc = Rc.button_pressed
+	Preferences.choose_version.mono = Mono.button_pressed
+	Preferences.choose_version.not_installed = Uninstalled.button_pressed
 	emit_signal("version_set", INSTALLATIONS.version(VersionOption.get_item_metadata(VersionOption.selected)))
 
 

@@ -24,7 +24,7 @@ extends Control
 @onready var ChooseInstallation: ChooseInstallation = find_child("ChooseInstallation", true)
 @onready var InstallationExistsAlert: AcceptDialog = $InstallationExistsAlert
 
-@onready var _managed_folder: String = PREFERENCES.read(Prefs.Keys.MANAGED_INSTALLATIONS_DIR)
+@onready var _managed_folder := Preferences.system.managed_installations_dir
 
 var _used_versions: Array[String] = []
 
@@ -33,10 +33,10 @@ func _ready() -> void:
 	INSTALLATIONS.installations_changed.connect(_refresh_installations)
 	SIGNALS.selected_amount_changed.connect(_on_installations_selection_changed)
 	_refresh_installations()
-	UsageFilter.selected = PREFERENCES.read(Prefs.Keys.INST_FILTER_USAGE)
-	ManagedFilter.selected = PREFERENCES.read(Prefs.Keys.INST_FILTER_MANAGED)
-	Sorting.selected = PREFERENCES.read(Prefs.Keys.INST_FILTER_SORT)
-	AscDesc.selected = PREFERENCES.read(Prefs.Keys.INST_FILTER_ASC_DESC)
+	UsageFilter.selected = Preferences.installations.filter_usage
+	ManagedFilter.selected = Preferences.installations.filter_managed
+	Sorting.selected = Preferences.installations.filter_sort
+	AscDesc.selected = Preferences.installations.filter_asc_desc
 
 
 func _refresh_installations() -> void:
@@ -79,10 +79,10 @@ func _set_buttons_state() -> void:
 # filtering
 func _on_filter_or_sorting_changed(_var) -> void:
 	_apply_filter_and_sort()
-	PREFERENCES.write(Prefs.Keys.INST_FILTER_USAGE, UsageFilter.selected)
-	PREFERENCES.write(Prefs.Keys.INST_FILTER_MANAGED, ManagedFilter.selected)
-	PREFERENCES.write(Prefs.Keys.INST_FILTER_SORT, Sorting.selected)
-	PREFERENCES.write(Prefs.Keys.INST_FILTER_ASC_DESC, AscDesc.selected)
+	Preferences.installations.filter_usage = UsageFilter.selected
+	Preferences.installations.filter_managed = ManagedFilter.selected
+	Preferences.installations.filter_sort = Sorting.selected
+	Preferences.installations.filter_asc_desc = AscDesc.selected
 
 
 func _apply_filter_and_sort() -> void:

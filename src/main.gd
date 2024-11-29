@@ -4,6 +4,7 @@ extends Control
 
 
 func _ready() -> void:
+	Preferences.initialise_prefs()
 	OS.low_processor_usage_mode = true
 
 

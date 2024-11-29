@@ -30,19 +30,19 @@ extends Control
 
 var scan_dir: String:
 	set(new_val):
-		PREFERENCES.write(Prefs.Keys.SCAN_DIR, new_val)
+		Preferences.projects.scan_dir = new_val
 		_perform_scan()
 	get:
-		return PREFERENCES.read(Prefs.Keys.SCAN_DIR)
+		return Preferences.projects.scan_dir
 
 var _currently_trying_to_start: ProjectData
 var _currently_trying_to_edit := false
 
 
 func _ready() -> void:
-	VersionFilter.selected = PREFERENCES.read(Prefs.Keys.PROJ_FILTER_VERSION)
-	Sort.selected = PREFERENCES.read(Prefs.Keys.PROJ_FILTER_SORT)
-	AscDesc.selected = PREFERENCES.read(Prefs.Keys.PROJ_FILTER_ASC_DESC)
+	VersionFilter.selected = Preferences.projects.filter_version
+	Sort.selected = Preferences.projects.filter_sort
+	AscDesc.selected = Preferences.projects.filter_asc_desc
 	EditButton.pressed.connect(_on_run_or_edit_pressed.bind(true))
 	RunButton.pressed.connect(_on_run_or_edit_pressed)
 	DownloadingMessage.get_label().horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -97,9 +97,9 @@ func _open_project(project: ProjectData , open_editor := false) -> void:
 # Filtering
 func _on_filter_or_sorting_changed(_var) -> void:
 	_apply_filter_and_sort()
-	PREFERENCES.write(Prefs.Keys.PROJ_FILTER_VERSION, VersionFilter.selected)
-	PREFERENCES.write(Prefs.Keys.PROJ_FILTER_SORT, Sort.selected)
-	PREFERENCES.write(Prefs.Keys.PROJ_FILTER_ASC_DESC, AscDesc.selected)
+	Preferences.projects.filter_version = VersionFilter.selected
+	Preferences.projects.filter_sort = Sort.selected
+	Preferences.projects.filter_asc_desc = AscDesc.selected
 
 
 func _apply_filter_and_sort() -> void:
