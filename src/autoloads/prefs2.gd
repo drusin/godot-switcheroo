@@ -136,14 +136,15 @@ static var _is_prod := false
 static var _values := {}
 
 
+static func initialise_prefs() -> void:
+    _is_prod = true
+    _values = PrefsFileHandler.load_prefs()
+
+
 static func _set_pref(name: String, val) -> void:
     _values[name] = val
     if (_is_prod):
-        _persist()
-
-
-static func _persist() -> void:
-    pass
+        PrefsFileHandler.persist_prefs(_values)
 
 
 class NestedPrefs extends Object:
