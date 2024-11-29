@@ -2,134 +2,134 @@ class_name Preferences
 extends Object
 
 
-class Projects extends Object:
+class Projects extends NestedPrefs:
     var filter_version: int:
         get:
-            return Preferences._values.get("projects.filter_version", 0)
+            return read("filter_version", 0)
         set(newVal):
-            Preferences._set_pref("projects.filter_version", newVal)
+            write("filter_version", newVal)
     
     var filter_sort: int:
         get:
-            return Preferences._values.get("projects.filter_sort", 0)
+            return read("filter_sort", 0)
         set(newVal):
-            Preferences._set_pref("projects.filter_sort", newVal)
+            write("filter_sort", newVal)
     
     var filter_asc_desc: int:
         get:
-            return Preferences._values.get("projects.filter_asc_desc", 1)
+            return read("filter_asc_desc", 1)
         set(newVal):
-            Preferences._set_pref("projects.filter_asc_desc", newVal)
+            write("filter_asc_desc", newVal)
     
     var scan_dir: String:
         get:
-            return Preferences._values.get("projects.scan_dir", "")
+            return read("scan_dir", "")
         set(newVal):
-            Preferences._set_pref("projects.scan_dir", newVal)
+            write("scan_dir", newVal)
 
-static var projects := Projects.new()
+static var projects := Projects.new("projects")
 
 
-class Installations extends Object:
+class Installations extends NestedPrefs:
     var filter_usage: int:
         get:
-            return Preferences._values.get("installations.filter_usage", 0)
+            return read("filter_usage", 0)
         set(newVal):
-            Preferences._set_pref("installations.filter_usage", newVal)
+            write("filter_usage", newVal)
     
     var filter_managed: int:
         get:
-            return Preferences._values.get("installations.filter_managed", 0)
+            return read("filter_managed", 0)
         set(newVal):
-            Preferences._set_pref("installations.filter_managed", newVal)
+            write("filter_managed", newVal)
     
     var filter_sort: int:
         get:
-            return Preferences._values.get("installations.filter_sort", 0)
+            return read("filter_sort", 0)
         set(newVal):
-            Preferences._set_pref("installations.filter_sort", newVal)
+            write("filter_sort", newVal)
     
     var filter_asc_desc: int:
         get:
-            return Preferences._values.get("installations.filter_asc_desc", 0)
+            return read("filter_asc_desc", 0)
         set(newVal):
-            Preferences._set_pref("installations.filter_asc_desc", newVal)
+            write("filter_asc_desc", newVal)
     
     var last_custom_installation_dir: String:
         get:
-            return Preferences._values.get("installations.last_custom_installation_dir", "")
+            return read("last_custom_installation_dir", "")
         set(newVal):
-            Preferences._set_pref("installations.last_custom_installation_dir", newVal)
+            write("last_custom_installation_dir", newVal)
 
-static var installations := Installations.new()
+static var installations := Installations.new("installations")
 
 
-class ChooseVersion extends Object:
+class ChooseVersion extends NestedPrefs:
     var managed: int:
         get:
-            return Preferences._values.get("choose_version.managed", 0)
+            return read("managed", 0)
         set(newVal):
-            Preferences._set_pref("choose_version.managed", newVal)
+            write("managed", newVal)
     
     var sort: int:
         get:
-            return Preferences._values.get("choose_version.sort", 0)
+            return read("sort", 0)
         set(newVal):
-            Preferences._set_pref("choose_version.sort", newVal)
+            write("sort", newVal)
     
     var pre_alpha: bool:
         get:
-            return Preferences._values.get("choose_version.pre_alpha", false)
+            return read("pre_alpha", false)
         set(newVal):
-            Preferences._set_pref("choose_version.pre_alpha", newVal)
+            write("pre_alpha", newVal)
     
     var alpha: bool:
         get:
-            return Preferences._values.get("choose_version.alpha", false)
+            return read("alpha", false)
         set(newVal):
-            Preferences._set_pref("choose_version.alpha", newVal)
+            write("alpha", newVal)
     
     var beta: bool:
         get:
-            return Preferences._values.get("choose_version.beta", false)
+            return read("beta", false)
         set(newVal):
-            Preferences._set_pref("choose_version.beta", newVal)
+            write("beta", newVal)
     
     var rc: bool:
         get:
-            return Preferences._values.get("choose_version.rc", false)
+            return read("rc", false)
         set(newVal):
-            Preferences._set_pref("choose_version.rc", newVal)
+            write("rc", newVal)
     
     var mono: bool:
         get:
-            return Preferences._values.get("choose_version.mono", false)
+            return read("mono", false)
         set(newVal):
-            Preferences._set_pref("choose_version.mono", newVal)
+            write("mono", newVal)
     
     var not_installed: bool:
         get:
-            return Preferences._values.get("choose_version.not_installed", true)
+            return read("not_installed", true)
         set(newVal):
-            Preferences._set_pref("choose_version.not_installed", newVal)
+            write("not_installed", newVal)
 
-static var choose_version := ChooseVersion.new()
+static var choose_version := ChooseVersion.new("choose_version")
 
 
-class System extends Object:
+class System extends NestedPrefs:
     var managed_installations_dir: String:
         get:
-            return Preferences._values.get("system.managed_installations_dir", "user://.managed")
+            return read("managed_installations_dir", "user://.managed")
         set(newVal):
-            Preferences._set_pref("system.managed_installations_dir", newVal)
+            write("managed_installations_dir", newVal)
     
     var temp_dir: String:
         get:
-            return Preferences._values.get("system.temp_dir", "user://.temp")
+            return read("temp_dir", "user://.temp")
         set(newVal):
-            Preferences._set_pref("system.temp_dir", newVal)
+            write("temp_dir", newVal)
 
-static var system := System.new()
+static var system := System.new("system")
 
 
 static var _is_prod := false
@@ -144,3 +144,18 @@ static func _set_pref(name: String, val) -> void:
 
 static func _persist() -> void:
     pass
+
+
+class NestedPrefs extends Object:
+    var _prefix: String
+
+    func _init(prefix: String) -> void:
+        _prefix = prefix
+    
+
+    func read(name: String, default):
+        return Preferences._values.get(_prefix + "." + name, default)
+    
+
+    func write(name: String, value):
+        Preferences._set_pref(_prefix + "." + name, value)
