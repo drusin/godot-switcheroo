@@ -4,11 +4,11 @@ extends RefCounted
 signal update(bytes_downloaded: int)
 signal downloaded(result: ReqResult)
 
-var _tree: SceneTree
+var _parent: Node
 
 
-func _init(tree: SceneTree) -> void:
-	_tree = tree
+func _init(parent: Node) -> void:
+	_parent = parent
 
 
 func request(url: String) -> ReqResult:
@@ -17,10 +17,10 @@ func request(url: String) -> ReqResult:
 
 func _request(url: String, httpRequestCreator: Callable) -> ReqResult:
 	var timer = Timer.new()
-	_tree.get_root().add_child.call_deferred(timer)
+	_parent.add_child.call_deferred(timer)
 	await timer.tree_entered
 	var req: _HTTPRequestInternal = httpRequestCreator.call()
-	_tree.get_root().add_child.call_deferred(req)
+	_parent.add_child.call_deferred(req)
 	await req.tree_entered
 
 	req.request(url)

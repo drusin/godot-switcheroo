@@ -8,7 +8,7 @@ func before_test() -> void:
 
 
 func test_updates() -> void:
-	var dl_req := DownloadRequest.new(get_tree())
+	var dl_req := DownloadRequest.new(get_tree().get_root())
 	dl_req._request("test", func (): return mockHTTPRequest)
 
 	var update = await dl_req.update
