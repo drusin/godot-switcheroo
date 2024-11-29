@@ -45,7 +45,7 @@ func _on_confirmed() -> void:
 	Preferences.choose_version.rc = Rc.button_pressed
 	Preferences.choose_version.mono = Mono.button_pressed
 	Preferences.choose_version.not_installed = Uninstalled.button_pressed
-	emit_signal("version_set", INSTALLATIONS.version(VersionOption.get_item_metadata(VersionOption.selected)))
+	emit_signal("version_set", Globals.installations.version(VersionOption.get_item_metadata(VersionOption.selected)))
 
 
 func _on_about_to_popup() -> void:
@@ -57,7 +57,7 @@ func _some_filter_changed(_ignore) -> void:
 
 
 func _refresh_version_list() -> void:
-	var versions := INSTALLATIONS.all_versions() if Uninstalled.button_pressed else INSTALLATIONS.local_versions()
+	var versions := Globals.installations.all_versions() if Uninstalled.button_pressed else Globals.installations.local_versions()
 	var filtered := versions \
 			.filter(_managed) \
 			.filter(_pre_alpha) \

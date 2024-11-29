@@ -1,3 +1,4 @@
+class_name Projects
 extends Node
 
 signal projects_loaded(projects: Array[ProjectData])
@@ -15,7 +16,7 @@ var _projects := {}
 
 
 func _ready() -> void:
-	await INSTALLATIONS.versions_loaded
+	await Globals.installations.versions_loaded
 	_load_cache()
 
 

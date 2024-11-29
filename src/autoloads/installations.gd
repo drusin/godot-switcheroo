@@ -1,3 +1,4 @@
+class_name Installations
 extends Node
 
 signal versions_loaded
@@ -11,8 +12,8 @@ var _installations := {}
 
 
 func _ready() -> void:
-	DOWNLOADS.available_versions_ready.connect(_add_remote_versions)
-	DOWNLOADS.version_downloaded.connect(_on_version_downloaded)
+	Globals.downloads.available_versions_ready.connect(_add_remote_versions)
+	Globals.downloads.version_downloaded.connect(_on_version_downloaded)
 	_load_cache()
 	_persist_cache()
 
@@ -66,7 +67,7 @@ func _on_version_downloaded(downloaded: GodotVersion) -> void:
 
 
 func _add_remote_versions():
-	for version_str in DOWNLOADS.available_versions():
+	for version_str in Globals.downloads.available_versions():
 		var godot_version = GodotVersion.new()
 		godot_version.version = version_str
 		if not _installations.has(godot_version.id()):

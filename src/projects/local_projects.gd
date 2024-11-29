@@ -46,25 +46,25 @@ func _ready() -> void:
 	EditButton.pressed.connect(_on_run_or_edit_pressed.bind(true))
 	RunButton.pressed.connect(_on_run_or_edit_pressed)
 	DownloadingMessage.get_label().horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	INSTALLATIONS.installations_changed.connect(_on_installations_changed)
-	PROJECTS.projects_changed.connect(_refresh_project_list)
+	Globals.installations.installations_changed.connect(_on_installations_changed)
+	Globals.projects.projects_changed.connect(_refresh_project_list)
 	SIGNALS.selected_amount_changed.connect(_on_projects_selection_changed)
 	_refresh_project_list()
 
 
 func _perform_scan() -> void:
-	PROJECTS.reload_projects()
+	Globals.projects.reload_projects()
 	var dirs_to_add: Array[String] = [scan_dir]
 	var dir := DirAccess.open(scan_dir)
 	for subdir in dir.get_directories():
 		dir.change_dir(scan_dir + "/" + subdir)
 		dirs_to_add.append(dir.get_current_dir(true))
-	PROJECTS.add_from_dirs(dirs_to_add)
+	Globals.projects.add_from_dirs(dirs_to_add)
 
 
 func _refresh_project_list() -> void:
 	var project_lines := []
-	for project in PROJECTS.all_projects():
+	for project in Globals.projects.all_projects():
 		var line: ProjectLine = ProjectLineScene.instantiate()
 		line.project = project
 		line.double_clicked.connect(_on_run_or_edit_pressed.bind(true, project))
@@ -84,10 +84,10 @@ func _set_buttons_state() -> void:
 
 
 func _open_project(project: ProjectData , open_editor := false) -> void:
-	PROJECTS.update_last_opened(project.general.path)
+	Globals.projects.update_last_opened(project.general.path)
 	_apply_filter_and_sort()
 	var args := ["--path", project.general.folder_path()]
-	var godot_version = INSTALLATIONS.version(project.godot_version_id)
+	var godot_version = Globals.installations.version(project.godot_version_id)
 	if open_editor:
 		args.append("-e")
 	OS.create_process(godot_version.installation_path, args)
@@ -163,7 +163,7 @@ func _on_import_pressed() -> void:
 # Logic for button presses
 func _on_run_or_edit_pressed(edit := false, selected: ProjectData = null) -> void:
 	var project: ProjectData = Projects.get_selected_items()[0].project if selected == null else selected
-	var godot_version := INSTALLATIONS.version(project.godot_version_id)
+	var godot_version := Globals.installations.version(project.godot_version_id)
 	if godot_version != null and godot_version.installation_path != "":
 		_open_project(project, edit)
 		return
@@ -173,11 +173,11 @@ func _on_run_or_edit_pressed(edit := false, selected: ProjectData = null) -> voi
 		MissingCustomVersion.popup()
 		return
 	DownloadingMessage.popup()
-	DOWNLOADS.download(godot_version.version)
+	Globals.downloads.download(godot_version.version)
 
 
 func _on_open_folder_pressed() -> void:
-	var project := PROJECTS.get_by_path(Projects.get_selected_items()[0].project_path)
+	var project := Globals.projects.get_by_path(Projects.get_selected_items()[0].project_path)
 	OS.shell_open(project.general.folder_path())
 
 
@@ -186,11 +186,11 @@ func _on_confirm_remove_pressed() -> void:
 	var to_remove: Array[String] = []
 	for line in Projects.get_selected_items():
 		to_remove.append(line.project_path)
-	PROJECTS.remove(to_remove)
+	Globals.projects.remove(to_remove)
 
 
 func _on_import_dialog_file_selected(path: String) -> void:
-	PROJECTS.add(path)
+	Globals.projects.add(path)
 
 
 func _on_projects_selection_changed(_selection: int) -> void:
@@ -203,7 +203,7 @@ func _on_scan_folder_dialog_dir_selected(dir: String) -> void:
 
 func _on_choose_installation_version_set(version: GodotVersion) -> void:
 	for line in Projects.get_selected_items():
-		PROJECTS.set_godot_version(line.project.general.path, version)
+		Globals.projects.set_godot_version(line.project.general.path, version)
 		line.reset()
 	_set_buttons_state()
 
@@ -215,7 +215,7 @@ func _on_downloading_message_canceled() -> void:
 func _on_installations_changed() -> void:
 	_refresh_project_list()
 	if not _currently_trying_to_start or \
-			INSTALLATIONS.version(_currently_trying_to_start.godot_version_id).installation_path == "":
+			Globals.installations.version(_currently_trying_to_start.godot_version_id).installation_path == "":
 		return
 	DownloadingMessage.hide()
 	_open_project(_currently_trying_to_start, _currently_trying_to_edit)
@@ -233,5 +233,5 @@ func _on_missing_custom_version_select_new_version():
 
 
 func _on_custom_version_dialog_version_created(version):
-	INSTALLATIONS.add_custom(version)
+	Globals.installations.add_custom(version)
 	_refresh_project_list()

@@ -18,7 +18,7 @@ var _version_index_mapping := {}
 
 func _ready():
 	VersionButton.get_popup().max_size = Vector2i(300, 300)
-	DOWNLOADS.available_versions_ready.connect(_update_versions_options)
+	Globals.downloads.available_versions_ready.connect(_update_versions_options)
 
 
 func custom_popup() -> void:
@@ -36,7 +36,7 @@ func custom_popup() -> void:
 
 func _update_versions_options() -> void:
 	VersionButton.clear()
-	var versions := DOWNLOADS.available_versions()
+	var versions := Globals.downloads.available_versions()
 	ArrayUtils.sort(versions, Comparators.STR_NATURAL_NO_CASE)
 	for i in versions.size():
 		VersionButton.add_item(versions[i], i)

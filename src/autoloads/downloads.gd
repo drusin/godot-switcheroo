@@ -1,3 +1,4 @@
+class_name Downloads
 extends Node
 
 signal available_versions_ready()

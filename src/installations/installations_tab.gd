@@ -30,7 +30,7 @@ var _used_versions: Array[String] = []
 
 
 func _ready() -> void:
-	INSTALLATIONS.installations_changed.connect(_refresh_installations)
+	Globals.installations.installations_changed.connect(_refresh_installations)
 	SIGNALS.selected_amount_changed.connect(_on_installations_selection_changed)
 	_refresh_installations()
 	UsageFilter.selected = Preferences.installations.filter_usage
@@ -41,7 +41,7 @@ func _ready() -> void:
 
 func _refresh_installations() -> void:
 	var lines := []
-	for installation in INSTALLATIONS.local_versions():
+	for installation in Globals.installations.local_versions():
 		var line: InstallationLine = InstallationLineScene.instantiate()
 		line.godot_version = installation
 		line.double_clicked.connect(_on_start_godot_pressed)
@@ -59,7 +59,7 @@ func _on_visibility_changed() -> void:
 
 func _check_used_versions() -> void:
 	_used_versions.clear()
-	for project in PROJECTS.all_projects():
+	for project in Globals.projects.all_projects():
 		if project.godot_version_id != "" and not _used_versions.has(project.godot_version_id):
 			_used_versions.append(project.godot_version_id)
 
@@ -146,12 +146,12 @@ func _on_new_managed_pressed() -> void:	ChooseInstallation.popup()
 
 # logic for button presses
 func _on_start_godot_pressed() -> void:
-	var installation = INSTALLATIONS.version(Installations.get_selected_items()[0].godot_version.id())
+	var installation = Globals.installations.version(Installations.get_selected_items()[0].godot_version.id())
 	OS.create_process(installation.installation_path, [])
 
 
 func _on_open_godot_folder_pressed() -> void:
-	var installation = INSTALLATIONS.version(Installations.get_selected_items()[0].godot_version.id())
+	var installation = Globals.installations.version(Installations.get_selected_items()[0].godot_version.id())
 	OS.shell_open(installation.folder_path())
 
 
@@ -168,32 +168,32 @@ func _on_rescan_pressed() -> void:
 			installation.installation_path = FileAccess.open(path + "/" + files[0], \
 					FileAccess.READ).get_path_absolute()
 			installations_to_add.append(installation)
-	INSTALLATIONS.add_managed(installations_to_add)
+	Globals.installations.add_managed(installations_to_add)
 
 
 
 # reacting to "external" signals
 func _on_custom_version_dialog_version_created(version: GodotVersion) -> void:
-	if INSTALLATIONS.version(version.id()):
+	if Globals.installations.version(version.id()):
 		InstallationExistsAlert.popup()
 		return
-	INSTALLATIONS.add_custom(version)
+	Globals.installations.add_custom(version)
 
 
 func _on_remove_confirmation_dialog_confirmed() -> void:
 	var ids_to_remove: Array[String] = []
 	for selected in Installations.get_selected_items():
 		ids_to_remove.append(selected.godot_version.id())
-	INSTALLATIONS.remove(ids_to_remove)
+	Globals.installations.remove(ids_to_remove)
 
 
 func _on_choose_installation_version_set(version: GodotVersion) -> void:
 	if version.installation_path != "":
 		return
 	version.installation_path = CONSTANTS.DOWNLOADING
-	INSTALLATIONS.add_managed([version])
-	DOWNLOADS.download(version.version)
+	Globals.installations.add_managed([version])
+	Globals.downloads.download(version.version)
 
 
 func _on_version_downloaded(version: GodotVersion) -> void:
-	INSTALLATIONS.add_managed([version])
+	Globals.installations.add_managed([version])

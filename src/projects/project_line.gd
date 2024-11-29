@@ -23,11 +23,11 @@ func _setup() -> void:
 		bottom_main_text = ""
 		bottom_secondary_text = "No Godot version selected"
 		return
-	var godot_version := INSTALLATIONS.version(project.godot_version_id)
+	var godot_version := Globals.installations.version(project.godot_version_id)
 	if not godot_version:
 		godot_version = GodotVersion.from_id(project.godot_version_id)
 		if not godot_version.is_custom:
-			INSTALLATIONS.add_managed([godot_version])
+			Globals.installations.add_managed([godot_version])
 	if godot_version.is_custom:
 		bottom_main_text = godot_version.custom_name
 		bottom_secondary_text = godot_version.version
@@ -41,5 +41,5 @@ func _setup() -> void:
 
 
 func reset() -> void:
-	project = PROJECTS.get_by_path(project.general.path)
+	project = Globals.projects.get_by_path(project.general.path)
 	_setup()
