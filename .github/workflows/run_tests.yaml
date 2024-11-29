@@ -22,4 +22,4 @@ jobs:
           godot-status: 'stable'
           paths: 'res://test'
           version: 'installed'
-          arguments: '-i download_request_integration_test'
+          arguments: '-i download_request_integration_test -i prefs2_test'
