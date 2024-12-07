@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://bg60jbvi1rnsp"]
 
-[ext_resource type="Script" path="res://src/general/status_bar/selected.gd" id="1_h8ta7"]
-[ext_resource type="Script" path="res://src/general/status_bar/downloads.gd" id="2_ax6qs"]
-[ext_resource type="Script" path="res://src/general/status_bar/download_progress.gd" id="3_e4ul5"]
-[ext_resource type="Script" path="res://src/general/status_bar/version.gd" id="4_kwnbp"]
+[ext_resource type="Script" path="res://src/ui/status_bar/selected.gd" id="1_h8ta7"]
+[ext_resource type="Script" path="res://src/ui/status_bar/downloads.gd" id="2_ax6qs"]
+[ext_resource type="Script" path="res://src/ui/status_bar/download_progress.gd" id="3_e4ul5"]
+[ext_resource type="Script" path="res://src/ui/status_bar/version.gd" id="4_kwnbp"]
 
 [node name="StatusBar" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 32)

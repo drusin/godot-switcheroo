@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://c0rnpv1l24576"]
 
-[ext_resource type="Script" path="res://src/main.gd" id="1_8d0wa"]
-[ext_resource type="PackedScene" uid="uid://bym3qys3xdgla" path="res://src/projects/local_projects.tscn" id="2_u1x8w"]
-[ext_resource type="PackedScene" uid="uid://6drkvcdycwyq" path="res://src/installations/installations_tab.tscn" id="3_srysk"]
-[ext_resource type="PackedScene" uid="uid://bg60jbvi1rnsp" path="res://src/general/status_bar/status_bar.tscn" id="4_22ax7"]
+[ext_resource type="Script" path="res://src/ui/main.gd" id="1_8d0wa"]
+[ext_resource type="PackedScene" uid="uid://bym3qys3xdgla" path="res://src/ui/projects/local_projects.tscn" id="2_u1x8w"]
+[ext_resource type="PackedScene" uid="uid://6drkvcdycwyq" path="res://src/ui/installations/installations_tab.tscn" id="3_srysk"]
+[ext_resource type="PackedScene" uid="uid://bg60jbvi1rnsp" path="res://src/ui/status_bar/status_bar.tscn" id="4_22ax7"]
 
 [node name="Main" type="Control"]
 layout_mode = 3

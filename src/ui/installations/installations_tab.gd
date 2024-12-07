@@ -11,7 +11,7 @@ extends Control
 
 # Content
 @onready var Installations: SelectablesList = $Content/InstallationPane/Installations
-@onready var InstallationLineScene := preload("res://src/installations/installation_line.tscn")
+@export var InstallationLineScene: PackedScene
 
 # Buttons
 @onready var RemoveButton: Button = $Content/ButtonPane/Remove

@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://bym3qys3xdgla"]
+[gd_scene load_steps=7 format=3 uid="uid://bym3qys3xdgla"]
 
-[ext_resource type="Script" path="res://src/projects/local_projects.gd" id="1_vvilm"]
-[ext_resource type="PackedScene" uid="uid://ba02cqk3mop6o" path="res://src/general/selectables_list.tscn" id="2_ot0x7"]
-[ext_resource type="PackedScene" uid="uid://btblf2mdnky7n" path="res://src/projects/choose_installation.tscn" id="3_m4nqt"]
-[ext_resource type="PackedScene" uid="uid://bavkmhohmkpp4" path="res://src/projects/missing_custom_version.tscn" id="4_q8hac"]
-[ext_resource type="PackedScene" uid="uid://bm51sat7023nd" path="res://src/installations/custom_version_dialog.tscn" id="5_1t4pl"]
+[ext_resource type="Script" path="res://src/ui/projects/local_projects.gd" id="1_vvilm"]
+[ext_resource type="PackedScene" uid="uid://ba02cqk3mop6o" path="res://src/ui/selectable/selectables_list.tscn" id="2_ot0x7"]
+[ext_resource type="PackedScene" uid="uid://c7ih6hxqdjogf" path="res://src/ui/projects/project_line.tscn" id="2_pfmpg"]
+[ext_resource type="PackedScene" uid="uid://btblf2mdnky7n" path="res://src/ui/projects/choose_installation.tscn" id="3_m4nqt"]
+[ext_resource type="PackedScene" uid="uid://bavkmhohmkpp4" path="res://src/ui/projects/missing_custom_version.tscn" id="4_q8hac"]
+[ext_resource type="PackedScene" uid="uid://bm51sat7023nd" path="res://src/ui/installations/custom_version_dialog.tscn" id="5_1t4pl"]
 
 [node name="LocalProjects" type="Control"]
 layout_mode = 3
@@ -17,6 +18,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 20.0
 script = ExtResource("1_vvilm")
+ProjectLineScene = ExtResource("2_pfmpg")
 
 [node name="Content" type="HBoxContainer" parent="."]
 layout_mode = 1

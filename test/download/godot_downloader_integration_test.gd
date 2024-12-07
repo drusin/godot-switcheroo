@@ -6,9 +6,13 @@ func before() -> void:
     DirAccess.remove_absolute("./target/" + TEST_FILE_NAME)
 
 
+func before_test() -> void:
+    Globals.root = get_tree().get_root()
+
+
 @warning_ignore('unused_parameter')
 func test_download(do_skip = true, skip_reason = "Takes too long") -> void:
-    var downloader := GodotDownloader.new(get_tree().get_root())
+    var downloader := GodotDownloader.new()
 
     var metadata := GodotDownloadMetadata.new()
     metadata.name = TEST_FILE_NAME + ".zip"

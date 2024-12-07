@@ -10,7 +10,7 @@ extends Control
 
 # Content
 @onready var Projects: SelectablesList = $Content/ProjectPane/Projects
-@onready var ProjectLineScene := preload("res://src/projects/project_line.tscn")
+@export var ProjectLineScene: PackedScene
 
 # Buttons
 @onready var SetGodotButton: Button = $Content/ButtonPane/SetGodotVersion

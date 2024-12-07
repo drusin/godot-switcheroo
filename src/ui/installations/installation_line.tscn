@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://csu7nig0ni2o6"]
 
-[ext_resource type="Script" path="res://src/installations/installation_line.gd" id="1_2q3kk"]
-[ext_resource type="PackedScene" uid="uid://dynsj8r4qw1vd" path="res://src/general/list_item.tscn" id="1_8bdew"]
+[ext_resource type="Script" path="res://src/ui/installations/installation_line.gd" id="1_2q3kk"]
+[ext_resource type="PackedScene" uid="uid://dynsj8r4qw1vd" path="res://src/ui/selectable/list_item.tscn" id="1_8bdew"]
 
 [node name="InstallationLine" instance=ExtResource("1_8bdew")]
 script = ExtResource("1_2q3kk")

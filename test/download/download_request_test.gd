@@ -5,10 +5,11 @@ var mockHTTPRequest: DownloadRequest._HTTPRequestInternal
 
 func before_test() -> void:
 	mockHTTPRequest = mock(DownloadRequest._HTTPRequestInternal)
+	Globals.root = get_tree().get_root()
 
 
 func test_updates() -> void:
-	var dl_req := DownloadRequest.new(get_tree().get_root())
+	var dl_req := DownloadRequest.new()
 	dl_req._request("test", func (): return mockHTTPRequest)
 
 	var update = await dl_req.update

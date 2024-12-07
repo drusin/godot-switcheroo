@@ -4,15 +4,9 @@ extends RefCounted
 signal update(id: String, percentage: int)
 signal downloaded(id: String)
 
-var _parent: Node
-
-
-func _init(parent: Node) -> void:
-    _parent = parent
-
 
 func download(id: String, metadata: GodotDownloadMetadata, path: String) -> void:
-    var request := DownloadRequest.new(_parent)
+    var request := DownloadRequest.new()
     request.update.connect(_create_update_listener(id, metadata.size))
 
     var result := await request.request(metadata.browser_download_url)

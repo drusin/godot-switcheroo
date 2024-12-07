@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ba02cqk3mop6o"]
 
-[ext_resource type="Script" path="res://src/general/selectables_list.gd" id="1_1n76g"]
+[ext_resource type="Script" path="res://src/ui/selectable/selectables_list.gd" id="1_1n76g"]
 
 [node name="SelectablesList" type="ScrollContainer"]
 anchors_preset = 15

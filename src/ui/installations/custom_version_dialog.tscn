@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bm51sat7023nd"]
 
-[ext_resource type="Script" path="res://src/installations/custom_version_dialog.gd" id="1_6ufn5"]
+[ext_resource type="Script" path="res://src/ui/installations/custom_version_dialog.gd" id="1_6ufn5"]
 
 [node name="CustomVersionDialog" type="ConfirmationDialog"]
 title = "Custom Godot Installation"
@@ -16,8 +16,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -49.0
+offset_right = 592.0
+offset_bottom = 109.0
 grow_horizontal = 2
 grow_vertical = 2
 

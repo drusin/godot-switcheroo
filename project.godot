@@ -11,14 +11,15 @@ config_version=5
 [application]
 
 config/name="Godot-Switcheroo"
-run/main_scene="res://src/pre_main.tscn"
+run/main_scene="res://src/godot_switcheroo.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
+run/low_processor_mode=true
 config/icon="res://icon.svg"
 
 [autoload]
 
-CONSTANTS="*res://src/autoloads/constants.gd"
-SIGNALS="*res://src/autoloads/signals.gd"
+CONSTANTS="*res://src/global/constants.gd"
+SIGNALS="*res://src/global/signals.gd"
 
 [display]
 

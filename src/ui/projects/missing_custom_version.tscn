@@ -1,10 +1,10 @@
 [gd_scene load_steps=2 format=3 uid="uid://bavkmhohmkpp4"]
 
-[ext_resource type="Script" path="res://src/projects/missing_custom_version.gd" id="1_ir7hu"]
+[ext_resource type="Script" path="res://src/ui/projects/missing_custom_version.gd" id="1_ir7hu"]
 
 [node name="MissingCustomVersion" type="Window"]
-initial_position = 2
 title = "Missing custom version"
+initial_position = 2
 size = Vector2i(400, 161)
 script = ExtResource("1_ir7hu")
 

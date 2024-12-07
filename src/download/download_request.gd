@@ -4,12 +4,6 @@ extends RefCounted
 signal update(bytes_downloaded: int)
 signal downloaded(result: ReqResult)
 
-var _parent: Node
-
-
-func _init(parent: Node) -> void:
-	_parent = parent
-
 
 func request(url: String) -> ReqResult:
 	return await _request(url, func (): return _HTTPRequestInternal.new())
@@ -17,10 +11,10 @@ func request(url: String) -> ReqResult:
 
 func _request(url: String, httpRequestCreator: Callable) -> ReqResult:
 	var timer = Timer.new()
-	_parent.add_child.call_deferred(timer)
+	Globals.root.add_child.call_deferred(timer)
 	await timer.tree_entered
 	var req: _HTTPRequestInternal = httpRequestCreator.call()
-	_parent.add_child.call_deferred(req)
+	Globals.root.add_child.call_deferred(req)
 	await req.tree_entered
 
 	req.request(url)
