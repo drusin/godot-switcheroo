@@ -4,15 +4,16 @@ extends RefCounted
 signal update(count: int, percentage: int)
 signal downloaded(id: String)
 
+var api_gateway := ApiGateway.new()
 var _downloads := {}
 
 
 func download(id: String, metadata: GodotDownloadMetadata, path: String) -> void:
-    var request := DownloadRequest.new()
+    var request := api_gateway.download_godot(metadata.browser_download_url)
     request.update.connect(_create_update_listener(id, metadata.size))
     _downloads[id] = 0
 
-    var result := await request.request(metadata.browser_download_url)
+    var result := await request.request()
     var bytes := result.body
 
     var zip_file_path: String = path + "/" + metadata.name

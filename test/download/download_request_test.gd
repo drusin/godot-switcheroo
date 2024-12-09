@@ -9,8 +9,8 @@ func before_test() -> void:
 
 
 func test_updates() -> void:
-	var dl_req := DownloadRequest.new()
-	dl_req._request("test", func (): return mockHTTPRequest)
+	var dl_req := DownloadRequest.new("test")
+	dl_req._request(func (): return mockHTTPRequest)
 
 	var update = await dl_req.update
 	assert_int(update).is_equal(0)

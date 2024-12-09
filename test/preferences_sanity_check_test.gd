@@ -47,7 +47,7 @@ func sanity_check(to_check: Object, module_name: String) -> void:
 func get_random_for(type):
     match type:
         TYPE_BOOL:
-            var ran = randi()
+            var ran := randi()
             @warning_ignore("integer_division")
             return ran == ran / 2 * 2
         TYPE_INT:
