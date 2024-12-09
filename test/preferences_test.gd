@@ -6,13 +6,13 @@ var test_prefs_file_path := "./target/prefs.json"
 func before() -> void:
     old_prefs_file_value = PrefsFileHandler._file_path
     PrefsFileHandler._file_path = test_prefs_file_path
+    DirAccess.remove_absolute(test_prefs_file_path);
 
 
 func after() -> void:
     PrefsFileHandler._file_path = old_prefs_file_value
     Preferences._is_prod = false
     Preferences._values = {}
-    DirAccess.remove_absolute(test_prefs_file_path);
 
 
 func test_persisting_prefs() -> void:
