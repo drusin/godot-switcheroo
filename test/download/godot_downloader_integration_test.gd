@@ -19,7 +19,7 @@ func test_download(do_skip = true, skip_reason = "Takes too long") -> void:
     metadata.size = 57381972
     metadata.browser_download_url = "https://github.com/godotengine/godot-builds/releases/download/4.3-stable/Godot_v4.3-stable_win64.exe.zip"
 
-    downloader.download("4.3", metadata, "target")
+    downloader.download_and_unzip("4.3", metadata, "target")
     await downloader.downloaded
 
     assert_file("target/" + TEST_FILE_NAME).exists()

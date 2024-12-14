@@ -8,7 +8,7 @@ var api_gateway := ApiGateway.new()
 var _downloads := {}
 
 
-func download(id: String, metadata: GodotDownloadMetadata, path: String) -> void:
+func download_and_unzip(id: String, metadata: GodotDownloadMetadata, path: String) -> void:
     var request := api_gateway.download_godot(metadata.browser_download_url)
     request.update.connect(_create_update_listener(id, metadata.size))
     _downloads[id] = 0
