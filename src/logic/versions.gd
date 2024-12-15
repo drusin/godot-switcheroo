@@ -25,4 +25,4 @@ func register(version: GodotVersion) -> void:
 
 func download(version: GodotVersion) -> void:
     var metadata := await _api_gateway.get_version_metadata(_remote_dl_lookup[version.version])
-    #_godot_downloader.download_and_unzip(version.version, metadata, "")
+    _godot_downloader.download_and_unzip(version.version, metadata, Preferences.system.managed_installations_dir)
