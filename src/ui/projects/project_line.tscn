@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c7ih6hxqdjogf"]
 
 [ext_resource type="PackedScene" uid="uid://dynsj8r4qw1vd" path="res://src/ui/selectable/list_item.tscn" id="1_ekshv"]
-[ext_resource type="Script" path="res://src/ui/projects/project_line.gd" id="1_nwo6l"]
+[ext_resource type="Script" uid="uid://bly7ixhvmipxi" path="res://src/ui/projects/project_line.gd" id="1_nwo6l"]
 [ext_resource type="PackedScene" uid="uid://bh7xo1mlpk0i2" path="res://src/ui/atoms/info_icon.tscn" id="3_4j5dv"]
 
 [node name="ProjectLine" instance=ExtResource("1_ekshv")]

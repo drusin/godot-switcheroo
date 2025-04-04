@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dynsj8r4qw1vd"]
 
-[ext_resource type="Script" path="res://src/ui/selectable/list_item.gd" id="1_q0eol"]
+[ext_resource type="Script" uid="uid://ca10xdgun3nf4" path="res://src/ui/selectable/list_item.gd" id="1_q0eol"]
 [ext_resource type="Texture2D" uid="uid://bi7wndmqnnyhs" path="res://icon.svg" id="2_p4nsx"]
 [ext_resource type="PackedScene" uid="uid://dyeem17hdif3i" path="res://src/ui/atoms/centered_cursive_label.tscn" id="3_nn8v6"]
 

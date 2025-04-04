@@ -1,7 +1,7 @@
 class_name  PrefsFileHandler
 extends RefCounted
 
-static var _file_path := "user://.prefs.godot-switcheroo"
+static var _file_path := "user://prefs"
 static var _about := "Preferences for https://github.com/drusin/godot-switcheroo"
 static var _file_version := 1
 
@@ -28,6 +28,7 @@ static func persist_prefs(values: Dictionary) -> void:
 	var file := FileAccess.open(_file_path, FileAccess.WRITE)
 	if file == null:
 		push_error("cannot read prefs file")
+		push_error(error_string(FileAccess.get_open_error()))
 		return
 	file.store_string(stringified)
 

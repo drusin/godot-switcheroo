@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bh7xo1mlpk0i2"]
 
-[ext_resource type="Script" path="res://src/ui/atoms/info_icon.gd" id="1_ad8d6"]
+[ext_resource type="Script" uid="uid://blbvrm4ukuwgy" path="res://src/ui/atoms/info_icon.gd" id="1_ad8d6"]
 [ext_resource type="Texture2D" uid="uid://d1rxjwlipiq8i" path="res://assets/info-circle.svg" id="1_b2btt"]
 
 [node name="InfoIcon" type="TextureRect"]

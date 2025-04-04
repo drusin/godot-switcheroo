@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bavkmhohmkpp4"]
 
-[ext_resource type="Script" path="res://src/ui/projects/missing_custom_version.gd" id="1_ir7hu"]
+[ext_resource type="Script" uid="uid://dwwwyres4d8b1" path="res://src/ui/projects/missing_custom_version.gd" id="1_ir7hu"]
 
 [node name="MissingCustomVersion" type="Window"]
 title = "Missing custom version"

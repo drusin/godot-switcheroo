@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://btblf2mdnky7n"]
 
-[ext_resource type="Script" path="res://src/ui/projects/choose_installation.gd" id="1_we6o6"]
+[ext_resource type="Script" uid="uid://bb4pct15bhpk3" path="res://src/ui/projects/choose_installation.gd" id="1_we6o6"]
 
 [node name="ChooseInstallation" type="ConfirmationDialog"]
 title = "Choose Godot Version"
